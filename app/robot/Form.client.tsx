@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import "/Users/jahaanshahsheikh/Documents/crescendo-2024-scoutingSite/app/globals.css";
+import "../globals.css";
 
 const Form = () => {
     const [robotNumber, setRobotNumber] = useState('');
