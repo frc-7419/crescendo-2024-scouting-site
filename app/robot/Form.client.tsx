@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 
 const Form = () => {
@@ -26,7 +28,8 @@ const Form = () => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <input type="text" value={robotNumber} onChange={handleRobotNumberChange} placeholder="Robot Number" />
+            <input type="text" value={robotNumber} onChange={handleRobotNumberChange} placeholder="Robot Number" maxLength={5} 
+/>
             <input type="text" value={matchNumber} onChange={handleMatchNumberChange} placeholder="Match Number" />
             <input type="text" value={totalPoints} onChange={handleTotalPointsChange} placeholder="Total Points" />
             <button type="submit">Submit</button>

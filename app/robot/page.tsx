@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-
 const Form = React.lazy(() => import('./Form.client'));
 
 const Page = () => {
