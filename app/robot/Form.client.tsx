@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import "/Users/jahaanshahsheikh/Documents/crescendo-2024-scoutingSite/app/globals.css";
 
 const Form = () => {
     const [robotNumber, setRobotNumber] = useState('');
@@ -27,13 +28,15 @@ const Form = () => {
     };
 
     return (
+        <div className = 'form'> 
         <form onSubmit={handleSubmit}>
             <input type="text" value={robotNumber} onChange={handleRobotNumberChange} placeholder="Robot Number" maxLength={5} 
-/>
+/>          
             <input type="text" value={matchNumber} onChange={handleMatchNumberChange} placeholder="Match Number" />
             <input type="text" value={totalPoints} onChange={handleTotalPointsChange} placeholder="Total Points" />
             <button type="submit">Submit</button>
         </form>
+        </div>
     );
 };
 
