@@ -3,36 +3,45 @@
 import logoLight from '@/resources/7419light.svg'
 import logoDark from '@/resources/7419dark.svg'
 import React, { FormEvent, useEffect, useState } from 'react';
-import router from 'next/router';
-import {useTheme} from "next-themes";
+import { useRouter } from 'next/navigation';
+import { signIn, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import { toast } from 'react-hot-toast';
 
 export default function LoginForm() {
+  const router = useRouter();
+  
   const [isDark, setIsDark] = useState(false);
   const { theme } = useTheme();
 
   useEffect(() => {
     setIsDark(theme === 'dark');
   }, [theme]);
-  
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
- 
-    const formData = new FormData(event.currentTarget)
+
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status == "authenticated") router.push("/dashboard");
+  }, [status]);
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget)
     const email = formData.get('email')
     const password = formData.get('password')
- 
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
- 
-    if (response.ok) {
-      router.push('/dashboard')
-    } else {
-      
-    }
-  }
+
+    signIn("credentials", {
+      redirect: false,
+      email: email,
+      password: password,
+    }).then((resp) => {
+      if (resp?.error) {
+        toast.error(resp.error);
+        console.log(resp.error);
+      }
+    });
+  };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 dark:bg-slate-950">
@@ -97,7 +106,6 @@ export default function LoginForm() {
             </button>
           </div>
         </form>
-
       </div>
     </div>
   );
