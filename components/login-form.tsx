@@ -13,6 +13,7 @@ export default function LoginForm() {
   
   const [isDark, setIsDark] = useState(false);
   const { theme } = useTheme();
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   useEffect(() => {
     setIsDark(theme === 'dark');
@@ -27,6 +28,8 @@ export default function LoginForm() {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setIsAuthenticating(true);
+
     const formData = new FormData(e.currentTarget)
     const email = formData.get('email')
     const password = formData.get('password')
@@ -38,7 +41,8 @@ export default function LoginForm() {
     }).then((resp) => {
       if (resp?.error) {
         toast.error(resp.error);
-        console.log(resp.error);
+        setIsAuthenticating(false);
+        console.error(resp.error);
       }
     });
   };
@@ -98,9 +102,10 @@ export default function LoginForm() {
           </div>
 
           <div>
-            <button
+          <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={isAuthenticating} // Disable button when authenticating
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-600"
             >
               Sign in
             </button>
