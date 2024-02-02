@@ -19,7 +19,7 @@ model Robot {
 
 model ScoutingData {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
-  userId Int
+  scouterId Int
   matchNumber Int
   robotNumber Int
   robotId Int
@@ -51,3 +51,9 @@ model Teleop {
   spotLight Boolean
   notes String
 }
+
+model User {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  admin Boolean @default(false)
+}
+
