@@ -4,15 +4,16 @@ import logoLight from '@/resources/7419light.svg'
 import logoDark from '@/resources/7419dark.svg'
 import React, { FormEvent, useEffect, useState } from 'react';
 import router from 'next/router';
+import {useTheme} from "next-themes";
 
 export default function LoginForm() {
   const [isDark, setIsDark] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
-    const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setIsDark(userPrefersDark);
-  }, []);
-
+    setIsDark(theme === 'dark');
+  }, [theme]);
+  
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
  
