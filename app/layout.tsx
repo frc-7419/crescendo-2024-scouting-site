@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <head />
-      <body className={alata.className}>
+      <body className={`${alata.className} transition-colors`}>
         <Providers>{children}</Providers>
       </body>
     </html>
