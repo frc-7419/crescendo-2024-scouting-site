@@ -35,3 +35,46 @@ enum Role {
   ADMIN
   SITEADMIN
 }
+
+model Robot {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  robotNumber Int    @unique
+  scoutingDataIds Int[]
+  winloss Float @default(1.0)
+}
+
+model ScoutingData {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  scouterId Int
+  matchNumber Int
+  robotNumber Int
+  robotId Int
+  autonId Int
+  teleopId Int
+}
+
+model Auton {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  preload   Boolean
+  leftCommunity Boolean
+  speaker Int
+  amp Int
+  notes String
+}
+
+model Teleop {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  canAmp Boolean
+  canSpeaker Boolean
+  defensive Boolean
+  intake Boolean
+  amp Int
+  speaker Int
+  isDisabled Boolean
+  disabledAt DateTime
+  isHanging Boolean
+  trap Boolean
+  spotLight Boolean
+  notes String
+}
+
