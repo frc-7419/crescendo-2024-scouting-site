@@ -6,8 +6,34 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  // provider = "sqlite"
+  // url      = env("DATABASE_URL")
+
+  provider          = "postgresql"
+  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+}
+
+model User {
+  id    String  @id @default(uuid())
+  email String  @unique
+  name  String
+  password String?
+  role  Role    @default(USER)
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+enum Role {
+  USER
+  ADMIN
+  SITEADMIN
 }
 
 model Robot {
@@ -50,10 +76,5 @@ model Teleop {
   trap Boolean
   spotLight Boolean
   notes String
-}
-
-model User {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  admin Boolean @default(false)
 }
 

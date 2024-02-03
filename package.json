@@ -15,16 +15,21 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@nextui-org/react": "^2.2.9",
+    "@prisma/client": "^5.9.1",
     "axios": "^1.6.7",
+    "bcrypt": "^5.1.1",
     "formik": "^2.4.5",
     "framer-motion": "^11.0.3",
     "next": "14.1.0",
+    "next-auth": "^4.24.5",
     "next-themes": "^0.2.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.16",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
