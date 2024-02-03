@@ -1,4 +1,6 @@
 import React, { Suspense } from 'react';
+import "@fontsource/poppins"
+
 const Form = React.lazy(() => import('./Form.client'));
 
 const Page = () => {

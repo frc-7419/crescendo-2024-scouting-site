@@ -1,23 +1,37 @@
 'use client'
 
-import styles from './login-form.module.css'
 import logoLight from '@/resources/7419light.svg'
 import logoDark from '@/resources/7419dark.svg'
 import React, { FormEvent, useEffect, useState } from 'react';
+import router from 'next/router';
+import {useTheme} from "next-themes";
 
 export default function LoginForm() {
   const [isDark, setIsDark] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
-    const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setIsDark(userPrefersDark);
-  }, []);
-
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    setIsDark(theme === 'dark');
+  }, [theme]);
+  
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-
+ 
     const formData = new FormData(event.currentTarget)
-    alert(`Email: ${formData.get('email')}, Password: ${formData.get('password')}`)
+    const email = formData.get('email')
+    const password = formData.get('password')
+ 
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+ 
+    if (response.ok) {
+      router.push('/dashboard')
+    } else {
+      
+    }
   }
 
   return (
@@ -34,7 +48,7 @@ export default function LoginForm() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST" onSubmit={onSubmit}>
+        <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">
               Email address

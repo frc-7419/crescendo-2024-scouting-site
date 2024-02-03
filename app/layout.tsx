@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Alata } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const alata = Alata({
+  subsets: ["latin"],
+  weight: "400"
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,8 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html suppressHydrationWarning>
+      <head />
+      <body className={alata.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
