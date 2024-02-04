@@ -9,25 +9,22 @@ datasource db {
   // provider = "sqlite"
   // url      = env("DATABASE_URL")
 
-  provider          = "postgresql"
-  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+  // provider          = "postgresql"
+  // url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  // directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  // shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+
+  provider = "postgresql"
+  url      = "postgres://postgres:password@localhost:5432/postgres"
 }
 
 model User {
-  id    String  @id @default(uuid())
-  email String  @unique
-  name  String
-  password String?
-  role  Role    @default(USER)
-}
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String
-  expiresAt DateTime
+  id           String         @id @default(uuid())
+  email        String         @unique
+  name         String
+  password     String?
+  role         Role           @default(USER)
+  ScoutingData ScoutingData[]
 }
 
 enum Role {
@@ -37,44 +34,92 @@ enum Role {
 }
 
 model Robot {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  robotNumber Int    @unique
-  scoutingDataIds Int[]
-  winloss Float @default(1.0)
+  id           Int            @id @default(autoincrement())
+  teamNumber   Int            @unique
+  scoutingData ScoutingData[]
+  winloss      Float          @default(1.0)
 }
 
 model ScoutingData {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  scouterId Int
+  id          Int      @id @default(autoincrement())
   matchNumber Int
-  robotNumber Int
-  robotId Int
-  autonId Int
-  teleopId Int
+  teamNumber  Int
+  venue       String
+  submitTime  DateTime
+  auton       Auton    @relation(fields: [autonId], references: [id])
+  teleop      Teleop   @relation(fields: [teleopId], references: [id])
+  misc        Misc     @relation(fields: [miscId], references: [id])
+  autonId     Int      @unique
+  teleopId    Int      @unique
+  miscId      Int      @unique
+  robot       Robot    @relation(fields: [teamNumber], references: [teamNumber])
+  scouter     User     @relation(fields: [scouterId], references: [id])
+  scouterId   String
 }
 
 model Auton {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  preload   Boolean
-  leftCommunity Boolean
-  speaker Int
-  amp Int
-  notes String
+  id               Int           @id @default(autoincrement())
+  preload          Boolean
+  leftCommunity    Boolean
+  speaker          Int
+  amp              Int
+  comments         String
+  startingPosition Position
+  ScoutingData     ScoutingData?
 }
 
 model Teleop {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  canAmp Boolean
-  canSpeaker Boolean
-  defensive Boolean
-  intake Boolean
-  amp Int
-  speaker Int
-  isDisabled Boolean
-  disabledAt DateTime
-  isHanging Boolean
-  trap Boolean
-  spotLight Boolean
-  notes String
+  id           Int            @id @default(autoincrement())
+  defensive    Boolean
+  intake       IntakePosition
+  amp          Int
+  speaker      Int
+  timesAmped   Int
+  pickupFrom   PickupFrom
+  isDisabled   Boolean
+  disabledAt   DateTime?
+  isHanging    Boolean
+  trap         Int
+  spotLight    Boolean
+  comments     String
+  ScoutingData ScoutingData?
+  finalStatus  FinalStatus // !isHanging: PARKED isHanging: ONSTAGE (isHanging && spotLight): ONSTAGE_SPOTLIT (for clientside optimization and accessibility)
 }
 
+model Misc {
+  id           Int           @id @default(autoincrement())
+  driverSkill  Int // 0: Not Observed 1: Poor 2: Fair 3: Good 4: Excellent
+  speedRating  Int // 1-5 (1 is slow, 5 is fast)
+  defense      Int // 0: Did Not Play Defense 1: Poor 2: Fair 3: Good 4: Excellent
+  reliability  Int // 1-5 (1 Dropped Many Notes, Unstable Cycle Times, 5: No Drops, Consistent Cycle Times)
+  comments     String
+  ScoutingData ScoutingData?
+}
+
+enum Alliance {
+  RED
+  BLUE
+}
+enum FinalStatus {
+  PARKED
+  ONSTAGE
+  ONSTAGE_SPOTLIT
+}
+
+enum PickupFrom {
+  FLOOR
+  SOURCE
+  BOTH
+  NOT_ATTEMPTED
+}
+
+enum IntakePosition {
+  OTB
+  UTB
+}
+
+enum Position {
+  TOP
+  MIDDLE
+  BOTTOM
+}
