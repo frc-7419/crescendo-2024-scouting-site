@@ -36,9 +36,12 @@ const MatchSchedule = ({ matches, loading, time }: { matches: any, loading: any,
                                 {(item) => (
                                     <TableRow key={item.key}>
                                         <TableCell>
-                                            {item.comp_level === 'qm' ?
-                                                `Qual ${item.match_number}` :
-                                                `Finals ${item.match_number}`
+                                            {
+                                                item.comp_level === 'qm' ?
+                                                    `Qual ${item.match_number}/90` :
+                                                    item.comp_level === 'sf' ?
+                                                        `Semi-Finals ${item.set_number}` :
+                                                        `Finals ${item.match_number}`
                                             }</TableCell>
                                         <TableCell>{new Date(item.predicted_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</TableCell>
                                         <TableCell>

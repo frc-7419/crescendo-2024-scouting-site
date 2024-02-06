@@ -33,7 +33,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
     console.debug(error)
     if (loading || isLoading) {
         return (
-            <div className="bg-slate-800 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
+            <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
                 <div className='p-6 currentMatchCard'>
                     <h1 className="currentEvent text-2xl font-semibold event">{eventName}</h1>
                     <div className="qual text-xl font-semibold">Qual <Spinner color="default" /></div>
@@ -56,7 +56,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
         )
     } else if(noMatch){
         return (
-            <div className="bg-slate-800 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
+            <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
                 <div className='p-6 currentMatchCard'>
                     <h1 className="currentEvent text-2xl font-semibold event">{eventName}</h1>
                     <p className="qual text-xl font-semibold">Event Has Concluded</p>
@@ -68,13 +68,15 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
     
     else {
         return (
-            <div className="bg-slate-800 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
+            <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
                 <div className='p-6 currentMatchCard'>
                     <h1 className="currentEvent text-2xl font-semibold event">{eventName}</h1>
                     <p className="qual text-xl font-semibold">{
                         match.comp_level === 'qm' ?
                             `Qual ${match.match_number}/90` :
-                            `Finals ${match.match_number}`
+                            match.comp_level === 'sf' ?
+                                `Semi-Finals ${match.set_number}` :
+                                `Finals ${match.match_number}`
                     }</p>
                     <p className="nextShift text-2xl font-semibold align-bottom">Your next shift is Qual 69</p>
                 </div>
