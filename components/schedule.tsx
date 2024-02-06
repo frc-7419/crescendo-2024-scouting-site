@@ -1,17 +1,20 @@
 'use client';
 
+import { Match } from '@/types/Match';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 
-const MatchSchedule = ({ matches, loading, time }: { matches: any, loading: any, time: Date }) => {
+
+const MatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
     const [eventKey, seteventKey] = useState('2023casf');
 
-    const [filteredMatches, setFilteredMatches] = useState([]);
+    const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
 
     useEffect(() => {
-        const filtered = matches.filter(match => new Date(match.predicted_time * 1000) >= time);
+        const filtered = matches.filter((match: Match) => new Date(match.predicted_time * 1000) >= time);
         setFilteredMatches(filtered);
     }, [matches, time]);
+
 
     return (
         <div className='max-w-full'>
@@ -38,7 +41,7 @@ const MatchSchedule = ({ matches, loading, time }: { matches: any, loading: any,
                                         <TableCell>
                                             {
                                                 item.comp_level === 'qm' ?
-                                                    `Qual ${item.match_number}/90` :
+                                                    `Qual ${item.match_number}` :
                                                     item.comp_level === 'sf' ?
                                                         `Semi-Finals ${item.set_number}` :
                                                         `Finals ${item.match_number}`

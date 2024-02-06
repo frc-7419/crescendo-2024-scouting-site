@@ -1,8 +1,9 @@
+import { Match } from '@/types/Match';
 import { Spinner } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 
 const getCurrentMatch = (matches: any[], time: any) => {
-    const [match, setMatch] = useState(null);
+    const [match, setMatch] = useState<Match>({} as Match);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [noMatch, setNoMatch] = useState(false);
@@ -31,6 +32,14 @@ const getCurrentMatch = (matches: any[], time: any) => {
 const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string, loading: boolean, matches: any, time: Date }) => {
     const { match, isLoading, error, noMatch } = getCurrentMatch(matches, time);
     console.debug(error)
+
+    const [qmMatchCount, setQmMatchCount] = useState(0);
+
+    useEffect(() => {    
+        const qmMatches = matches.filter((match: Match) => match.comp_level === 'qm');
+        setQmMatchCount(qmMatches.length);
+    }, []);
+    
     if (loading || isLoading) {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
@@ -73,7 +82,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                     <h1 className="currentEvent text-2xl font-semibold event">{eventName}</h1>
                     <p className="qual text-xl font-semibold">{
                         match.comp_level === 'qm' ?
-                            `Qual ${match.match_number}/90` :
+                            `Qual ${match.match_number}/${qmMatchCount}` :
                             match.comp_level === 'sf' ?
                                 `Semi-Finals ${match.set_number}` :
                                 `Finals ${match.match_number}`
@@ -89,7 +98,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                                 <div className="flex-grow text-center"><Spinner color="default" /></div>
                             </>
                         ) : (
-                            match && match.alliances.blue.team_keys.map((teamKey) => (
+                            match && match.alliances.blue.team_keys.map((teamKey: string) => (
                                 <div className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
                             ))
                         )}
@@ -102,7 +111,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                                 <div className="flex-grow text-center"><Spinner color="default" /></div>
                             </>
                         ) : (
-                            match && match.alliances.red.team_keys.map((teamKey) => (
+                            match && match.alliances.red.team_keys.map((teamKey: string) => (
                                 <div className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
                             ))
                         )}
