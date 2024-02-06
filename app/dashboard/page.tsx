@@ -55,7 +55,7 @@ const Dashboard = () => {
             <NavBar />
             <div id='dash' className="p-6">
                 <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(e.target.value)} />
-                <span className="text-3xl text-white">Welcome {firstName},</span>
+                <span className="text-3xl">Welcome {firstName},</span>
                 <div id='cards' className="mt-4 overflow-y-auto">
                     <CurrentGame matches={matches} loading={loading} eventName="Arizona East Regionals" time={currentTime}/>
                     <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime}/>} />
