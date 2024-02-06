@@ -22,4 +22,4 @@ export interface Match {
     set_number: number;
     time: number;
     winning_alliance: 'blue' | 'red';
-  }
+}

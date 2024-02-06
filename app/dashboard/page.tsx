@@ -2,14 +2,13 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import { Main } from 'next/document';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
-import { match } from 'assert';
 import CurrentGame from '@/components/currentgame';
 import { Input } from '@nextui-org/react';
+import { Match } from '@/types/Match';
 
 const Dashboard = () => {
     const { data: session } = useSession();
@@ -38,7 +37,7 @@ const Dashboard = () => {
                 .then(response => response.json())
                 .then(data => {
                     console.log(data);
-                    const sortedMatches = data.sort((a, b) => a.predicted_time - b.predicted_time);
+                    const sortedMatches = data.sort((a: Match, b: Match) => a.predicted_time - b.predicted_time);
                     setMatches(sortedMatches);
                     setLoading(false);
                 })
@@ -54,7 +53,7 @@ const Dashboard = () => {
             <SideBar />
             <NavBar />
             <div id='dash' className="p-6">
-                <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(e.target.value)} />
+                <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
                 <span className="text-3xl">Welcome {firstName},</span>
                 <div id='cards' className="mt-4 overflow-y-auto">
                     <CurrentGame matches={matches} loading={loading} eventName="Arizona East Regionals" time={currentTime}/>

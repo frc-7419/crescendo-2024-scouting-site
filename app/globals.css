@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {}
-
-body {}
-
 main {
   display: grid;
   grid-template-columns: 15rem 1fr;

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-
+import { Team } from '@/types/Team';
 const BlueAllianceComponent = () => {
     const [teamKey, setTeamKey] = useState('frc254'); 
-    const [data, setData] = useState(null);
+    const [data, setData] = useState<Team>({} as Team);
 
     useEffect(() => {
         if (teamKey) {
