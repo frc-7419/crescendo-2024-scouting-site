@@ -38,7 +38,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
     useEffect(() => {    
         const qmMatches = matches.filter((match: Match) => match.comp_level === 'qm');
         setQmMatchCount(qmMatches.length);
-    }, []);
+    }, [matches]);
     
     if (loading || isLoading) {
         return (
