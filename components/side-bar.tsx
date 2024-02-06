@@ -8,7 +8,7 @@ import { faCalendarDays, faGauge, faHandPaper, faPoll } from '@fortawesome/free-
 
 export default function SideBar() {
     const pathname = usePathname();
-    const MenuItem = ({ icon, name, route }: { icon: JSX.Element, name: string, route: string }) => {
+    const MenuItem = ({ icon, name, route }: { icon: React.JSX.Element, name: string, route: string }) => {
         // Highlight menu item based on currently displayed route
         const colorClass = pathname === route ? "text-white" : "text-white/50 hover:text-white";
 
@@ -30,7 +30,7 @@ export default function SideBar() {
     return (
         <div id='sidebar' className='flex flex-col bg-slate-900 p-6'>
             <p className='text-2xl text-left'>7419</p>
-            <div className="flex flex-col mt-5">
+            <div className="flex flex-col mt-8">
                     <MenuItem
                         name="Dashboard"
                         route="/dashboard"

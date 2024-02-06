@@ -9,9 +9,9 @@ const BlueAllianceComponent = () => {
     useEffect(() => {
         if (teamKey) {
             fetch(`https://www.thebluealliance.com/api/v3/team/${teamKey}`, {
-                headers: {
-                    'X-TBA-Auth-Key': 'h2zoQFRZDrANaEitRZzA0pZfM3kiUqGaNMqmh49un8KFUB27GnbAphMc9VLmDYD5'
-                }
+                headers: new Headers({
+                    'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
+                })
             })
             .then(response => response.json())
             .then(data => {
