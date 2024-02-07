@@ -25,6 +25,7 @@ model User {
   password     String?
   role         Role           @default(USER)
   ScoutingData ScoutingData[]
+  Scouter      Scouter[]
 }
 
 enum Role {
@@ -96,10 +97,37 @@ model Misc {
   ScoutingData ScoutingData?
 }
 
+model ScoutingSchedule {
+  id          Int       @id @default(autoincrement())
+  matchNumber Int
+  matchID     String
+  venue       String
+  scouters    Scouter[]
+}
+
+model Scouter {
+  id                 Int               @id @default(autoincrement())
+  scouter            User              @relation(fields: [scouterId], references: [id])
+  scouterId          String
+  role               TeamRole
+  ScoutingSchedule   ScoutingSchedule? @relation(fields: [scoutingScheduleId], references: [id])
+  scoutingScheduleId Int?
+}
+
+enum TeamRole {
+  BLUEONE
+  BLUETWO
+  BLUETHREE
+  REDONE
+  REDTWO
+  REDTHREE
+}
+
 enum Alliance {
   RED
   BLUE
 }
+
 enum FinalStatus {
   PARKED
   ONSTAGE

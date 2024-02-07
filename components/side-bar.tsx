@@ -10,7 +10,7 @@ export default function SideBar() {
     const pathname = usePathname();
     const MenuItem = ({ icon, name, route }: { icon: React.JSX.Element, name: string, route: string }) => {
         // Highlight menu item based on currently displayed route
-        const colorClass = pathname === route ? "dark:text-white" : "dark:text-white/50 text-black/50 hover:text-gray-800 dark:hover:text-white";
+        const colorClass = pathname.startsWith(route)? "dark:text-white" : "dark:text-white/50 text-black/50 hover:text-gray-800 dark:hover:text-white";
 
         return (
             <Link

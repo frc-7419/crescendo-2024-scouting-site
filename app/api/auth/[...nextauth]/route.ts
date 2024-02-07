@@ -2,12 +2,12 @@
 
 import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth, { AuthOptions, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 
-const handler = NextAuth({
+const authOptions: AuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -60,6 +60,8 @@ const handler = NextAuth({
     pages: {
         signIn: "/login"
     }
-});
+};
 
-export { handler as GET, handler as POST };
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST, authOptions };

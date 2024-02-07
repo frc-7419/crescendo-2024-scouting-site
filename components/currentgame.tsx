@@ -6,7 +6,6 @@ const getCurrentMatch = (matches: any[], time: any) => {
     const [match, setMatch] = useState<Match>({} as Match);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
-    const [noMatch, setNoMatch] = useState(false);
 
     useEffect(() => {
         if (matches && matches.length > 0) {
@@ -16,21 +15,24 @@ const getCurrentMatch = (matches: any[], time: any) => {
 
             if (specificMatch) {
                 setMatch(specificMatch);
+                setError('');
                 setIsLoading(false);
-                setNoMatch(false);
             } else {
-                setError(`No match found at ${time}`);
+                setError(`NM00`);
                 setIsLoading(false);
-                setNoMatch(true)
             }
+        } else {
+            setError(`NM01`);
+            setIsLoading(false);
         }
     }, [matches, time]);
 
-    return { match, isLoading, error, noMatch };
+    return { match, isLoading, error };
 };
 
 const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string, loading: boolean, matches: any, time: Date }) => {
-    const { match, isLoading, error, noMatch } = getCurrentMatch(matches, time);
+    const { match, isLoading, error } = getCurrentMatch(loading ? [] : matches, time);
+    console.log("afjsdlkfasldkflsadfjl", match, isLoading, error)
     console.debug(error)
 
     const [qmMatchCount, setQmMatchCount] = useState(0);
@@ -63,12 +65,22 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                 </div>
             </div>
         )
-    } else if(noMatch){
+    } else if(error === "NM00"){
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
                 <div className='p-6 currentMatchCard'>
                     <h1 className="currentEvent text-2xl font-semibold event">{eventName}</h1>
                     <p className="qual text-xl font-semibold">Event Has Concluded</p>
+                    <p className="nextShift text-2xl font-semibold align-bottom">No Upcoming Shifts</p>
+                </div>
+            </div >
+        )
+    } else if(error === "NM01"){
+        return (
+            <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
+                <div className='p-6 currentMatchCard'>
+                    <h1 className="currentEvent text-2xl font-semibold event">{eventName}</h1>
+                    <p className="qual text-xl font-semibold">Schedule Pending</p>
                     <p className="nextShift text-2xl font-semibold align-bottom">No Upcoming Shifts</p>
                 </div>
             </div >
