@@ -17,11 +17,12 @@ const Dashboard = () => {
     const firstName = session?.user?.name?.split(" ")[0];
 
 
-    const [eventKey, seteventKey] = useState('2023casf');
+    const [eventKey, seteventKey] = useState('2023cafr');
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [currentTime, setCurrentTime] = useState(new Date(1679270078 * 1000));
+    const [currentTime, setCurrentTime] = useState(new Date(1678554428 * 1000));
 
+    const [selectedTab, setSelectedTab] = useState("admin")
 
     const setTime = (time: number) => {
         const date = new Date();
@@ -37,6 +38,10 @@ const Dashboard = () => {
             }
         }
     }, [session]);
+
+    useEffect(() => {
+        console.log(selectedTab)
+    }, [selectedTab]);
 
     useEffect(() => {
         if (eventKey) {
@@ -62,7 +67,12 @@ const Dashboard = () => {
                 <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
                 <div className='header flex justify-between'>
                     <span className="text-3xl">Welcome {firstName},</span>
-                    <Tabs aria-label="Tabs colors" radius="full">
+                    <Tabs
+                        aria-label="Tabs colors"
+                        radius="full"
+                        selectedKey={selectedTab}
+                        onSelectionChange={(key) => setSelectedTab(String(key))}
+                    >
                         <Tab key="admin" title="Admin" />
                         <Tab key="scouter" title="Scouter" />
                     </Tabs>

@@ -32,7 +32,6 @@ const getCurrentMatch = (matches: any[], time: any) => {
 
 const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string, loading: boolean, matches: any, time: Date }) => {
     const { match, isLoading, error } = getCurrentMatch(loading ? [] : matches, time);
-    console.log("afjsdlkfasldkflsadfjl", match, isLoading, error)
     console.debug(error)
 
     const [qmMatchCount, setQmMatchCount] = useState(0);
