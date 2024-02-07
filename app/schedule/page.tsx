@@ -49,9 +49,9 @@ const Dashboard = () => {
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
-            <div id='dash' className="p-6">
+            <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
                 <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
-                <div id='cards' className="mt-4 overflow-y-auto">
+                <div id='cards' className="mt-4 overflow-y-auto flex-1">
                     <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime}/>} />
                 </div>
             </div>

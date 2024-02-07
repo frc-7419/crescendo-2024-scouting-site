@@ -4,14 +4,10 @@
 
 main {
   display: grid;
-  grid-template-columns: 15rem 1fr;
-  grid-template-rows: 5rem 1fr;
+  grid-template-columns: 15rem calc(100vw - 15rem);
+  grid-template-rows: 5rem calc(100vh - 5rem);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
-}
-
-#cards {
-  max-height: calc(100vh - 10rem);
 }
 
 #sidebar {
