@@ -89,8 +89,6 @@ model Teleop {
 
 model Misc {
   id           Int           @id @default(autoincrement())
-  driverSkill  Int // 0: Not Observed 1: Poor 2: Fair 3: Good 4: Excellent
-  speedRating  Int // 1-5 (1 is slow, 5 is fast)
   defense      Int // 0: Did Not Play Defense 1: Poor 2: Fair 3: Good 4: Excellent
   reliability  Int // 1-5 (1 Dropped Many Notes, Unstable Cycle Times, 5: No Drops, Consistent Cycle Times)
   comments     String
