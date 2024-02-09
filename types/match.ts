@@ -6,12 +6,14 @@ export interface Match {
         score: number;
         surrogate_team_keys: string[];
         team_keys: string[];
+        scouters: string[];
       };
       red: {
         dq_team_keys: string[];
         score: number;
         surrogate_team_keys: string[];
         team_keys: string[];
+        scouters: string[];
       };
     };
     comp_level: string;

@@ -23,9 +23,6 @@ const Scouters = () => {
     const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date(1678554428 * 1000));
 
-    const [names, setNames] = useState('');
-
-
     const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
 
     useEffect(() => {
@@ -58,78 +55,13 @@ const Scouters = () => {
         }
     }, [eventKey]);
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-    
-        const formData = new FormData(e.currentTarget)
-        alert(formData.keys);
-      };
-      
     return (
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
             <div id='dash' className="p-6 flex flex-col">
                 <div id='cards' className="overflow-y-scroll flex-1">
-                    <DashCard title="Scouting Schedule" content={
-                        <>
-                            <form className="flex flex-row justify-between" onSubmit={handleSubmit}>
-                                <Input
-                                    isRequired
-                                    label="Matches"
-                                    id='matches'
-                                    placeholder="1-10"
-                                    type="text"
-                                />
-                                <Input
-                                    isRequired
-                                    label="Blue One"
-                                    id="blueone"
-                                    placeholder="User"
-                                    type="text"
-                                />
-                                <Input
-                                    isRequired
-                                    label="Blue Two"
-                                    id="bluetwo"
-                                    placeholder="User"
-                                    type="text"
-                                />
-                                <Input
-                                    isRequired
-                                    label="Blue Three"
-                                    id="bluethree"
-                                    placeholder="User"
-                                    type="text"
-                                />
-                                <Input
-                                    isRequired
-                                    label="Red One"
-                                    id="redone"
-                                    placeholder="User"
-                                    type="text"
-                                />
-                                <Input
-                                    isRequired
-                                    label="Red Two"
-                                    id="redtwo"
-                                    placeholder="User"
-                                    type="text"
-                                />
-                                <Input
-                                    isRequired
-                                    label="Red Three"
-                                    id="redthree"
-                                    placeholder="User"
-                                    type="text"
-                                />
-                                <Button fullWidth color="primary" type="submit">
-                                    Submit
-                                </Button>
-                            </form>
-                            <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime} />
-                        </>
-                    } />
+                    <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime} />
                 </div>
             </div>
         </main>
