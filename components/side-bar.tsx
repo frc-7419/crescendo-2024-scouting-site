@@ -45,7 +45,7 @@ export default function SideBar() {
                 />
                 <MenuItem
                     name="Scouting"
-                    route="/scout"
+                    route="/scouting"
                     icon={<FontAwesomeIcon icon={faPoll} />}
                 />
                 {(session?.user?.role === "ADMIN" || session?.user?.role === "SITEADMIN") ? (
