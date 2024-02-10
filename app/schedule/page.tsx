@@ -8,16 +8,16 @@ import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
 import CurrentGame from '@/components/currentgame';
 import { Input } from '@nextui-org/react';
-import { Match } from '@/types/Match';
+import { Match } from '@/types/match';
 
 const Dashboard = () => {
     const [eventKey, seteventKey] = useState('2023casf');
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [currentTime, setCurrentTime] = useState(new Date(1679270078*1000));
+    const [currentTime, setCurrentTime] = useState(new Date(1679270078 * 1000));
 
 
-    const setTime= (time: number) => {
+    const setTime = (time: number) => {
         const date = new Date();
         const timee = new Date(time * 1000)
         setCurrentTime(timee);
@@ -32,7 +32,7 @@ const Dashboard = () => {
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    console.debug(data);
                     const sortedMatches = data.sort((a: Match, b: Match) => a.predicted_time - b.predicted_time);
                     setMatches(sortedMatches);
                     setLoading(false);
@@ -43,7 +43,7 @@ const Dashboard = () => {
                 });
         }
     }, [eventKey]);
-    
+
     return (
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
@@ -51,7 +51,7 @@ const Dashboard = () => {
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
                 <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                    <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime}/>} />
+                    <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime} />} />
                 </div>
             </div>
         </main>

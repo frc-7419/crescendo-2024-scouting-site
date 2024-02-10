@@ -8,7 +8,7 @@ import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
 import CurrentGame from '@/components/currentgame';
 import { Input } from '@nextui-org/react';
-import { Match } from '@/types/Match';
+import { Match } from '@/types/match';
 
 const Dashboard = () => {
     const { data: session } = useSession();
@@ -32,7 +32,7 @@ const Dashboard = () => {
             fetch(`/api/bluealliance/getMatches/${eventKey}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    console.debug(data);
                     setMatches(data);
                     setLoading(false);
                 })

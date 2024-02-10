@@ -1,10 +1,13 @@
 'use client';
 
-import { Match } from '@/types/Match';
+import { Match } from '@/types/match';
 import { Scouter, ScoutingSchedule } from '@/types/schedule';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip, Input, Button, Selection, Avatar, Autocomplete, AutocompleteItem } from '@nextui-org/react';
 import { TeamRole } from '@prisma/client';
-import React, { FormEvent, Key, createRef, useEffect, useState } from 'react';
+import { match } from 'assert';
+import React, { FormEvent, Key, createRef, use, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { set } from 'zod';
 
 const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
     const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
@@ -19,7 +22,9 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
     const ref = createRef<HTMLFormElement>();
     const [usersLoading, setUsersLoading] = useState<boolean>(true);
     const roles = ['BLUEONE', 'BLUETWO', 'BLUETHREE', 'REDONE', 'REDTWO', 'REDTHREE'];
-
+    const [submitting, setSubmitting] = useState<boolean>(false);
+    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+    const [arrayInitliazed, setArrayInitialized] = useState<boolean>(false);
     const getUser = (uuid: string) => {
         return users.find((user) => user.uuid === uuid);
     };
@@ -72,7 +77,6 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
         fetchUsers();
     }, []);
 
-
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -100,6 +104,60 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
         updateMatches(updatedMatches);
     };
 
+    const editColumn = (matchId: string, scouters: []) => {
+        const updatedMatches = playerMatches.map((match) => {
+            if (match.key === matchId) {
+                match.alliances.blue.scoutersIDs = [];
+                match.alliances.red.scoutersIDs = [];
+                scouters.forEach((scouter: Scouter, index) => {
+                    console.debug(scouter)
+                    if (scouter.role.includes('BLUE')) {
+                        match.alliances.blue.scoutersIDs.push(scouter.scouterId);
+                        const user = getUser(scouter.scouterId);
+                        if (user) {
+                            match.alliances.blue.scouters.push(user.name);
+                        }
+                    } else {
+                        match.alliances.red.scoutersIDs.push(scouter.scouterId);
+                        const user = getUser(scouter.scouterId);
+                        if (user) {
+                            match.alliances.red.scouters.push(user.name);
+                        }
+                    }
+                })
+            }
+            return match;
+        });
+
+        updateMatches(updatedMatches);
+    };
+
+    const loadData = async () => {
+        if (playerMatches.length < 1) return;
+        if (dataLoaded) return;
+        console.debug("hi")
+        setUsersLoading(true);
+        try {
+            const response = await fetch(`/api/schedule/get?venue=${matches[0].event_key}`)
+            const data = await response.json();
+            const entryArray = Object.entries(data.entries) as [string, { matchID: string; scouters: any }][];
+            entryArray.forEach((entry: [string, { matchID: string; scouters: any }]) => {
+                console.debug(entry)
+                editColumn(entry[1].matchID, entry[1].scouters)
+            });
+            setDataLoaded(true);
+
+        } catch (error) {
+            console.error('Error fetching schedule:', error);
+        }
+        setUsersLoading(false);
+        console.debug(playerMatches, "playerMatches")
+    };
+
+    useEffect(() => {
+        loadData();
+    }, [playerMatches, arrayInitliazed]);
+
     const handleClear = () => {
         const keys = Array.from(selectedKeys)
 
@@ -116,35 +174,63 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
     };
 
     const uploadSchedule = () => {
+        setSubmitting(true);
+        console.debug("Starting Submit")
         let scoutingschedule: { [matchID: string]: ScoutingSchedule } = {};
 
         playerMatches.forEach((match) => {
-            const blueScouters: Scouter[] = match.alliances.blue.scoutersIDs.map((scouter, index) => {
-                return {
-                    scouterId: scouter,
-                    role: roles[index] as TeamRole,
+            if (match.alliances.blue.scouters.length > 0) {
+                const blueScouters: Scouter[] = match.alliances.blue.scoutersIDs.map((scouter, index) => {
+                    return {
+                        scouterId: scouter,
+                        role: roles[index] as TeamRole,
+                    };
+                });
+
+                const redScouters: Scouter[] = match.alliances.red.scoutersIDs.map((scouter, index) => {
+                    return {
+                        scouterId: scouter,
+                        role: roles[index + 3] as TeamRole,
+                    };
+                });
+
+                const entry: ScoutingSchedule = {
+                    matchNumber: match.match_number,
+                    matchID: match.key,
+                    venue: match.event_key,
+                    scouters: [...blueScouters, ...redScouters],
                 };
-            });
 
-            const redScouters: Scouter[] = match.alliances.red.scoutersIDs.map((scouter, index) => {
-                return {
-                    scouterId: scouter,
-                    role: roles[index + 3] as TeamRole,
-                };
-            });
-
-            const entry: ScoutingSchedule = {
-                matchNumber: match.match_number,
-                matchID: match.key,
-                venue: match.event_key,
-                scouters: [...blueScouters, ...redScouters],
-            };
-
-            scoutingschedule[match.key] = entry;
+                scoutingschedule[match.key] = entry;
+            }
         });
 
-        console.log(scoutingschedule)
-        return scoutingschedule;
+        console.debug(scoutingschedule, matches[0].event_key);
+
+        const scheduleData = {
+            venue: matches[0].event_key,
+            entries: scoutingschedule
+        }
+
+        fetch('/api/schedule/set', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(scheduleData),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    toast.success('Schedule Updated');
+                } else {
+                    toast.error('Error Updating Schedule');
+                }
+                setSubmitting(false);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                setSubmitting(false);
+            });
     };
 
     useEffect(() => {
@@ -152,23 +238,16 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
     }, [playerMatches]);
 
     useEffect(() => {
-        console.log(users);
-    }, [users]);
-
-    useEffect(() => {
         const updatedMatches = matches.map((match) => {
             match.alliances.blue.scouters = [];
+            match.alliances.blue.scoutersIDs = [];
             match.alliances.red.scouters = [];
+            match.alliances.red.scoutersIDs = [];
             return match;
         });
         setPlayerMatches(updatedMatches)
+        setArrayInitialized(true)
     }, [matches]);
-
-    /*
-    useEffect(() => {
-        console.log(playerMatches)
-    }, [playerMatches]);
-    */
 
     return (
         <div className="dark:bg-slate-800 bg-slate-200 rounded-lg p-6 mb-6 drop-shadow-lg shadow-inner">
@@ -176,16 +255,16 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                 <form ref={ref} className="flex flex-col p-2 rounded-xl gap-4" onSubmit={handleSubmit}>
                     <div className='align-right flex gap-4 flex-row w-full'>
                         <h1 className="text-2xl font-semibold flex-grow">Scouting Schedule</h1>
-                        <Button variant="bordered" color='primary' type="submit">
+                        <Button variant="bordered" color='primary' type="submit" isDisabled={submitting} isLoading={usersLoading}>
                             Submit
                         </Button>
-                        <Button variant="bordered" color='warning' onClick={() => ref.current?.reset()}>
+                        <Button variant="bordered" color='warning' onClick={() => ref.current?.reset()} isDisabled={submitting} isLoading={usersLoading}>
                             Clear
                         </Button>
-                        <Button variant="bordered" onClick={handleClear} color='danger'>
+                        <Button variant="bordered" onClick={handleClear} color='danger' isDisabled={submitting} isLoading={usersLoading}>
                             Delete
                         </Button>
-                        <Button variant="bordered" color='secondary' onClick={uploadSchedule}>
+                        <Button variant="bordered" color='secondary' onClick={uploadSchedule} isLoading={submitting || usersLoading}>
                             Push Changes
                         </Button>
                     </div>

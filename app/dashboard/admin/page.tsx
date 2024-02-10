@@ -8,7 +8,7 @@ import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
 import CurrentGame from '@/components/currentgame';
 import { Input, Tabs, Tab } from '@nextui-org/react';
-import { Match } from '@/types/Match';
+import { Match } from '@/types/match';
 import { useRouter } from 'next/navigation';
 
 const Dashboard = () => {
@@ -40,7 +40,7 @@ const Dashboard = () => {
     }, [session]);
 
     useEffect(() => {
-        console.log(selectedTab)
+        console.debug(selectedTab)
     }, [selectedTab]);
 
     useEffect(() => {
@@ -48,7 +48,7 @@ const Dashboard = () => {
             fetch(`/api/bluealliance/getMatches/${eventKey}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    console.debug(data);
                     setMatches(data);
                     setLoading(false);
                 })

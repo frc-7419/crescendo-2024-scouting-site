@@ -4,13 +4,10 @@ import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
 import React, { FormEvent, Suspense, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import DashCard from '@/components/templates/dash-card';
-import MatchSchedule from '@/components/schedule';
-import CurrentGame from '@/components/currentgame';
-import { Input, Tabs, Tab, Button } from '@nextui-org/react';
-import { Match } from '@/types/Match';
+import { Match } from '@/types/match';
 import { useRouter } from 'next/navigation';
 import SetScouterSchedule from '@/components/set-scouter-schedule';
+import Toast from "@/components/toast";
 
 const Scouters = () => {
     const router = useRouter();
@@ -44,7 +41,7 @@ const Scouters = () => {
             fetch(`/api/bluealliance/getMatches/${eventKey}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    console.debug(data);
                     setMatches(data);
                     setLoading(false);
                 })
@@ -59,6 +56,7 @@ const Scouters = () => {
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
+            <Toast />
             <div id='dash' className="p-6 flex flex-col">
                 <div id='cards' className="overflow-y-scroll flex-1">
                     <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime} />

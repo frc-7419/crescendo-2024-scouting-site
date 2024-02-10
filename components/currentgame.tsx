@@ -1,8 +1,8 @@
-import { Match } from '@/types/Match';
+import { Match } from '@/types/match';
 import { Spinner } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 
-const getCurrentMatch = (matches: any[], time: any) => {
+const useCurrentMatch = (matches: any[], time: any) => {
     const [match, setMatch] = useState<Match>({} as Match);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
@@ -31,16 +31,16 @@ const getCurrentMatch = (matches: any[], time: any) => {
 };
 
 const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string, loading: boolean, matches: any, time: Date }) => {
-    const { match, isLoading, error } = getCurrentMatch(loading ? [] : matches, time);
+    const { match, isLoading, error } = useCurrentMatch(loading ? [] : matches, time);
     console.debug(error)
 
     const [qmMatchCount, setQmMatchCount] = useState(0);
 
-    useEffect(() => {    
+    useEffect(() => {
         const qmMatches = matches.filter((match: Match) => match.comp_level === 'qm');
         setQmMatchCount(qmMatches.length);
     }, [matches]);
-    
+
     if (loading || isLoading) {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
@@ -64,7 +64,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                 </div>
             </div>
         )
-    } else if(error === "NM00"){
+    } else if (error === "NM00") {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
                 <div className='p-6 currentMatchCard'>
@@ -74,7 +74,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                 </div>
             </div >
         )
-    } else if(error === "NM01"){
+    } else if (error === "NM01") {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
                 <div className='p-6 currentMatchCard'>
@@ -85,7 +85,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
             </div >
         )
     }
-    
+
     else {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
@@ -110,7 +110,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                             </>
                         ) : (
                             match && match.alliances.blue.team_keys.map((teamKey: string) => (
-                                <div className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
+                                <div key={teamKey} className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
                             ))
                         )}
                     </div>
@@ -123,7 +123,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                             </>
                         ) : (
                             match && match.alliances.red.team_keys.map((teamKey: string) => (
-                                <div className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
+                                <div key={teamKey} className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
                             ))
                         )}
                     </div>
