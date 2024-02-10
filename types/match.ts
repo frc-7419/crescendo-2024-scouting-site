@@ -7,6 +7,7 @@ export interface Match {
         surrogate_team_keys: string[];
         team_keys: string[];
         scouters: string[];
+        scoutersIDs: string[];
       };
       red: {
         dq_team_keys: string[];
@@ -14,6 +15,7 @@ export interface Match {
         surrogate_team_keys: string[];
         team_keys: string[];
         scouters: string[];
+        scoutersIDs: string[];
       };
     };
     comp_level: string;

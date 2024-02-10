@@ -9,13 +9,13 @@ datasource db {
   // provider = "sqlite"
   // url      = env("DATABASE_URL")
 
-  // provider          = "postgresql"
-  // url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL") // uses connection pooling
   // directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
   // shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 
-  provider = "postgresql"
-  url      = "postgres://postgres:password@localhost:5432/postgres"
+  // provider = "postgresql"
+  // url      = "postgres://postgres:password@localhost:5432/postgres"
 }
 
 model User {
@@ -26,6 +26,8 @@ model User {
   role         Role           @default(USER)
   ScoutingData ScoutingData[]
   Scouter      Scouter[]
+  hours        ShopHour[]
+  meetings     Meeting[]
 }
 
 enum Role {
@@ -100,7 +102,7 @@ model Misc {
 model ScoutingSchedule {
   id          Int       @id @default(autoincrement())
   matchNumber Int
-  matchID     String
+  matchID     String    @unique
   venue       String
   scouters    Scouter[]
 }
@@ -121,6 +123,35 @@ enum TeamRole {
   REDONE
   REDTWO
   REDTHREE
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model Meeting {
+  id        String   @id @default(uuid())
+  name      String
+  date      DateTime
+  hours     Decimal
+  code      String
+  attendees User[]
+}
+
+model ShopHour {
+  id                 String   @id @default(uuid())
+  user               User     @relation(fields: [userId], references: [id])
+  userId             String
+  hours              Decimal
+  date               DateTime
+  name               String
+  description        String
+  supervisor_name    String
+  supervisor_contact String
+  approved           Boolean  @default(false)
 }
 
 enum Alliance {

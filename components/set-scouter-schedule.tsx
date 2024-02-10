@@ -1,25 +1,30 @@
 'use client';
 
 import { Match } from '@/types/Match';
+import { Scouter, ScoutingSchedule } from '@/types/schedule';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip, Input, Button, Selection, Avatar, Autocomplete, AutocompleteItem } from '@nextui-org/react';
-import React, { FormEvent, createRef, useEffect, useState } from 'react';
-
+import { TeamRole } from '@prisma/client';
+import React, { FormEvent, Key, createRef, useEffect, useState } from 'react';
 
 const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
     const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
     const [playerMatches, setPlayerMatches] = useState<Match[]>([]);
     const [tableKey, setTableKey] = useState<string>('table');
-
+    const [blueOneId, setBlueOne] = useState<Key>('');
+    const [blueTwoId, setBlueTwo] = useState<Key>('');
+    const [blueThreeId, setBlueThree] = useState<Key>('');
+    const [redOneId, setRedOne] = useState<Key>('');
+    const [redTwoId, setRedTwo] = useState<Key>('');
+    const [redThreeId, setRedThree] = useState<Key>('');
     const ref = createRef<HTMLFormElement>();
+    const [usersLoading, setUsersLoading] = useState<boolean>(true);
+    const roles = ['BLUEONE', 'BLUETWO', 'BLUETHREE', 'REDONE', 'REDTWO', 'REDTHREE'];
 
-    const users = [
-        {name: "Jahaanshah Sheikh", uuid: "jahaanshah"},
-        {name: "James Zhang", uuid: "jamesz"},
-        {name: "William Chen", uuid: "willchen"},
-        {name: "Veerrohit Veeravadivel", uuid: "rohitv"},
-        {name: "Adhyayan Singh", uuid: "adhyayan"},
-        {name: "Win Htet Lin", uuid: "win"},
-    ];
+    const getUser = (uuid: string) => {
+        return users.find((user) => user.uuid === uuid);
+    };
+
+    const [users, setUsers] = useState<{ name: string; uuid: string }[]>([]);
 
     const abbreviate_name = (name: string) => {
         const words = name.split(' ');
@@ -47,27 +52,50 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
         });
     };
 
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('/api/users/getusers');
+            const data = await response.json();
+            const users = data.map((user: { name: string, id: string }) => ({
+                name: user.name,
+                uuid: user.id
+            }));
+            // Store the fetched users
+            setUsers(users);
+            setUsersLoading(false)
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
+
         const redOne = formData.get('redOne') as string;
         const redTwo = formData.get('redTwo') as string;
         const redThree = formData.get('redThree') as string;
         const blueOne = formData.get('blueOne') as string;
         const blueTwo = formData.get('blueTwo') as string;
         const blueThree = formData.get('blueThree') as string;
-        const keys = Array.from(selectedKeys)
+        const keys = Array.from(selectedKeys);
 
         const updatedMatches = playerMatches.map((match) => {
             if (keys.includes(match.key)) {
                 match.alliances.blue.scouters = [blueOne, blueTwo, blueThree];
+                match.alliances.blue.scoutersIDs = [blueOneId?.toString() ?? '', blueTwoId?.toString() ?? '', blueThreeId?.toString() ?? ''];
                 match.alliances.red.scouters = [redOne, redTwo, redThree];
+                match.alliances.red.scoutersIDs = [redOneId?.toString() ?? '', redTwoId?.toString() ?? '', redThreeId?.toString() ?? ''];
             }
+
             return match;
         });
-
-
 
         updateMatches(updatedMatches);
     };
@@ -87,9 +115,45 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
         updateMatches(updatedMatches);
     };
 
+    const uploadSchedule = () => {
+        let scoutingschedule: { [matchID: string]: ScoutingSchedule } = {};
+
+        playerMatches.forEach((match) => {
+            const blueScouters: Scouter[] = match.alliances.blue.scoutersIDs.map((scouter, index) => {
+                return {
+                    scouterId: scouter,
+                    role: roles[index] as TeamRole,
+                };
+            });
+
+            const redScouters: Scouter[] = match.alliances.red.scoutersIDs.map((scouter, index) => {
+                return {
+                    scouterId: scouter,
+                    role: roles[index + 3] as TeamRole,
+                };
+            });
+
+            const entry: ScoutingSchedule = {
+                matchNumber: match.match_number,
+                matchID: match.key,
+                venue: match.event_key,
+                scouters: [...blueScouters, ...redScouters],
+            };
+
+            scoutingschedule[match.key] = entry;
+        });
+
+        console.log(scoutingschedule)
+        return scoutingschedule;
+    };
+
     useEffect(() => {
         setTableKey(Math.random().toString());
     }, [playerMatches]);
+
+    useEffect(() => {
+        console.log(users);
+    }, [users]);
 
     useEffect(() => {
         const updatedMatches = matches.map((match) => {
@@ -100,9 +164,11 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
         setPlayerMatches(updatedMatches)
     }, [matches]);
 
+    /*
     useEffect(() => {
         console.log(playerMatches)
     }, [playerMatches]);
+    */
 
     return (
         <div className="dark:bg-slate-800 bg-slate-200 rounded-lg p-6 mb-6 drop-shadow-lg shadow-inner">
@@ -119,7 +185,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                         <Button variant="bordered" onClick={handleClear} color='danger'>
                             Delete
                         </Button>
-                        <Button variant="bordered" color='secondary'>
+                        <Button variant="bordered" color='secondary' onClick={uploadSchedule}>
                             Push Changes
                         </Button>
                     </div>
@@ -127,80 +193,103 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                         <Autocomplete
                             isRequired
                             label="Blue One"
+                            defaultItems={users}
+                            isLoading={usersLoading}
                             name="blueOne"
                             placeholder="User"
                             type="text"
+                            onSelectionChange={setBlueOne}
                         >
-                            {users.map((user) => (
+                            {(user) => (
                                 <AutocompleteItem key={user.uuid} value={user.name}>
                                     {user.name}
                                 </AutocompleteItem>
-                            ))}
+                            )}
                         </Autocomplete>
+
                         <Autocomplete
                             isRequired
                             label="Blue Two"
+                            defaultItems={users}
+                            isLoading={usersLoading}
                             name="blueTwo"
                             placeholder="User"
                             type="text"
+                            onSelectionChange={setBlueTwo}
                         >
-                            {users.map((user) => (
+                            {(user) => (
                                 <AutocompleteItem key={user.uuid} value={user.name}>
                                     {user.name}
                                 </AutocompleteItem>
-                            ))}
+                            )}
                         </Autocomplete>
+
                         <Autocomplete
                             isRequired
                             label="Blue Three"
-                            name="blueThree" 
+                            defaultItems={users}
+                            isLoading={usersLoading}
+                            name="blueThree"
                             placeholder="User"
                             type="text"
+                            onSelectionChange={setBlueThree}
                         >
-                            {users.map((user) => (
+                            {(user) => (
                                 <AutocompleteItem key={user.uuid} value={user.name}>
                                     {user.name}
                                 </AutocompleteItem>
-                            ))}
+                            )}
                         </Autocomplete>
+
                         <Autocomplete
                             isRequired
                             label="Red One"
+                            defaultItems={users}
+                            isLoading={usersLoading}
                             name="redOne"
                             placeholder="User"
                             type="text"
+                            onSelectionChange={setRedOne}
                         >
-                            {users.map((user) => (
+                            {(user) => (
                                 <AutocompleteItem key={user.uuid} value={user.name}>
                                     {user.name}
                                 </AutocompleteItem>
-                            ))}
+                            )}
                         </Autocomplete>
+
                         <Autocomplete
                             isRequired
                             label="Red Two"
+                            defaultItems={users}
+                            isLoading={usersLoading}
                             name="redTwo"
                             placeholder="User"
                             type="text"
+                            onSelectionChange={setRedTwo}
                         >
-                            {users.map((user) => (
+                            {(user) => (
                                 <AutocompleteItem key={user.uuid} value={user.name}>
                                     {user.name}
                                 </AutocompleteItem>
-                            ))}
+                            )}
                         </Autocomplete>
+
                         <Autocomplete
                             isRequired
                             label="Red Three"
-                            name="redThree" 
+                            defaultItems={users}
+                            isLoading={usersLoading}
+                            name="redThree"
                             placeholder="User"
                             type="text"
+                            onSelectionChange={setRedThree}
                         >
-                            {users.map((user) => (
+                            {(user) => (
                                 <AutocompleteItem key={user.uuid} value={user.name}>
                                     {user.name}
                                 </AutocompleteItem>
-                            ))}
+                            )}
                         </Autocomplete>
                     </div>
                 </form>
@@ -274,7 +363,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                                                                             />
                                                                         }
                                                                     >
-                                                                        {abbreviate_name(item.alliances.blue.scouters[index])}
+                                                                        {abbreviate_name(item.alliances.red.scouters[index])}
                                                                     </Chip>
                                                                 </>
                                                             )}

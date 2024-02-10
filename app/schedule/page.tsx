@@ -2,7 +2,6 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import { Main } from 'next/document';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
