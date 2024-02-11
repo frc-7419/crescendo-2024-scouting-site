@@ -11,7 +11,7 @@ import Image from 'next/image';
 
 export default function LoginForm() {
   const router = useRouter();
-  
+
   const [isDark, setIsDark] = useState(false);
   const { theme } = useTheme();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -51,7 +51,7 @@ export default function LoginForm() {
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 dark:bg-slate-950">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <Image
+        <img
           className="mx-auto h-12"
           src={isDark ? logoLight.src : logoDark.src}
           alt="Tech Support"
@@ -103,7 +103,7 @@ export default function LoginForm() {
           </div>
 
           <div>
-          <button
+            <button
               type="submit"
               disabled={isAuthenticating} // Disable button when authenticating
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-600"

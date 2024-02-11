@@ -10,13 +10,11 @@ export async function GET(
 ) {
     const session = await getServerSession(authOptions);
 
-    /*
     if (!session) {
         return new Response('You must be logged in. Session Invalid.', {
             status: 401,
         });
     }
-    */
 
     if (request.method !== "GET") return new Response("Oops, Invalid Method.", {
         status: 400,
@@ -24,8 +22,8 @@ export async function GET(
 
     const schedules = await prisma.scouter.findMany({
         where: {
-            // scouterId: session?.user?.id,
-            scouterId: '94af928c-26ae-42e1-9ecb-e0428cfcd9f1'
+            scouterId: session?.user?.id,
+            // scouterId: '94af928c-26ae-42e1-9ecb-e0428cfcd9f1'
         },
         include: {
             ScoutingSchedule: true,

@@ -25,25 +25,32 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
         let team;
         let alliance;
         if (shift) {
-            switch (shift.role) {
+            console.log(shift.role)
+            switch (shift.role as string) {
                 case "BLUEONE":
                     team = match.alliances.blue.team_keys[0];
                     alliance = "Blue Alliance";
+                    break;
                 case "BLUETWO":
                     team = match.alliances.blue.team_keys[1];
                     alliance = "Blue Alliance";
+                    break;
                 case "BLUETHREE":
                     team = match.alliances.blue.team_keys[2];
                     alliance = "Blue Alliance";
+                    break;
                 case "REDONE":
                     team = match.alliances.red.team_keys[0];
                     alliance = "Red Alliance";
+                    break;
                 case "REDTWO":
                     team = match.alliances.red.team_keys[1];
                     alliance = "Red Alliance";
+                    break;
                 case "REDTHREE":
                     team = match.alliances.red.team_keys[2];
                     alliance = "Red Alliance";
+                    break;
             }
         }
         const scoutedTeam = {
@@ -51,6 +58,7 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
             alliance: alliance
         };
 
+        console.log(scoutedTeam)
         return scoutedTeam
 
     }

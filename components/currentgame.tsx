@@ -3,6 +3,7 @@ import { Spinner } from '@nextui-org/react';
 import { Scouter } from '@/types/schedule';
 import React, { useEffect, useState } from 'react';
 import { boolean } from 'zod';
+import next from 'next';
 
 const useCurrentMatch = (matches: any[], time: any) => {
     const [match, setMatch] = useState<Match>({} as Match);
@@ -36,7 +37,7 @@ const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName:
     const { match, isLoading, error } = useCurrentMatch(loading ? [] : matches, time);
     const [nextUserShift, setUserNextShift] = useState<Scouter>();
     const [tickTock, setTickTock] = useState<boolean>(false);
-
+    const [shiftNumber, setShiftNumber] = useState<number>(0);
     const toggleTickTock = () => {
         setTickTock(!tickTock);
     };
@@ -74,7 +75,7 @@ const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName:
 
     useEffect(() => {
         getNextShift();
-    }, [shifts]);
+    }, [shifts, time]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -83,6 +84,12 @@ const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName:
         return () => clearInterval(interval);
     }, []);
 
+
+    useEffect(() => {
+        if (nextUserShift) {
+            setShiftNumber(nextUserShift.ScoutingSchedule?.matchNumber as number)
+        }
+    }, [nextUserShift]);
     if (loading || isLoading) {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
