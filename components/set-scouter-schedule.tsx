@@ -25,6 +25,9 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
     const [arrayInitliazed, setArrayInitialized] = useState<boolean>(false);
+    const [requested, setRequested] = useState<boolean>(false);
+    const [usersRequested, setUsersRequested] = useState<boolean>(false);
+
     const getUser = (uuid: string) => {
         return users.find((user) => user.uuid === uuid);
     };
@@ -58,6 +61,9 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
     };
 
     const fetchUsers = async () => {
+        if (users.length > 0) return;
+        if (usersRequested) return;
+        setUsersRequested(true);
         try {
             const response = await fetch('/api/users/getusers');
             const data = await response.json();
@@ -71,6 +77,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
         } catch (error) {
             console.error('Error fetching users:', error);
         }
+        setUsersRequested(false);
     };
 
     useEffect(() => {
@@ -133,8 +140,12 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
     };
 
     const loadData = async () => {
+        if (requested) return;
         if (playerMatches.length < 1) return;
+        if (users.length < 1) return;
         if (dataLoaded) return;
+        setRequested(true);
+
         console.debug("hi")
         setUsersLoading(true);
         try {
@@ -142,7 +153,6 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
             const data = await response.json();
             const entryArray = Object.entries(data.entries) as [string, { matchID: string; scouters: any }][];
             entryArray.forEach((entry: [string, { matchID: string; scouters: any }]) => {
-                console.debug(entry)
                 editColumn(entry[1].matchID, entry[1].scouters)
             });
             setDataLoaded(true);
@@ -151,12 +161,13 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
             console.error('Error fetching schedule:', error);
         }
         setUsersLoading(false);
+        setRequested(false);
         console.debug(playerMatches, "playerMatches")
     };
 
     useEffect(() => {
         loadData();
-    }, [playerMatches, arrayInitliazed]);
+    }, [users, playerMatches]);
 
     const handleClear = () => {
         const keys = Array.from(selectedKeys)

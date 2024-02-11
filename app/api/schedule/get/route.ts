@@ -13,13 +13,12 @@ export async function GET(
     const searchParams = request.nextUrl.searchParams
     const venue = searchParams.get('venue') as string;
 
-    /*
     if (!session) {
         return new Response('You must be logged in. Session Invalid.', {
             status: 401,
         });
     }
-    */
+
     if (request.method !== "GET") return new Response("Oops, Invalid Method.", {
         status: 400,
     });

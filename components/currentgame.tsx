@@ -1,6 +1,8 @@
 import { Match } from '@/types/match';
 import { Spinner } from '@nextui-org/react';
+import { Scouter } from '@/types/schedule';
 import React, { useEffect, useState } from 'react';
+import { boolean } from 'zod';
 
 const useCurrentMatch = (matches: any[], time: any) => {
     const [match, setMatch] = useState<Match>({} as Match);
@@ -30,8 +32,15 @@ const useCurrentMatch = (matches: any[], time: any) => {
     return { match, isLoading, error };
 };
 
-const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string, loading: boolean, matches: any, time: Date }) => {
+const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName: string, loading: boolean, matches: Match[], time: Date, shifts: Scouter[] }) => {
     const { match, isLoading, error } = useCurrentMatch(loading ? [] : matches, time);
+    const [nextUserShift, setUserNextShift] = useState<Scouter>();
+    const [tickTock, setTickTock] = useState<boolean>(false);
+
+    const toggleTickTock = () => {
+        setTickTock(!tickTock);
+    };
+
     console.debug(error)
 
     const [qmMatchCount, setQmMatchCount] = useState(0);
@@ -40,6 +49,39 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
         const qmMatches = matches.filter((match: Match) => match.comp_level === 'qm');
         setQmMatchCount(qmMatches.length);
     }, [matches]);
+
+    const getNextShift = () => {
+        console.log(shifts)
+        if (shifts) {
+            const nextShift = shifts.find((shift) => {
+                const match = matches.find((match) => match.key === shift.ScoutingSchedule?.matchID);
+                if (match) {
+                    const matchDate = new Date(match.predicted_time * 1000)
+                    console.log(matchDate, time);
+                    if (matchDate > time) { return shift; }
+                }
+            });
+
+            if (nextShift) {
+                setUserNextShift(nextShift);
+            } else {
+                setUserNextShift(undefined);
+            }
+        } else {
+            setUserNextShift(undefined);
+        }
+    }
+
+    useEffect(() => {
+        getNextShift();
+    }, [shifts]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            toggleTickTock();
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     if (loading || isLoading) {
         return (
@@ -98,7 +140,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                                 `Semi-Finals ${match.set_number}` :
                                 `Finals ${match.match_number}`
                     }</p>
-                    <p className="nextShift text-2xl font-semibold align-bottom">Your next shift is Qual 69</p>
+                    <p className="nextShift text-2xl font-semibold align-bottom">{nextUserShift ? (`Your next shift is Qual ${nextUserShift.ScoutingSchedule?.matchNumber}`) : ('No Upcoming Shifts.')}</p>
                 </div>
                 <div className='allianceView flex flex-col justify-between flex-grow mr-6'>
                     <div className="blueAllianceView bg-blue-600/60 h-20 rounded-b-lg items-center">

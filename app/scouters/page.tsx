@@ -17,9 +17,8 @@ const Scouters = () => {
 
     const [eventKey, seteventKey] = useState('2023cafr');
     const [matches, setMatches] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date(1678554428 * 1000));
-
     const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
 
     useEffect(() => {
@@ -37,6 +36,9 @@ const Scouters = () => {
     }, [session]);
 
     useEffect(() => {
+        if (loading) return;
+        console.log(loading)
+        setLoading(true);
         if (eventKey) {
             fetch(`/api/bluealliance/getMatches/${eventKey}`)
                 .then(response => response.json())

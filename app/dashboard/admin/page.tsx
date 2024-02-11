@@ -10,11 +10,14 @@ import CurrentGame from '@/components/currentgame';
 import { Input, Tabs, Tab } from '@nextui-org/react';
 import { Match } from '@/types/match';
 import { useRouter } from 'next/navigation';
+import ScouterSchedule from '@/components/scouter-schedule';
+import AdminMatchSchedule from '@/components/scheduleAdmin';
 
 const Dashboard = () => {
     const router = useRouter();
     const { data: session } = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
+    const [shifts, setShifts] = useState([]);
 
 
     const [eventKey, seteventKey] = useState('2023cafr');
@@ -59,6 +62,17 @@ const Dashboard = () => {
         }
     }, [eventKey]);
 
+    const getShifts = async () => {
+        const response = await fetch(`/api/schedule/user/get`);
+        const data = await response.json();
+        setShifts(data);
+        console.log(shifts);
+    };
+
+    useEffect(() => {
+        getShifts();
+    }, []);
+
     return (
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
@@ -78,8 +92,9 @@ const Dashboard = () => {
                     </Tabs>
                 </div>
                 <div id='cards' className="mt-4 overflow-y-auto flex-1 ">
-                    <CurrentGame matches={matches} loading={loading} eventName="Arizona East Regionals" time={currentTime} />
-                    <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime} />} />
+                    <CurrentGame matches={matches} loading={loading} eventName="Arizona East Regionals" time={currentTime} shifts={shifts} />
+
+                    {selectedTab === "admin" ? (<DashCard title="Scouting Schedule" content={<AdminMatchSchedule matches={matches} loading={loading} time={currentTime} />} />) : (<DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />)}
                 </div>
             </div>
         </main>
