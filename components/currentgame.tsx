@@ -147,7 +147,17 @@ const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName:
                                 `Semi-Finals ${match.set_number}` :
                                 `Finals ${match.match_number}`
                     }</p>
-                    <p className="nextShift text-2xl font-semibold align-bottom">{nextUserShift ? (`Your next shift is Qual ${nextUserShift.ScoutingSchedule?.matchNumber}`) : ('No Upcoming Shifts.')}</p>
+                    <p className="nextShift text-2xl font-semibold align-bottom">
+                        {nextUserShift ? (
+                            nextUserShift.ScoutingSchedule?.matchNumber === match.match_number ? (
+                                'Your next shift is NOW'
+                            ) : (
+                                `Your next shift is Qual ${nextUserShift.ScoutingSchedule?.matchNumber}`
+                            )
+                        ) : (
+                            'No Upcoming Shifts.'
+                        )}
+                    </p>
                 </div>
                 <div className='allianceView flex flex-col justify-between flex-grow mr-6'>
                     <div className="blueAllianceView bg-blue-600/60 h-20 rounded-b-lg items-center">
