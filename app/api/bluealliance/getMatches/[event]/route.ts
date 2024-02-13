@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Match } from "@/types/Match";
+import { Match } from "@/types/match";
 
 export async function GET(
   request: Request,

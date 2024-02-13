@@ -1,6 +1,6 @@
 'use client';
 
-import { Match } from '@/types/Match';
+import { Match } from '@/types/match';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 
@@ -50,7 +50,7 @@ const MatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: 
                                         <TableCell>
                                             <div className='flex flex-row justify-between'>
                                                 {item.alliances.blue.team_keys.map((teamKey) => (
-                                                    <div className='w-28 text-center'>
+                                                    <div className='w-28 text-center' key={teamKey}>
                                                         <Chip color="primary">
                                                             {teamKey.replace("frc", "")}
                                                         </Chip>
@@ -61,7 +61,7 @@ const MatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: 
                                         <TableCell>
                                             <div className='flex flex-row justify-between'>
                                                 {item.alliances.red.team_keys.map((teamKey) => (
-                                                    <div className='w-28 text-center'>
+                                                    <div className='w-28 text-center' key={teamKey}>
                                                         <Chip color="danger">
                                                             {teamKey.replace("frc", "")}
                                                         </Chip>

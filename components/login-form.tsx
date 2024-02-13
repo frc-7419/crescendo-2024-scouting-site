@@ -7,10 +7,11 @@ import { useRouter } from 'next/navigation';
 import { signIn, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { toast } from 'react-hot-toast';
+import Image from 'next/image';
 
 export default function LoginForm() {
   const router = useRouter();
-  
+
   const [isDark, setIsDark] = useState(false);
   const { theme } = useTheme();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -102,7 +103,7 @@ export default function LoginForm() {
           </div>
 
           <div>
-          <button
+            <button
               type="submit"
               disabled={isAuthenticating} // Disable button when authenticating
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-600"

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Team } from '@/types/Team';
 const BlueAllianceComponent = () => {
-    const [teamKey, setTeamKey] = useState('frc254'); 
+    const [teamKey, setTeamKey] = useState('frc254');
     const [data, setData] = useState<Team>({} as Team);
 
     useEffect(() => {
@@ -13,12 +13,12 @@ const BlueAllianceComponent = () => {
                     'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setData(data);
-            })
-            .catch(error => console.error(error));
+                .then(response => response.json())
+                .then(data => {
+                    console.debug(data);
+                    setData(data);
+                })
+                .catch(error => console.error(error));
         }
     }, [teamKey]);
 
@@ -42,5 +42,5 @@ const BlueAllianceComponent = () => {
             )}
         </div>
     );
-            }
+}
 export default BlueAllianceComponent;

@@ -1,8 +1,11 @@
-import { Match } from '@/types/Match';
+import { Match } from '@/types/match';
 import { Spinner } from '@nextui-org/react';
+import { Scouter } from '@/types/schedule';
 import React, { useEffect, useState } from 'react';
+import { boolean } from 'zod';
+import next from 'next';
 
-const getCurrentMatch = (matches: any[], time: any) => {
+const useCurrentMatch = (matches: any[], time: any) => {
     const [match, setMatch] = useState<Match>({} as Match);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
@@ -30,17 +33,63 @@ const getCurrentMatch = (matches: any[], time: any) => {
     return { match, isLoading, error };
 };
 
-const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string, loading: boolean, matches: any, time: Date }) => {
-    const { match, isLoading, error } = getCurrentMatch(loading ? [] : matches, time);
+const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName: string, loading: boolean, matches: Match[], time: Date, shifts: Scouter[] }) => {
+    const { match, isLoading, error } = useCurrentMatch(loading ? [] : matches, time);
+    const [nextUserShift, setUserNextShift] = useState<Scouter>();
+    const [tickTock, setTickTock] = useState<boolean>(false);
+    const [shiftNumber, setShiftNumber] = useState<number>(0);
+    const toggleTickTock = () => {
+        setTickTock(!tickTock);
+    };
+
     console.debug(error)
 
     const [qmMatchCount, setQmMatchCount] = useState(0);
 
-    useEffect(() => {    
+    useEffect(() => {
         const qmMatches = matches.filter((match: Match) => match.comp_level === 'qm');
         setQmMatchCount(qmMatches.length);
     }, [matches]);
-    
+
+    const getNextShift = () => {
+        console.log(shifts)
+        if (shifts) {
+            const nextShift = shifts.find((shift) => {
+                const match = matches.find((match) => match.key === shift.ScoutingSchedule?.matchID);
+                if (match) {
+                    const matchDate = new Date(match.predicted_time * 1000)
+                    console.log(matchDate, time);
+                    if (matchDate > time) { return shift; }
+                }
+            });
+
+            if (nextShift) {
+                setUserNextShift(nextShift);
+            } else {
+                setUserNextShift(undefined);
+            }
+        } else {
+            setUserNextShift(undefined);
+        }
+    }
+
+    useEffect(() => {
+        getNextShift();
+    }, [shifts, time]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            toggleTickTock();
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+
+    useEffect(() => {
+        if (nextUserShift) {
+            setShiftNumber(nextUserShift.ScoutingSchedule?.matchNumber as number)
+        }
+    }, [nextUserShift]);
     if (loading || isLoading) {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
@@ -64,7 +113,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                 </div>
             </div>
         )
-    } else if(error === "NM00"){
+    } else if (error === "NM00") {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
                 <div className='p-6 currentMatchCard'>
@@ -74,7 +123,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                 </div>
             </div >
         )
-    } else if(error === "NM01"){
+    } else if (error === "NM01") {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
                 <div className='p-6 currentMatchCard'>
@@ -85,7 +134,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
             </div >
         )
     }
-    
+
     else {
         return (
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg mt-6 mb-6 drop-shadow-lg shadow-inner flex flex-row">
@@ -98,7 +147,17 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                                 `Semi-Finals ${match.set_number}` :
                                 `Finals ${match.match_number}`
                     }</p>
-                    <p className="nextShift text-2xl font-semibold align-bottom">Your next shift is Qual 69</p>
+                    <p className="nextShift text-2xl font-semibold align-bottom">
+                        {nextUserShift ? (
+                            nextUserShift.ScoutingSchedule?.matchNumber === match.match_number ? (
+                                'Your next shift is NOW'
+                            ) : (
+                                `Your next shift is Qual ${nextUserShift.ScoutingSchedule?.matchNumber}`
+                            )
+                        ) : (
+                            'No Upcoming Shifts.'
+                        )}
+                    </p>
                 </div>
                 <div className='allianceView flex flex-col justify-between flex-grow mr-6'>
                     <div className="blueAllianceView bg-blue-600/60 h-20 rounded-b-lg items-center">
@@ -110,7 +169,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                             </>
                         ) : (
                             match && match.alliances.blue.team_keys.map((teamKey: string) => (
-                                <div className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
+                                <div key={teamKey} className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
                             ))
                         )}
                     </div>
@@ -123,7 +182,7 @@ const CurrentGame = ({ eventName, loading, matches, time }: { eventName: string,
                             </>
                         ) : (
                             match && match.alliances.red.team_keys.map((teamKey: string) => (
-                                <div className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
+                                <div key={teamKey} className="flex-grow text-center text-2xl">{teamKey.replace("frc", "")}</div>
                             ))
                         )}
                     </div>

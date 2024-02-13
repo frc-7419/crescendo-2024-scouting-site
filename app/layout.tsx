@@ -5,7 +5,8 @@ import { Providers } from "./providers";
 
 const alata = Alata({
   subsets: ["latin"],
-  weight: "400"
+  weight: "400",
+  display: 'swap'
 });
 
 export const metadata: Metadata = {
