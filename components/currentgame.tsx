@@ -2,7 +2,7 @@ import { Match } from '@/types/match';
 import { Spinner } from '@nextui-org/react';
 import { Scouter } from '@/types/schedule';
 import React, { useEffect, useState } from 'react';
-import { boolean } from 'zod';
+// import { boolean } from 'zod';
 import next from 'next';
 
 const useCurrentMatch = (matches: any[], time: any) => {

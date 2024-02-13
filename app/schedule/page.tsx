@@ -51,7 +51,7 @@ const Dashboard = () => {
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
                 <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                    <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime} />} />
+                    <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime} />} size="text-2xl font-semibold" />
                 </div>
             </div>
         </main>
