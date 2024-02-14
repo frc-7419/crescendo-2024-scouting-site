@@ -5,6 +5,7 @@ import { Scouter } from '@/types/schedule';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip } from '@nextui-org/react';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 
@@ -109,7 +110,7 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
                                         </TableCell>
                                         <TableCell>
                                             {/* waiting for form component */}
-                                            <p className='text-center'>Open Form</p>
+                                            <Link href={`/scouting/${item.key}`} className='text-center'>Open Form</Link>
                                         </TableCell>
                                         <TableCell>
                                             <button>
