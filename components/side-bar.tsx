@@ -17,7 +17,7 @@ export default function SideBar() {
         return (
             <Link
                 href={route}
-                className={`flex items-center gap-4 my-auto text-md py-5 ${colorClass}`}
+                className={`transition-colors flex items-center gap-4 my-auto text-md py-5 ${colorClass}`}
             >
                 <div className="text-3xl w-[30px]">
                     {icon}

@@ -181,7 +181,14 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
                             >
                                 {(item) => (
                                     <TableRow key={item.key}>
-                                        <TableCell>Qual {item.match_number}</TableCell>
+                                        <TableCell>
+                                            {
+                                                item.comp_level === 'qm' ?
+                                                    `Qual ${item.match_number}` :
+                                                    item.comp_level === 'sf' ?
+                                                        `Semi-Finals ${item.set_number}` :
+                                                        `Finals ${item.match_number}`
+                                            }</TableCell>
                                         <TableCell>{new Date(item.predicted_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</TableCell>
                                         <TableCell>
                                             <div className='flex flex-row justify-between'>
