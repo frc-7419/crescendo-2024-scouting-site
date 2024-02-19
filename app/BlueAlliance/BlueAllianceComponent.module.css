@@ -1,0 +1,35 @@
+.blueAllianceContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.blueAllianceContainer input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.blueAllianceContainer select {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.blueAllianceContainer h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.blueAllianceContainer p {
+    margin-bottom: 5px;
+}
+
+.blueAllianceContainer a {
+    color: blue;
+    text-decoration: none;
+}
+
+.blueAllianceContainer a:hover {
+    text-decoration: underline;
+}

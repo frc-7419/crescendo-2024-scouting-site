@@ -26,8 +26,8 @@ export default function SideBar() {
                     {name}
                 </div>
             </Link>
-        )
-    }
+        );
+    };
 
     return (
         <div id='sidebar' className='flex flex-col dark:bg-slate-900 bg-slate-100 p-6'>
@@ -62,7 +62,12 @@ export default function SideBar() {
                         />
                     </>
                 ) : null}
+                <MenuItem
+                    name= "Blue Alliance"
+                    route="/BlueAlliance"
+                    icon={<FontAwesomeIcon icon={faHandPaper} />}
+                />
             </div>
         </div>
-    )
+    );
 }
