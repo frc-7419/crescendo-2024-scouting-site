@@ -56,7 +56,9 @@ const BlueAllianceComponent: React.FC = () => {
     };
 
     return (
-        <><SideBar /><NavBar /><div className={styles.blueAllianceContainer}>
+        <main className="h-screen overflow-clip dark:bg-slate-950">
+        <SideBar />
+        <NavBar /><div className={styles.blueAllianceContainer}>
             <input
                 type="text"
                 value={teamNumber}
@@ -99,7 +101,7 @@ const BlueAllianceComponent: React.FC = () => {
                 <p>No data available. Please enter a valid team number.</p>
             )}
         </div></>
-    );
+        </main>   );
 }
 
 export default BlueAllianceComponent;
