@@ -96,9 +96,6 @@ async function createTestUser() {
     }
 }
 
-// Call the function to create the test user
-createTestUser();
-
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST, authOptions };

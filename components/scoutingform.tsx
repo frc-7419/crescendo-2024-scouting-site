@@ -1,66 +1,113 @@
 import { ScoutingFormData } from '@/types/form';
-import { Checkbox } from '@nextui-org/react';
-import React from 'react';
+import { Autocomplete, AutocompleteItem, Button, Checkbox, Input, Textarea } from '@nextui-org/react';
+import React, { FormEvent } from 'react';
 import frcMap from '@/resources/frcmap.png';
 import Image from 'next/image';
 
 const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
-    const ScoutModule = ({ text, key }: { text: string, key: string }) => {
+    const ScoutModule = ({ text, key, type, className, items = [], min, max }: { text: string, key: string, type: string, className?: string, items?: { key: string, value: string }[], min?: number, max?: number }) => {
         return (
-            <div className='pt-4 pb-4 pr-4 flex justify-between items-center'>
+            <div className={`${className} pt-4 pb-4 pr-4 flex justify-between items-center`}>
                 <p>{text}</p>
-                <Checkbox key={key} color="primary"></Checkbox>
+                {type === 'checkbox' && <Checkbox key={key} color="primary"></Checkbox>}
+                {type === 'number' && <Input required className="w-25" variant='bordered' key={key} type="number" />}
+                {type === 'dropdown' && (
+                    <Autocomplete
+                        label={text}
+                        required
+                        className="max-w-xs"
+                    >
+                        {items?.map(({ key: itemKey, value: itemValue }) => (
+                            <AutocompleteItem key={itemKey} value={itemValue}>
+                                {itemValue}
+                            </AutocompleteItem>
+                        ))}
+                    </Autocomplete>
+                )}
+                {type === 'datetime' && <Input required className="w-25" variant='bordered' key={key} type="datetime-local" />}
+                {type === 'range' && <Input required className="w-25" variant='bordered' key={key} type="range" min={min} max={max} />}
+            </div>
+        )
+    }
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        console.log(formData);
+    }
+    const ScoutCommentModule = ({ text, key }: { text: string, key: string }) => {
+        return (
+            <div className='pt-4 pb-4 col-start-1 col-end-3'>
+                <p className='pb-4'>{text}</p>
+                <Textarea variant="faded" key={key} />
             </div>
         )
     }
     return (
         <div className="dark:bg-slate-800 bg-slate-200 rounded-lg p-6 mb-6 drop-shadow-lg shadow-inner">
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className='pb-4'>
                     <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Auton</h1>
-                    <div className="grid grid-cols-2 grid-rows-8 text-3xl font-thin gap-4">
-                        <ScoutModule text="Has Preload" key="preload" />
-                        <div className='pt-4 pb-4 pr-4 row-start-1 row-end-5 col-start-2 col-end-3'>
+                    <div className="grid grid-cols-2 grid-rows-4 text-3xl font-thin">
+                        <ScoutModule text="Has Preload" key="preload" type='checkbox' />
+                        <div className='pt-4 pb-4 pr-4 row-start-1 row-end-3 col-start-2 col-end-3'>
                             <Image src={frcMap.src} alt="FRC Map" width={frcMap.width} height={frcMap.height} />
                         </div>
-                        <ScoutModule text="Left Community" key="leftCommunity" />
-                        <ScoutModule text="Left Community" key="leftCommunity" />
-                        <ScoutModule text="Left Community" key="leftCommunity" />
-                        <ScoutModule text="Left Community" key="leftCommunity" />
-                        <ScoutModule text="Left Community" key="leftCommunity" />
-
+                        <ScoutModule text="Left Community" key="leftCommunity" type='checkbox' />
+                        <ScoutModule text="Speaker" key="speaker" type='number' />
+                        <ScoutModule className="pl-4" text="Amp" key="amp" type='number' />
+                        <ScoutCommentModule text="Comments" key="comments" />
                     </div>
                 </div>
                 <div className='pb-4'>
                     <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Teleop</h1>
-                    <div className="grid grid-cols-2 text-2xl">
-                        <p>1</p>
-                        <p>2</p>
-                        <p>3</p>
-                        <p>4</p>
-                        <p>5</p>
-                        <p>6</p>
-                        <p>7</p>
-                        <p>8</p>
-                        <p>9</p>
-                        <p>10</p>
+                    <div className="grid grid-cols-2 grid-rows-7 text-3xl font-thin">
+                        <ScoutModule text="Defensive" key="defensive" type='checkbox' />
+                        <ScoutModule className="pl-4" text="Intake" key="intake" type='dropdown' items={
+                            [
+                                { key: 'OTB', value: 'Over the Bumper' },
+                                { key: 'UTB', value: 'Under the Bumper' },]
+                        } />
+                        <ScoutModule text="Amp" key="amp" type='number' />
+                        <ScoutModule className="pl-4" text="Speaker" key="speaker" type='number' />
+                        <ScoutModule text="Times Amped" key="timesAmped" type='number' />
+                        <ScoutModule className="pl-4" text="Pickup From" key="pickupFrom" type='dropdown' items={[
+                            { key: 'FLOOR', value: 'Floor' },
+                            { key: 'SOURCE', value: 'Source' },
+                            { key: 'BOTH', value: 'Both' },
+                            { key: 'NOT_ATTEMPTED', value: 'Did Not Attempt' },
+                        ]} />
+                        <ScoutModule text="Is Disabled" key="isDisabled" type='checkbox' />
+                        <ScoutModule className="pl-4" text="Disabled At" key="disabledAt" type='datetime' />
+                        <ScoutModule text="Is Hanging" key="isHanging" type='checkbox' />
+                        <ScoutModule className="pl-4" text="Trap" key="trap" type='number' />
+                        <ScoutModule text="Spot Light" key="spotLight" type='checkbox' />
+                        <ScoutCommentModule text="Comments" key="comments" />
                     </div>
                 </div>
                 <div className='pb-4'>
                     <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Misc</h1>
-                    <div className="grid grid-cols-2 text-2xl">
-                        <p>1</p>
-                        <p>2</p>
-                        <p>3</p>
-                        <p>4</p>
-                        <p>5</p>
-                        <p>6</p>
-                        <p>7</p>
-                        <p>8</p>
-                        <p>9</p>
-                        <p>10</p>
+                    <div className="grid grid-cols-2 grid-rows-2 text-3xl font-thin">
+                        <ScoutModule text="Defense" key="defense" type='dropdown' items={[
+                            { key: '0', value: 'Did Not Play Defense' },
+                            { key: '1', value: 'Poor' },
+                            { key: '2', value: 'Fair' },
+                            { key: '3', value: 'Good' },
+                            { key: '4', value: 'Excellent' },
+                        ]} />
+                        <ScoutModule text="Reliability" key="reliability" type='dropdown' items={[
+                            { key: '1', value: '1 - Dropped Many Notes, Unstable Cycle Times' },
+                            { key: '2', value: '2 - Some Drops, Inconsistent Cycle Times' },
+                            { key: '3', value: '3 - Few Drops, Fairly Consistent Cycle Times' },
+                            { key: '4', value: '4 - Rare Drops, Consistent Cycle Times' },
+                            { key: '5', value: '5 - No Drops, Consistent Cycle Times' }
+                        ]} />
+                        <ScoutCommentModule text="Comments" key="comments" />
                     </div>
                 </div>
+                <Button fullWidth color="primary" size="lg" variant="shadow" type='submit'>
+                    Submit
+                </Button>
             </form >
         </div >
     )
