@@ -6,14 +6,14 @@ import SideBar from '@/components/side-bar';
 import { Event } from '@/types/Event';
 import { Team } from '@/types/Team';
 import '@/app/globals.css';
-import styles from './BlueAllianceComponent.module.css'; // Import CSS module for component-specific styles
+import styles from './BlueAllianceComponent.module.css'; 
 
 const BlueAllianceComponent: React.FC = () => {
     const [teamNumber, setTeamNumber] = useState('');
     const [teamData, setTeamData] = useState<Team | null>(null);
     const [teamEvents, setTeamEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(false);
-    const [selectedSeason, setSelectedSeason] = useState<string>('2024'); // Default selected season
+    const [selectedSeason, setSelectedSeason] = useState<string>('2024'); 
 
     useEffect(() => {
         if (teamNumber && /^\d+$/.test(teamNumber)) {
