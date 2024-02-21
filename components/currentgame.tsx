@@ -52,13 +52,13 @@ const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName:
     }, [matches]);
 
     const getNextShift = () => {
-        console.log(shifts)
+        console.debug(shifts)
         if (shifts) {
             const nextShift = shifts.find((shift) => {
                 const match = matches.find((match) => match.key === shift.ScoutingSchedule?.matchID);
                 if (match) {
                     const matchDate = new Date(match.predicted_time * 1000)
-                    console.log(matchDate, time);
+                    console.debug(matchDate, time);
                     if (matchDate > time) { return shift; }
                 }
             });

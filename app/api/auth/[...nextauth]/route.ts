@@ -87,9 +87,9 @@ async function createTestUser() {
                 data: testUserData,
             });
 
-            console.log("Test user created:", createdUser);
+            console.debug("Test user created:", createdUser);
         } else {
-            console.log("Test user already exists:", existingUser);
+            console.debug("Test user already exists:", existingUser);
         }
     } catch (error) {
         console.error("Error creating test user:", error);

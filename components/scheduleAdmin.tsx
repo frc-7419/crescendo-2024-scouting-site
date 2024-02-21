@@ -3,10 +3,13 @@
 import { Match } from '@/types/match';
 import { Scouter } from '@/types/schedule';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip, Avatar } from '@nextui-org/react';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { LoadStatusContext } from './LoadStatusContext';
+import axios from 'axios';
 
 
 const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
+    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
     const [playerMatches, setPlayerMatches] = useState<Match[]>([]);
     const [tableKey, setTableKey] = useState<string>('table');
 
@@ -55,8 +58,15 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
         if (usersRequested) return;
         setUsersRequested(true);
         try {
-            const response = await fetch('/api/users/getusers');
-            const data = await response.json();
+            const response = await axios.get('/api/users/getusers', {
+                onDownloadProgress: (progressEvent) => {
+                    let percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                    );
+                    setValue(percentCompleted);
+                }
+            });
+            const data = await response.data;
             const users = data.map((user: { name: string, id: string }) => ({
                 name: user.name,
                 uuid: user.id
@@ -72,6 +82,7 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
 
     useEffect(() => {
         fetchUsers();
+        setValue(0);
     }, []);
 
     const editColumn = (matchId: string, scouters: []) => {
@@ -104,7 +115,7 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
 
 
     const loadData = async () => {
-        console.log(requested, playerMatches.length, users.length, dataLoaded)
+        console.debug(requested, playerMatches.length, users.length, dataLoaded)
         if (requested) return;
         if (playerMatches.length < 1) return;
         if (users.length < 1) return;
@@ -114,8 +125,15 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
         console.debug("hi")
         setUsersLoading(true);
         try {
-            const response = await fetch(`/api/schedule/get?venue=${matches[0].event_key}`)
-            const data = await response.json();
+            const response = await axios.get(`/api/schedule/get?venue=${matches[0].event_key}`, {
+                onDownloadProgress: (progressEvent) => {
+                    let percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                    );
+                    setValue(percentCompleted);
+                }
+            })
+            const data = await response.data;
             const entryArray = Object.entries(data.entries) as [string, { matchID: string; scouters: any }][];
             entryArray.forEach((entry: [string, { matchID: string; scouters: any }]) => {
                 editColumn(entry[1].matchID, entry[1].scouters)

@@ -2,22 +2,32 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
 import ScoutingForm from '@/components/scoutingform';
 import { set } from 'zod';
 import { Spinner } from '@nextui-org/react';
 import { ScoutingFormData } from '@/types/form';
+import axios from 'axios';
+import { LoadStatusContext } from '@/components/LoadStatusContext';
 
 const Scouting = ({ params }: { params: { match: string } }) => {
+    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
     const [loading, setLoading] = useState(true);
     const [form, setForm] = useState({} as ScoutingFormData)
     const [errored, setErrored] = useState(false);
 
     const getForm = async () => {
         try {
-            const res = await fetch(`/api/schedule/user/get/form?matchId=${params.match}`);
-            const data = await res.json();
-            console.log(data);
+            const res = await axios.get(`/api/schedule/user/get/form?matchId=${params.match}`, {
+                onDownloadProgress: (progressEvent) => {
+                    let percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                    );
+                    setValue(percentCompleted);
+                }
+            });
+            const data = await res.data;
+            console.debug(data);
             setForm(data);
             setLoading(false);
         } catch (error) {

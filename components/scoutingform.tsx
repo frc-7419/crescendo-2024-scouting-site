@@ -33,13 +33,13 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        console.log(formData);
+        console.debug(formData);
     }
     const ScoutCommentModule = ({ text, key }: { text: string, key: string }) => {
         return (
             <div className='pt-4 pb-4 col-start-1 col-end-3'>
                 <p className='pb-4'>{text}</p>
-                <Textarea variant="faded" key={key} />
+                <Textarea variant="faded" key={key} color='primary' />
             </div>
         )
     }
@@ -48,12 +48,9 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
             <form onSubmit={handleSubmit}>
                 <div className='pb-4'>
                     <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Auton</h1>
-                    <div className="grid grid-cols-2 grid-rows-4 text-3xl font-thin">
+                    <div className="grid grid-cols-2 grid-rows-3 text-3xl font-thin">
                         <ScoutModule text="Has Preload" key="preload" type='checkbox' />
-                        <div className='pt-4 pb-4 pr-4 row-start-1 row-end-3 col-start-2 col-end-3'>
-                            <Image src={frcMap.src} alt="FRC Map" width={frcMap.width} height={frcMap.height} />
-                        </div>
-                        <ScoutModule text="Left Community" key="leftCommunity" type='checkbox' />
+                        <ScoutModule className="pl-4" text="Left Community" key="leftCommunity" type='checkbox' />
                         <ScoutModule text="Speaker" key="speaker" type='number' />
                         <ScoutModule className="pl-4" text="Amp" key="amp" type='number' />
                         <ScoutCommentModule text="Comments" key="comments" />
