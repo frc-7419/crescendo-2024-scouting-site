@@ -15,16 +15,16 @@ export default function ThemeToggle() {
 
     const toggleDarkMode = () => {
         setIsDarkMode(!isDarkMode);
-        if(isDarkMode){
+        if (isDarkMode) {
             setTheme('light');
-        }else{
+        } else {
             setTheme('dark');
         }
     };
 
     return (
         <button onClick={toggleDarkMode}>
-            <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} size="xl" fixedWidth/>
+            <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} size="xl" fixedWidth className='transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300' />
         </button>
     );
 }

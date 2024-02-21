@@ -2,9 +2,10 @@
 
 import { Match } from '@/types/match';
 import { Scouter } from '@/types/schedule';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faDoorOpen, faMailForward } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip } from '@nextui-org/react';
+import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem } from '@nextui-org/react';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 
@@ -19,6 +20,18 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
     }, [matches, time, shifts]);
 
 
+    const PopButton = ({ icon, text }: { icon: JSX.Element, text: string }) => {
+        return (
+            <div className='flex justify-between items-center gap-4'>
+                <div className="">
+                    {text}
+                </div>
+                <div className="">
+                    {icon}
+                </div>
+            </div>
+        )
+    }
 
     const getScoutedTeam = (match: Match) => {
         const shift = shifts.find((shift) => shift.ScoutingSchedule?.matchID === match.key);
@@ -109,12 +122,34 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
                                         </TableCell>
                                         <TableCell>
                                             {/* waiting for form component */}
-                                            <p className='text-center'>Open Form</p>
+                                            <Link href={`/scouting/${item.key}`} className='text-center'>Open Form</Link>
                                         </TableCell>
                                         <TableCell>
-                                            <button>
-                                                <FontAwesomeIcon icon={faCog} />
-                                            </button>
+                                            <Popover showArrow>
+                                                <PopoverTrigger>
+                                                    <button>
+                                                        <FontAwesomeIcon className='hover:animate-spin' icon={faCog} />
+                                                    </button>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="text-xl">
+                                                    <Listbox
+                                                        aria-label="Actions"
+                                                    >
+                                                        <ListboxItem key="settings">
+                                                            <PopButton
+                                                                icon={<FontAwesomeIcon icon={faMailForward} />}
+                                                                text="Dispute"
+                                                            />
+                                                        </ListboxItem>
+                                                        <ListboxItem key="logout" className="text-danger" color="danger">
+                                                            <PopButton
+                                                                icon={<FontAwesomeIcon icon={faDoorOpen} />}
+                                                                text="Logout"
+                                                            />
+                                                        </ListboxItem>
+                                                    </Listbox>
+                                                </PopoverContent>
+                                            </Popover>
                                         </TableCell>
                                     </TableRow>
                                 )}

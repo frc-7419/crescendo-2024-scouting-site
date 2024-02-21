@@ -62,6 +62,40 @@ const authOptions: AuthOptions = {
     }
 };
 
+// Create a test user
+async function createTestUser() {
+    try {
+        // Check if the test user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                email: "test@example.com",
+            },
+        });
+
+        // If test user doesn't exist, create it
+        if (!existingUser) {
+            // Define test user data
+            const testUserData = {
+                email: "test@example.com",
+                password: "password123", // Make sure to hash this password before inserting into production!
+                name: "Test User",
+                // Add any other fields you have in your user model
+            };
+
+            // Insert the test user data into the database
+            const createdUser = await prisma.user.create({
+                data: testUserData,
+            });
+
+            console.log("Test user created:", createdUser);
+        } else {
+            console.log("Test user already exists:", existingUser);
+        }
+    } catch (error) {
+        console.error("Error creating test user:", error);
+    }
+}
+
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST, authOptions };

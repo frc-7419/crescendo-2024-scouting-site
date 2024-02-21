@@ -5,17 +5,19 @@ import SideBar from '@/components/side-bar';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
-import MatchSchedule from '@/components/schedule';
-import CurrentGame from '@/components/currentgame';
 import { Input } from '@nextui-org/react';
-import { Match } from '@/types/match';
+import ScouterSchedule from '@/components/scouter-schedule';
 
 const Dashboard = () => {
-    const [eventKey, seteventKey] = useState('2023casf');
+    const { data: session } = useSession();
+    const firstName = session?.user?.name?.split(" ")[0];
+
+
+    const [eventKey, seteventKey] = useState('2023cafr');
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [currentTime, setCurrentTime] = useState(new Date(1679270078 * 1000));
-
+    const [currentTime, setCurrentTime] = useState(new Date(1678554428 * 1000));
+    const [shifts, setShifts] = useState([]);
 
     const setTime = (time: number) => {
         const date = new Date();
@@ -25,16 +27,11 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (eventKey) {
-            fetch(`https://www.thebluealliance.com/api/v3/event/${eventKey}/matches/simple`, {
-                headers: new Headers({
-                    'X-TBA-Auth-Key': 'h2zoQFRZDrANaEitRZzA0pZfM3kiUqGaNMqmh49un8KFUB27GnbAphMc9VLmDYD5'
-                })
-            })
+            fetch(`/api/bluealliance/getMatches/${eventKey}`)
                 .then(response => response.json())
                 .then(data => {
                     console.debug(data);
-                    const sortedMatches = data.sort((a: Match, b: Match) => a.predicted_time - b.predicted_time);
-                    setMatches(sortedMatches);
+                    setMatches(data);
                     setLoading(false);
                 })
                 .catch(error => {
@@ -44,6 +41,17 @@ const Dashboard = () => {
         }
     }, [eventKey]);
 
+    const getShifts = async () => {
+        const response = await fetch(`/api/schedule/user/get`);
+        const data = await response.json();
+        setShifts(data);
+        console.log(shifts);
+    };
+
+    useEffect(() => {
+        getShifts();
+    }, []);
+
     return (
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
@@ -51,7 +59,7 @@ const Dashboard = () => {
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
                 <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                    <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime} />} size="text-2xl font-semibold" />
+                    <DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />
                 </div>
             </div>
         </main>
