@@ -9,13 +9,15 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
         return (
             <div className={`${className} pt-4 pb-4 pr-4 flex justify-between items-center`}>
                 <p>{text}</p>
-                {type === 'checkbox' && <Checkbox key={key} color="primary"></Checkbox>}
-                {type === 'number' && <Input required className="w-25" variant='bordered' key={key} type="number" />}
+                {type === 'checkbox' && <Checkbox name={key} key={key} color="primary"></Checkbox>}
+                {type === 'number' && <Input name={key} placeholder='0' className="w-25" variant='bordered' key={key} type="number" />}
                 {type === 'dropdown' && (
                     <Autocomplete
                         label={text}
-                        required
+                        isRequired
                         className="max-w-xs"
+                        name={key}
+                        key={key}
                     >
                         {items?.map(({ key: itemKey, value: itemValue }) => (
                             <AutocompleteItem key={itemKey} value={itemValue}>
@@ -24,8 +26,8 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
                         ))}
                     </Autocomplete>
                 )}
-                {type === 'datetime' && <Input required className="w-25" variant='bordered' key={key} type="datetime-local" />}
-                {type === 'range' && <Input required className="w-25" variant='bordered' key={key} type="range" min={min} max={max} />}
+                {type === 'datetime' && <Input isRequired className="w-25" variant='bordered' key={key} name={key} type="time" />}
+                {type === 'range' && <Input isRequired className="w-25" variant='bordered' key={key} name={key} type="range" min={min} max={max} />}
             </div>
         )
     }
@@ -33,7 +35,7 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        console.debug(formData);
+        console.log('Form data:', Object.fromEntries(formData.entries()));
     }
     const ScoutCommentModule = ({ text, key }: { text: string, key: string }) => {
         return (

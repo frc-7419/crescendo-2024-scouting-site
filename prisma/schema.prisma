@@ -61,14 +61,13 @@ model ScoutingData {
 }
 
 model Auton {
-  id               Int           @id @default(autoincrement())
-  preload          Boolean
-  leftCommunity    Boolean
-  speaker          Int
-  amp              Int
-  comments         String
-  startingPosition Position
-  ScoutingData     ScoutingData?
+  id            Int           @id @default(autoincrement())
+  preload       Boolean
+  leftCommunity Boolean
+  speaker       Int
+  amp           Int
+  comments      String
+  ScoutingData  ScoutingData?
 }
 
 model Teleop {
@@ -173,10 +172,4 @@ enum PickupFrom {
 enum IntakePosition {
   OTB
   UTB
-}
-
-enum Position {
-  TOP
-  MIDDLE
-  BOTTOM
 }
