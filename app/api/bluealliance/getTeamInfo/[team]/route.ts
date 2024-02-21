@@ -27,7 +27,7 @@ export async function GET(
     try {
         const response = await fetch(`https://www.thebluealliance.com/api/v3/team/${team}`, {
             headers: new Headers({
-                'X-TBA-Auth-Key': 'h2zoQFRZDrANaEitRZzA0pZfM3kiUqGaNMqmh49un8KFUB27GnbAphMc9VLmDYD5'
+                'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
             }),
             next: { revalidate: 3600 }
         });
@@ -36,7 +36,7 @@ export async function GET(
 
         const eventsResponse = await fetch(`https://www.thebluealliance.com/api/v3/team/${team}/events/${selectedSeason}`, {
             headers: new Headers({
-                'X-TBA-Auth-Key': 'h2zoQFRZDrANaEitRZzA0pZfM3kiUqGaNMqmh49un8KFUB27GnbAphMc9VLmDYD5'
+                'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
             }),
             next: { revalidate: 3600 }
         }).then(response => response.json());

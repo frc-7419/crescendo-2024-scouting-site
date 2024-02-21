@@ -23,7 +23,7 @@ export async function GET(
   try {
     const response = await fetch(`https://www.thebluealliance.com/api/v3/event/${event}/matches/simple`, {
       headers: new Headers({
-        'X-TBA-Auth-Key': 'h2zoQFRZDrANaEitRZzA0pZfM3kiUqGaNMqmh49un8KFUB27GnbAphMc9VLmDYD5'
+        'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
       }),
       next: { revalidate: 30 }
     });
