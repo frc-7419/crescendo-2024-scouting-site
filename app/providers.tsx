@@ -7,6 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { LoadStatusContext } from '@/components/LoadStatusContext';
 import LoadStatus from '@/components/load-status';
 import { useRef, useState } from 'react';
+import Toast from '@/components/toast';
 
 export function Providers({ children }: { children: React.ReactNode }) {
     const [value, setValue] = useState<number>(0);
@@ -17,6 +18,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 <NextThemesProvider attribute="class" defaultTheme="dark">
                     <LoadStatusContext.Provider value={{ value, setValue }}>
                         <LoadStatus />
+                        <Toast />
                         {children}
                     </LoadStatusContext.Provider>
                 </NextThemesProvider>

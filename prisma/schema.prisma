@@ -72,21 +72,21 @@ model Auton {
 }
 
 model Teleop {
-  id           Int            @id @default(autoincrement())
-  defensive    Boolean
-  intake       IntakePosition
-  amp          Int
-  speaker      Int
-  timesAmped   Int
-  pickupFrom   PickupFrom
-  isRobotDisabled   Boolean
-  disabledAt   DateTime?
-  isHanging    Boolean
-  trap         Int
-  spotLight    Boolean
-  comments     String
-  ScoutingData ScoutingData?
-  finalStatus  FinalStatus // !isHanging: PARKED isHanging: ONSTAGE (isHanging && spotLight): ONSTAGE_SPOTLIT (for clientside optimization and accessibility)
+  id              Int            @id @default(autoincrement())
+  defensive       Boolean
+  intake          IntakePosition
+  amp             Int
+  speaker         Int
+  timesAmped      Int
+  pickupFrom      PickupFrom
+  isRobotDisabled Boolean
+  disabledAt      Int?
+  isHanging       Boolean
+  trap            Int
+  spotLight       Boolean
+  comments        String
+  ScoutingData    ScoutingData?
+  finalStatus     FinalStatus // !isHanging: PARKED isHanging: ONSTAGE (isHanging && spotLight): ONSTAGE_SPOTLIT (for clientside optimization and accessibility)
 }
 
 model Misc {

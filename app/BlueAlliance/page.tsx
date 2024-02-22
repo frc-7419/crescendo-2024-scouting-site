@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import BlueAllianceComponent from '@/components/bluealliancecomponent';
 import SideBar from '@/components/side-bar';

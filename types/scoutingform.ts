@@ -26,7 +26,7 @@ type Teleop = {
     timesAmped: number;
     pickupFrom: PickupFrom;
     isRobotDisabled: boolean;
-    disabledAt: Date | null;
+    disabledAt: number;
     isHanging: boolean;
     trap: number;
     spotLight: boolean;
@@ -54,12 +54,7 @@ export interface ScoutingData {
     autonId?: number;
     teleopId?: number;
     miscId?: number;
-    robot: {
-        teamNumber: number;
-    };
-    scouter: {
-        id: string;
-    };
+    scouterId: string;
 };
 
 export interface ReturnedFormData extends FieldValues {
@@ -75,7 +70,7 @@ export interface ReturnedFormData extends FieldValues {
     timesAmped: number;
     pickupFrom: PickupFrom;
     isRobotDisabled: boolean;
-    disabledAt: Date | null;
+    disabledAt: string;
     isHanging: boolean;
     trap: number;
     spotLight: boolean;

@@ -72,7 +72,6 @@ const Scouters = () => {
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
-            <Toast />
             <div id='dash' className="p-6 flex flex-col">
                 <div id='cards' className="overflow-y-scroll flex-1">
                     <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime} />

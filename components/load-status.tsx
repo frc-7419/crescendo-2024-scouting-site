@@ -25,6 +25,16 @@ const LoadStatus = () => {
                     }, 1000);
                 }, 3000);
                 setTimeoutID(id);
+            } else if (value === 500) {
+                setProgressValue(100);
+                setColor('danger');
+                const id = setTimeout(() => {
+                    setOpacity(0);
+                    setTimeout(() => {
+                        setShowProgress(false);
+                    }, 1000);
+                }, 3000);
+                setTimeoutID(id);
             } else {
                 setColor('primary');
                 setProgressValue(value);

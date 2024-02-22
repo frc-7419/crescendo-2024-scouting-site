@@ -9,7 +9,7 @@ const getScoutedTeam = (match: Match, shift: Scouter) => {
     let team;
     let alliance;
     if (shift) {
-        console.log(shift.role)
+        console.debug(shift.role)
         switch (shift.role as string) {
             case "BLUEONE":
                 team = match.alliances.blue.team_keys[0];
