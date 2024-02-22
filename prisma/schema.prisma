@@ -46,6 +46,7 @@ model Robot {
 model ScoutingData {
   id          Int      @id @default(autoincrement())
   matchNumber Int
+  matchID     String
   teamNumber  Int
   venue       String
   submitTime  DateTime
@@ -78,7 +79,7 @@ model Teleop {
   speaker      Int
   timesAmped   Int
   pickupFrom   PickupFrom
-  isDisabled   Boolean
+  isRobotDisabled   Boolean
   disabledAt   DateTime?
   isHanging    Boolean
   trap         Int

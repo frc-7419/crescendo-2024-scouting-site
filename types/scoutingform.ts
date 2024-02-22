@@ -1,3 +1,5 @@
+import { FieldValues } from 'react-hook-form';
+
 type Alliance = 'RED' | 'BLUE';
 
 type FinalStatus = 'PARKED' | 'ONSTAGE' | 'ONSTAGE_SPOTLIT';
@@ -7,7 +9,7 @@ type PickupFrom = 'FLOOR' | 'SOURCE' | 'BOTH' | 'NOT_ATTEMPTED';
 type IntakePosition = 'OTB' | 'UTB';
 
 type Auton = {
-    id: number;
+    id?: number;
     preload: boolean;
     leftCommunity: boolean;
     speaker: number;
@@ -16,14 +18,14 @@ type Auton = {
 };
 
 type Teleop = {
-    id: number;
+    id?: number;
     defensive: boolean;
     intake: IntakePosition;
     amp: number;
     speaker: number;
     timesAmped: number;
     pickupFrom: PickupFrom;
-    isDisabled: boolean;
+    isRobotDisabled: boolean;
     disabledAt: Date | null;
     isHanging: boolean;
     trap: number;
@@ -33,24 +35,25 @@ type Teleop = {
 };
 
 type Misc = {
-    id: number;
+    id?: number;
     defense: number;
     reliability: number;
     comments: string;
 };
 
-type ScoutingData = {
-    id: number;
+export interface ScoutingData {
+    id?: number;
     matchNumber: number;
+    matchID: string;
     teamNumber: number;
     venue: string;
     submitTime: Date;
     auton: Auton;
     teleop: Teleop;
     misc: Misc;
-    autonId: number;
-    teleopId: number;
-    miscId: number;
+    autonId?: number;
+    teleopId?: number;
+    miscId?: number;
     robot: {
         teamNumber: number;
     };
@@ -58,3 +61,26 @@ type ScoutingData = {
         id: string;
     };
 };
+
+export interface ReturnedFormData extends FieldValues {
+    preload: boolean;
+    leftCommunity: boolean;
+    autospeaker: number;
+    autoamp: number;
+    autocomments: string;
+    defensive: boolean;
+    intake: IntakePosition;
+    teleopamp: number;
+    teleopspeaker: number;
+    timesAmped: number;
+    pickupFrom: PickupFrom;
+    isRobotDisabled: boolean;
+    disabledAt: Date | null;
+    isHanging: boolean;
+    trap: number;
+    spotLight: boolean;
+    teleopcomments: string;
+    defense: number;
+    reliability: number;
+    misccomments: string;
+}
