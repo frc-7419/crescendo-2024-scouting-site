@@ -38,7 +38,7 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
         let team;
         let alliance;
         if (shift) {
-            console.log(shift.role)
+            console.debug(shift.role)
             switch (shift.role as string) {
                 case "BLUEONE":
                     team = match.alliances.blue.team_keys[0];
@@ -71,7 +71,7 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
             alliance: alliance
         };
 
-        console.log(scoutedTeam)
+        console.debug(scoutedTeam)
         return scoutedTeam
 
     }

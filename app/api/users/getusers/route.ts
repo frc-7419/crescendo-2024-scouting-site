@@ -20,14 +20,23 @@ export async function GET(
 
   try {
     const users = await prisma.user.findMany({
-        select: {
-            id: true,
-            name: true,
-            email: true,
-        },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     });
 
-    return Response.json(users);
+    const responseBody = JSON.stringify(users);
+    const headers = {
+      'Content-Type': 'application/json',
+      'Content-Length': responseBody.length.toString(),
+    };
+
+    return new Response(responseBody, {
+      status: 200,
+      headers: headers,
+    });
   } catch (error) {
     console.error(error);
     return new Response(String(error), {

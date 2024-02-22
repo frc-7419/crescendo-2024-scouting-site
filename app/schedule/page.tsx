@@ -2,15 +2,18 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
 import CurrentGame from '@/components/currentgame';
 import { Input } from '@nextui-org/react';
 import { Match } from '@/types/match';
+import axios, { AxiosHeaders } from 'axios';
+import { LoadStatusContext } from '@/components/LoadStatusContext';
 
 const Dashboard = () => {
+    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
     const [eventKey, seteventKey] = useState('2023casf');
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -24,17 +27,23 @@ const Dashboard = () => {
     }
 
     useEffect(() => {
+        setValue(0);
+    }, []);
+
+    useEffect(() => {
         if (eventKey) {
-            fetch(`https://www.thebluealliance.com/api/v3/event/${eventKey}/matches/simple`, {
-                headers: new Headers({
-                    'X-TBA-Auth-Key': 'h2zoQFRZDrANaEitRZzA0pZfM3kiUqGaNMqmh49un8KFUB27GnbAphMc9VLmDYD5'
-                })
+            axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
+                onDownloadProgress: (progressEvent) => {
+                    let percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                    );
+                    setValue(percentCompleted);
+                },
             })
-                .then(response => response.json())
+                .then(response => response.data)
                 .then(data => {
                     console.debug(data);
-                    const sortedMatches = data.sort((a: Match, b: Match) => a.predicted_time - b.predicted_time);
-                    setMatches(sortedMatches);
+                    setMatches(data);
                     setLoading(false);
                 })
                 .catch(error => {
@@ -51,7 +60,7 @@ const Dashboard = () => {
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
                 <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                    <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime} />} size="text-2xl font-semibold" />
+                    <DashCard title="Upcoming Matches" content={<MatchSchedule matches={matches} loading={loading} time={currentTime} />} />
                 </div>
             </div>
         </main>

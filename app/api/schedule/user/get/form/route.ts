@@ -9,7 +9,7 @@ const getScoutedTeam = (match: Match, shift: Scouter) => {
     let team;
     let alliance;
     if (shift) {
-        console.log(shift.role)
+        console.debug(shift.role)
         switch (shift.role as string) {
             case "BLUEONE":
                 team = match.alliances.blue.team_keys[0];
@@ -93,7 +93,7 @@ export async function GET(
     try {
         const response = await fetch(`https://www.thebluealliance.com/api/v3/match/${matchId}/simple`, {
             headers: new Headers({
-                'X-TBA-Auth-Key': 'h2zoQFRZDrANaEitRZzA0pZfM3kiUqGaNMqmh49un8KFUB27GnbAphMc9VLmDYD5'
+                'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
             }),
         });
 
@@ -114,11 +114,15 @@ export async function GET(
             alliance: team.alliance,
         };
 
-        return new Response(JSON.stringify(scoutData), {
+        const responseBody = JSON.stringify(scoutData);
+        const headers = {
+            'Content-Type': 'application/json',
+            'Content-Length': responseBody.length.toString(),
+        };
+
+        return new Response(responseBody, {
             status: 200,
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
         });
 
     } catch (error) {

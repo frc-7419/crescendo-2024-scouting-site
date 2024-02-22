@@ -46,6 +46,7 @@ model Robot {
 model ScoutingData {
   id          Int      @id @default(autoincrement())
   matchNumber Int
+  matchID     String
   teamNumber  Int
   venue       String
   submitTime  DateTime
@@ -61,32 +62,31 @@ model ScoutingData {
 }
 
 model Auton {
-  id               Int           @id @default(autoincrement())
-  preload          Boolean
-  leftCommunity    Boolean
-  speaker          Int
-  amp              Int
-  comments         String
-  startingPosition Position
-  ScoutingData     ScoutingData?
+  id            Int           @id @default(autoincrement())
+  preload       Boolean
+  leftCommunity Boolean
+  speaker       Int
+  amp           Int
+  comments      String
+  ScoutingData  ScoutingData?
 }
 
 model Teleop {
-  id           Int            @id @default(autoincrement())
-  defensive    Boolean
-  intake       IntakePosition
-  amp          Int
-  speaker      Int
-  timesAmped   Int
-  pickupFrom   PickupFrom
-  isDisabled   Boolean
-  disabledAt   DateTime?
-  isHanging    Boolean
-  trap         Int
-  spotLight    Boolean
-  comments     String
-  ScoutingData ScoutingData?
-  finalStatus  FinalStatus // !isHanging: PARKED isHanging: ONSTAGE (isHanging && spotLight): ONSTAGE_SPOTLIT (for clientside optimization and accessibility)
+  id              Int            @id @default(autoincrement())
+  defensive       Boolean
+  intake          IntakePosition
+  amp             Int
+  speaker         Int
+  timesAmped      Int
+  pickupFrom      PickupFrom
+  isRobotDisabled Boolean
+  disabledAt      Int?
+  isHanging       Boolean
+  trap            Int
+  spotLight       Boolean
+  comments        String
+  ScoutingData    ScoutingData?
+  finalStatus     FinalStatus // !isHanging: PARKED isHanging: ONSTAGE (isHanging && spotLight): ONSTAGE_SPOTLIT (for clientside optimization and accessibility)
 }
 
 model Misc {
@@ -173,10 +173,4 @@ enum PickupFrom {
 enum IntakePosition {
   OTB
   UTB
-}
-
-enum Position {
-  TOP
-  MIDDLE
-  BOTTOM
 }

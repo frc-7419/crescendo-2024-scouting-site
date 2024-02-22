@@ -5,11 +5,14 @@ import { Scouter, ScoutingSchedule } from '@/types/schedule';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip, Input, Button, Selection, Avatar, Autocomplete, AutocompleteItem } from '@nextui-org/react';
 import { TeamRole } from '@prisma/client';
 import { match } from 'assert';
-import React, { FormEvent, Key, createRef, use, useEffect, useState } from 'react';
+import axios from 'axios';
+import React, { FormEvent, Key, createRef, use, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { set } from 'zod';
+import { LoadStatusContext } from './LoadStatusContext';
 
 const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
+    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
     const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
     const [playerMatches, setPlayerMatches] = useState<Match[]>([]);
     const [tableKey, setTableKey] = useState<string>('table');
@@ -65,8 +68,15 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
         if (usersRequested) return;
         setUsersRequested(true);
         try {
-            const response = await fetch('/api/users/getusers');
-            const data = await response.json();
+            const response = await axios.get('/api/users/getusers', {
+                onDownloadProgress: (progressEvent) => {
+                    let percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                    );
+                    setValue(percentCompleted);
+                }
+            });
+            const data = await response.data;
             const users = data.map((user: { name: string, id: string }) => ({
                 name: user.name,
                 uuid: user.id
@@ -82,6 +92,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
 
     useEffect(() => {
         fetchUsers();
+        setValue(0);
     }, []);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -149,8 +160,15 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
         console.debug("hi")
         setUsersLoading(true);
         try {
-            const response = await fetch(`/api/schedule/get?venue=${matches[0].event_key}`)
-            const data = await response.json();
+            const response = await axios.get(`/api/schedule/get?venue=${matches[0].event_key}`, {
+                onDownloadProgress: (progressEvent) => {
+                    let percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                    );
+                    setValue(percentCompleted);
+                }
+            })
+            const data = await response.data;
             const entryArray = Object.entries(data.entries) as [string, { matchID: string; scouters: any }][];
             entryArray.forEach((entry: [string, { matchID: string; scouters: any }]) => {
                 editColumn(entry[1].matchID, entry[1].scouters)
@@ -185,6 +203,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
     };
 
     const uploadSchedule = () => {
+        setValue(0);
         setSubmitting(true);
         console.debug("Starting Submit")
         let scoutingschedule: { [matchID: string]: ScoutingSchedule } = {};
@@ -233,6 +252,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
             .then((response) => {
                 if (response.ok) {
                     toast.success('Schedule Updated');
+                    setValue(100);
                 } else {
                     toast.error('Error Updating Schedule');
                 }
@@ -282,6 +302,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                     <div className='flex flex-row justify-between'>
                         <Autocomplete
                             isRequired
+                            autoComplete='off'
                             label="Blue One"
                             defaultItems={users}
                             isLoading={usersLoading}
@@ -299,6 +320,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
 
                         <Autocomplete
                             isRequired
+                            autoComplete='off'
                             label="Blue Two"
                             defaultItems={users}
                             isLoading={usersLoading}
@@ -316,6 +338,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
 
                         <Autocomplete
                             isRequired
+                            autoComplete='off'
                             label="Blue Three"
                             defaultItems={users}
                             isLoading={usersLoading}
@@ -333,6 +356,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
 
                         <Autocomplete
                             isRequired
+                            autoComplete='off'
                             label="Red One"
                             defaultItems={users}
                             isLoading={usersLoading}
@@ -350,6 +374,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
 
                         <Autocomplete
                             isRequired
+                            autoComplete='off'
                             label="Red Two"
                             defaultItems={users}
                             isLoading={usersLoading}
@@ -367,6 +392,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
 
                         <Autocomplete
                             isRequired
+                            autoComplete='off'
                             label="Red Three"
                             defaultItems={users}
                             isLoading={usersLoading}

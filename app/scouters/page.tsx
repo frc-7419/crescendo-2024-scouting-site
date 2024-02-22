@@ -2,15 +2,18 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import React, { FormEvent, Suspense, useEffect, useState } from 'react';
+import React, { FormEvent, Suspense, use, useContext, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Match } from '@/types/match';
 import { useRouter } from 'next/navigation';
 import SetScouterSchedule from '@/components/set-scouter-schedule';
 import Toast from "@/components/toast";
+import axios from 'axios';
+import { LoadStatusContext } from '@/components/LoadStatusContext';
 
 const Scouters = () => {
     const router = useRouter();
+    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
     const { data: session } = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
 
@@ -36,12 +39,23 @@ const Scouters = () => {
     }, [session]);
 
     useEffect(() => {
+        setValue(0);
+    }, []);
+
+    useEffect(() => {
         if (loading) return;
-        console.log(loading)
+        console.debug(loading)
         setLoading(true);
         if (eventKey) {
-            fetch(`/api/bluealliance/getMatches/${eventKey}`)
-                .then(response => response.json())
+            axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
+                onDownloadProgress: (progressEvent) => {
+                    let percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                    );
+                    setValue(percentCompleted);
+                }
+            })
+                .then(response => response.data)
                 .then(data => {
                     console.debug(data);
                     setMatches(data);
@@ -58,7 +72,6 @@ const Scouters = () => {
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
-            <Toast />
             <div id='dash' className="p-6 flex flex-col">
                 <div id='cards' className="overflow-y-scroll flex-1">
                     <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime} />

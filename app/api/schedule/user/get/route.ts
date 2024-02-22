@@ -30,10 +30,14 @@ export async function GET(
         },
     });
 
-    return new Response(JSON.stringify(schedules), {
+    const responseBody = JSON.stringify(schedules);
+    const headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': responseBody.length.toString(),
+    };
+
+    return new Response(responseBody, {
         status: 200,
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: headers,
     });
 }

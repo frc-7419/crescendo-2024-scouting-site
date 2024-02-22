@@ -18,5 +18,5 @@ app.use('/api', createProxyMiddleware({
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Proxy Server listening on port ${PORT}`);
+    console.debug(`Proxy Server listening on port ${PORT}`);
 });

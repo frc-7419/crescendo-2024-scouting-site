@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { use, useContext, useEffect, useState } from 'react';
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
 import { Event } from '@/types/Event';
@@ -8,25 +8,59 @@ import { Team } from '@/types/Team';
 import '@/app/globals.css';
 import { Button, Card, CardBody, Input, Image, Accordion, AccordionItem, Spacer, Divider, Link } from '@nextui-org/react';
 import { Select, SelectSection, SelectItem } from "@nextui-org/react";
+import { LoadStatusContext } from './LoadStatusContext';
+import axios from 'axios';
+import { set } from 'zod';
 
 const BlueAllianceComponent: React.FC = () => {
+    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
     const [teamNumber, setTeamNumber] = useState('');
     const [teamData, setTeamData] = useState<Team | null>(null);
     const [teamEvents, setTeamEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(false);
+    const [errored, setErrored] = useState(false);
     const [selectedSeason, setSelectedSeason] = useState<string>('2024');
 
     const getTeamInfo = () => {
         if (teamNumber && /^\d+$/.test(teamNumber)) {
+            setErrored(false);
             setLoading(true);
             const teamKey = `frc${teamNumber}`;
-            fetch(`/api/bluealliance/getTeamInfo/${teamKey}?season=${selectedSeason}`)
-                .then(response => response.json())
-                .then(data => {
-                    setTeamData(data.teamResponse);
-                    setTeamEvents(data.eventsResponse);
-                    setLoading(false);
+            try {
+                setValue(0);
+                axios.get(`/api/bluealliance/getTeamInfo/${teamKey}?season=${selectedSeason}`, {
+                    onDownloadProgress: (progressEvent) => {
+                        let percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                        );
+                        setValue(percentCompleted);
+                    },
                 })
+                    .then(response => response.data)
+                axios.get(`/api/bluealliance/getTeamInfo/${teamKey}?season=${selectedSeason}`, {
+                    onDownloadProgress: (progressEvent) => {
+                        let percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                        );
+                        setValue(percentCompleted);
+                    },
+                })
+                    .then(response => response.data)
+                    .then(data => {
+                        setTeamData(data.teamResponse);
+                        setTeamEvents(data.eventsResponse);
+                        setLoading(false);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        setErrored(true);
+                        setLoading(false);
+                    });
+            } catch (error) {
+                console.error(error);
+                setErrored(true);
+                setLoading(false);
+            }
         }
     }
 
@@ -38,11 +72,15 @@ const BlueAllianceComponent: React.FC = () => {
         setSelectedSeason(event.target.value);
     };
 
+    useEffect(() => {
+        setValue(100);
+    }, []);
     return (
         <>
             <div className='flex'>
                 <Input
                     fullWidth
+                    autoComplete='off'
                     type="text"
                     value={teamNumber}
                     onChange={handleInputChange}
@@ -69,6 +107,8 @@ const BlueAllianceComponent: React.FC = () => {
             </div>
             {loading ? (
                 <p>Loading...</p>
+            ) : errored ? (
+                <p>No data available. Please enter a valid team number.</p>
             ) : teamData ? (
                 <><Card
                     isBlurred
@@ -76,13 +116,22 @@ const BlueAllianceComponent: React.FC = () => {
                 >
                     <CardBody>
                         <div className="">
-                            <div className="flex flex-col">
+                            <div className="flex flex-col gap-4">
                                 <div className="flex justify-between align-middle">
                                     <div className='flex flex-col'>
                                         <p className="font-bold text-2xl">{teamData.team_number}: {teamData.nickname}</p>
                                         <p className='text-small font-medium'>{teamData.name}</p>
                                     </div>
-                                    <Link href={`https://www.google.com/maps/search/?api=1&query=${teamData.city},${teamData.state_prov}`} className="text-medium font-medium">{teamData.city}, {teamData.state_prov}</Link>
+                                    <Link href={`https://www.google.com/maps/search/?api=1&query=${teamData.city},${teamData.state_prov} ${teamData.school_name}`} className="text-medium font-medium">{teamData.city}, {teamData.state_prov}</Link>
+                                </div>
+                                <div className="flex h-5 items-center space-x-2">
+                                    <p>Since {teamData.rookie_year}</p>
+                                    {teamData.website && (
+                                        <>
+                                            <Divider orientation="vertical" />
+                                            <p>Website: <Link href={teamData.website}>{teamData.website}</Link></p>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                             <Divider className="my-4" />
@@ -92,17 +141,17 @@ const BlueAllianceComponent: React.FC = () => {
                                         <p className='text-xl'>Events in Season {selectedSeason}</p>
                                         <Accordion>
                                             {teamEvents.map(event => (
-                                                <AccordionItem key={event.key} aria-label={event.name} title={event.name} subtitle={event.event_type_string}>
+                                                <AccordionItem key={event.key} aria-label={event.name} title={event.name} subtitle={`${event.event_type_string} - Week ${event.week}`}>
                                                     <div className="accordion-item-content">
-                                                        <p>Week {event.week}</p>
+                                                        <p></p>
                                                         <p>Event Code: {event.event_code}</p>
                                                         <p>{event.city}, {event.state_prov}</p>
                                                         <p>
                                                             <span>{event.start_date && event.end_date ? new Date(event.start_date).toLocaleDateString() + ' - ' + new Date(event.end_date).toLocaleDateString() : ''}</span>
                                                         </p>
-                                                        <p>Address: {event.address}</p>
-                                                        <Link href={event.gmaps_url}>Open In Google Maps</Link>
-                                                        <p>Website: <Link>{event.website}</Link></p>
+                                                        {event.address && <p>Address: {event.address}</p>}
+                                                        {event.gmaps_url && <Link href={event.gmaps_url}>Open In Google Maps</Link>}
+                                                        {event.website && <p>Website: <Link href={event.website}>{event.website}</Link></p>}
                                                     </div>
                                                 </AccordionItem>
                                             ))}

@@ -2,16 +2,18 @@
 
 import logoLight from '@/resources/7419light.svg'
 import logoDark from '@/resources/7419dark.svg'
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
+import { LoadStatusContext } from './LoadStatusContext';
 
 export default function LoginForm() {
   const router = useRouter();
 
+  const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
   const [isDark, setIsDark] = useState(false);
   const { theme } = useTheme();
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -27,6 +29,7 @@ export default function LoginForm() {
   }, [status]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    setValue(0);
     e.preventDefault();
 
     setIsAuthenticating(true);
@@ -44,9 +47,17 @@ export default function LoginForm() {
         toast.error(resp.error);
         setIsAuthenticating(false);
         console.error(resp.error);
+        setValue(500);
+      } else {
+        setValue(100);
+        toast.success("Logged in successfully. Redirecting...");
       }
     });
   };
+
+  useEffect(() => {
+    setValue(100);
+  }, []);
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 dark:bg-slate-950">

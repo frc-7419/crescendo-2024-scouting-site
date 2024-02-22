@@ -2,7 +2,7 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
@@ -10,10 +10,13 @@ import CurrentGame from '@/components/currentgame';
 import { Input } from '@nextui-org/react';
 import { Match } from '@/types/match';
 import ScouterSchedule from '@/components/scouter-schedule';
+import { LoadStatusContext } from '@/components/LoadStatusContext';
+import axios from 'axios';
 
 const Dashboard = () => {
     const { data: session } = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
+    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
 
 
     const [eventKey, seteventKey] = useState('2023cafr');
@@ -30,8 +33,15 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (eventKey) {
-            fetch(`/api/bluealliance/getMatches/${eventKey}`)
-                .then(response => response.json())
+            axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
+                onDownloadProgress: (progressEvent) => {
+                    let percentCompleted = Math.round(
+                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                    );
+                    setValue(percentCompleted);
+                },
+            })
+                .then(response => response.data)
                 .then(data => {
                     console.debug(data);
                     setMatches(data);
@@ -45,14 +55,22 @@ const Dashboard = () => {
     }, [eventKey]);
 
     const getShifts = async () => {
-        const response = await fetch(`/api/schedule/user/get`);
-        const data = await response.json();
+        const response = await axios.get(`/api/schedule/user/get`, {
+            onDownloadProgress: (progressEvent) => {
+                let percentCompleted = Math.round(
+                    (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                );
+                setValue(percentCompleted);
+            },
+        });
+        const data = await response.data;
         setShifts(data);
-        console.log(shifts);
+        console.debug(shifts);
     };
 
     useEffect(() => {
         getShifts();
+        setValue(0);
     }, []);
 
     return (

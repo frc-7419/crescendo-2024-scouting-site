@@ -23,7 +23,7 @@ export async function GET(
   try {
     const response = await fetch(`https://www.thebluealliance.com/api/v3/event/${event}/matches/simple`, {
       headers: new Headers({
-        'X-TBA-Auth-Key': 'h2zoQFRZDrANaEitRZzA0pZfM3kiUqGaNMqmh49un8KFUB27GnbAphMc9VLmDYD5'
+        'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
       }),
       next: { revalidate: 30 }
     });
@@ -35,7 +35,16 @@ export async function GET(
     const data = await response.json();
     const sortedMatches = data.sort((a: Match, b: Match) => a.predicted_time - b.predicted_time);
 
-    return Response.json(sortedMatches);
+    const responseBody = JSON.stringify(sortedMatches);
+    const headers = {
+      'Content-Type': 'application/json',
+      'Content-Length': responseBody.length.toString(),
+    };
+
+    return new Response(responseBody, {
+      status: 200,
+      headers: headers,
+    });
   } catch (error) {
     console.error(error);
     return new Response(String(error), {

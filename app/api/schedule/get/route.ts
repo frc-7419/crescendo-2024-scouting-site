@@ -59,10 +59,14 @@ export async function GET(
         });
     }
 
-    return new Response(JSON.stringify(output), {
+    const responseBody = JSON.stringify(output);
+    const headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': responseBody.length.toString(),
+    };
+
+    return new Response(responseBody, {
         status: 200,
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: headers,
     });
 }
