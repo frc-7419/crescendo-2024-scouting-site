@@ -75,6 +75,7 @@ const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName:
 
     useEffect(() => {
         getNextShift();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [shifts, time]);
 
     useEffect(() => {
@@ -82,6 +83,7 @@ const CurrentGame = ({ eventName, loading, matches, time, shifts }: { eventName:
             toggleTickTock();
         }, 1000);
         return () => clearInterval(interval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 

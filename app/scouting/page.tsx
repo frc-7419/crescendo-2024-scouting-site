@@ -10,6 +10,7 @@ import ScouterSchedule from '@/components/scouter-schedule';
 import { LoadStatusContext } from '@/components/LoadStatusContext';
 import axios from 'axios';
 import { set } from 'zod';
+import { getCurrentEvent } from '@/components/getCurrentEvent';
 
 const Dashboard = () => {
     const { data: session } = useSession();
@@ -17,7 +18,7 @@ const Dashboard = () => {
     const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
 
 
-    const [eventKey, seteventKey] = useState('2023cafr');
+    const eventKey = getCurrentEvent();
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date(1678554428 * 1000));
@@ -50,6 +51,7 @@ const Dashboard = () => {
                     setLoading(false);
                 });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
     const getShifts = async () => {
@@ -69,6 +71,7 @@ const Dashboard = () => {
     useEffect(() => {
         getShifts();
         setValue(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

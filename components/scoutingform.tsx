@@ -40,7 +40,7 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
         return {
             matchNumber: Number(formData.matchNumber),
             matchID: formData.matchId,
-            teamNumber: Number(formData.team),
+            teamNumber: formData.team,
             venue: formData.venue,
             submitTime: new Date(),
             auton: {

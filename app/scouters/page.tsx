@@ -10,6 +10,7 @@ import SetScouterSchedule from '@/components/set-scouter-schedule';
 import Toast from "@/components/toast";
 import axios from 'axios';
 import { LoadStatusContext } from '@/components/LoadStatusContext';
+import { getCurrentEvent } from '@/components/getCurrentEvent';
 
 const Scouters = () => {
     const router = useRouter();
@@ -18,7 +19,7 @@ const Scouters = () => {
     const firstName = session?.user?.name?.split(" ")[0];
 
 
-    const [eventKey, seteventKey] = useState('2023cafr');
+    const eventKey = getCurrentEvent();
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date(1678554428 * 1000));
@@ -36,10 +37,12 @@ const Scouters = () => {
                 router.push("/")
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
     useEffect(() => {
         setValue(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -66,6 +69,7 @@ const Scouters = () => {
                     setLoading(false);
                 });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
     return (

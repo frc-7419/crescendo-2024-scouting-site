@@ -3,10 +3,11 @@
 import { Match } from '@/types/match';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
+import { getCurrentEvent } from '@/components/getCurrentEvent';
 
 
 const MatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
-    const [eventKey, seteventKey] = useState('2023casf');
+    const eventKey = getCurrentEvent();
 
     const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
 

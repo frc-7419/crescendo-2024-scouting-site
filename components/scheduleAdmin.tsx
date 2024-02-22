@@ -83,6 +83,7 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
     useEffect(() => {
         fetchUsers();
         setValue(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const editColumn = (matchId: string, scouters: []) => {
@@ -150,6 +151,7 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
 
     useEffect(() => {
         loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users, playerMatches]);
 
     useEffect(() => {
