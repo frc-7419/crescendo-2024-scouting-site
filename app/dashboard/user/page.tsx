@@ -14,6 +14,7 @@ import { LoadStatusContext } from '@/components/LoadStatusContext';
 import axios from 'axios';
 import { getCurrentEvent } from '@/components/getCurrentEvent';
 import { Event } from '@/types/Event';
+import Loading from '@/components/loading';
 
 const Dashboard = () => {
     const { data: session } = useSession();
@@ -93,6 +94,10 @@ const Dashboard = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    if (loading) {
+        return <Loading />
+    }
+    
     return (
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />

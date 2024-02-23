@@ -11,6 +11,7 @@ import Toast from "@/components/toast";
 import axios from 'axios';
 import { LoadStatusContext } from '@/components/LoadStatusContext';
 import { getCurrentEvent } from '@/components/getCurrentEvent';
+import Loading from '@/components/loading';
 
 const Scouters = () => {
     const router = useRouter();
@@ -72,6 +73,10 @@ const Scouters = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
+    if (loading) {
+        return <Loading />
+    }
+    
     return (
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />

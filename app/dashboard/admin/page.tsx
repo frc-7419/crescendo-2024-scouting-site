@@ -18,6 +18,7 @@ import { LoadStatusContext } from '@/components/LoadStatusContext';
 import { set } from 'zod';
 import { getCurrentEvent } from '@/components/getCurrentEvent';
 import { Event } from '@/types/Event';
+import Loading from '@/components/loading';
 
 const Dashboard = () => {
     const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
@@ -55,26 +56,25 @@ const Dashboard = () => {
     }, [selectedTab]);
 
     useEffect(() => {
-        if (eventKey) {
-            axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
-                onDownloadProgress: (progressEvent) => {
-                    let percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                    );
-                    setValue(percentCompleted);
-                },
-            })
-                .then(response => response.data)
-                .then(data => {
-                    console.debug(data);
-                    setMatches(data);
+        const fetchMatches = async () => {
+            if (eventKey) {
+                try {
+                    const response = await axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
+                        onDownloadProgress: (progressEvent) => {
+                            let percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 1));
+                            setValue(percentCompleted);
+                        },
+                    });
+                    setMatches(response.data);
                     setLoading(false);
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error(error);
                     setLoading(false);
-                });
-        }
+                }
+            }
+        };
+
+        fetchMatches();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
@@ -106,12 +106,22 @@ const Dashboard = () => {
         console.debug(eventData);
     };
 
+    const preFetch = async () => {
+        router.prefetch('/dashboard/scouting');
+        router.prefetch('/dashboard/schedule');
+    }
+
     useEffect(() => {
         getShifts();
         getEvent();
         setValue(0);
+        preFetch();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    if (loading) {
+        return <Loading />
+    }
 
     return (
         <main className="h-screen overflow-clip dark:bg-slate-950">
