@@ -28,6 +28,7 @@ model User {
   Scouter      Scouter[]
   hours        ShopHour[]
   meetings     Meeting[]
+  Profile      Profile[]
 }
 
 enum Role {
@@ -38,7 +39,7 @@ enum Role {
 
 model Robot {
   id           Int            @id @default(autoincrement())
-  teamNumber   Int            @unique
+  teamNumber   String         @unique
   scoutingData ScoutingData[]
   winloss      Float          @default(1.0)
 }
@@ -47,7 +48,7 @@ model ScoutingData {
   id          Int      @id @default(autoincrement())
   matchNumber Int
   matchID     String
-  teamNumber  Int
+  teamNumber  String
   venue       String
   submitTime  DateTime
   auton       Auton    @relation(fields: [autonId], references: [id])
@@ -150,6 +151,13 @@ model ShopHour {
   supervisor_name    String
   supervisor_contact String
   approved           Boolean  @default(false)
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  pfpUrl String
 }
 
 enum Alliance {

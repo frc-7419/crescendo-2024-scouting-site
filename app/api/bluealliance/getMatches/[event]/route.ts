@@ -33,6 +33,11 @@ export async function GET(
     }
 
     const data = await response.json();
+    data.forEach((match: Match) => {
+      if (!match.predicted_time) {
+        match.predicted_time = match.time;
+      }
+    }); // Kinda scuffed but useful for Offseason events
     const sortedMatches = data.sort((a: Match, b: Match) => a.predicted_time - b.predicted_time);
 
     const responseBody = JSON.stringify(sortedMatches);

@@ -7,10 +7,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem } from '@nextui-org/react';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import { getCurrentEvent } from '@/components/getCurrentEvent';
 
 
 const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[], loading: any, time: Date, shifts: Scouter[] }) => {
-    const [eventKey, seteventKey] = useState('2023casf');
+    const eventKey = getCurrentEvent();
 
     const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
 

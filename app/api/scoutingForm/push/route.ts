@@ -79,8 +79,8 @@ export async function POST(
                 },
                 robot: {
                     connectOrCreate: {
-                        where: { teamNumber: Number(teamNumber) },
-                        create: { teamNumber: Number(teamNumber) }
+                        where: { teamNumber: teamNumber },
+                        create: { teamNumber: teamNumber }
                     }
                 },
             },

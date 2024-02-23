@@ -93,6 +93,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
     useEffect(() => {
         fetchUsers();
         setValue(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -185,6 +186,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
 
     useEffect(() => {
         loadData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users, playerMatches]);
 
     const handleClear = () => {

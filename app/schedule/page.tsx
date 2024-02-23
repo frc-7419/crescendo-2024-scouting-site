@@ -11,10 +11,11 @@ import { Input } from '@nextui-org/react';
 import { Match } from '@/types/match';
 import axios, { AxiosHeaders } from 'axios';
 import { LoadStatusContext } from '@/components/LoadStatusContext';
+import { getCurrentEvent } from '@/components/getCurrentEvent';
 
 const Dashboard = () => {
     const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
-    const [eventKey, seteventKey] = useState('2023casf');
+    const eventKey = getCurrentEvent();
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date(1679270078 * 1000));
@@ -28,6 +29,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         setValue(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -51,6 +53,7 @@ const Dashboard = () => {
                     setLoading(false);
                 });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
     return (

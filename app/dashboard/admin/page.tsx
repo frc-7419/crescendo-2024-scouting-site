@@ -16,6 +16,8 @@ import axios from 'axios';
 import LoadStatus from '@/components/load-status';
 import { LoadStatusContext } from '@/components/LoadStatusContext';
 import { set } from 'zod';
+import { getCurrentEvent } from '@/components/getCurrentEvent';
+import { Event } from '@/types/Event';
 
 const Dashboard = () => {
     const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
@@ -23,9 +25,9 @@ const Dashboard = () => {
     const { data: session } = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
     const [shifts, setShifts] = useState([]);
+    const [eventData, setEventData] = useState<Event>();
 
-
-    const [eventKey, seteventKey] = useState('2023cafr');
+    const eventKey = getCurrentEvent();
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date(1678554428 * 1000));
@@ -45,6 +47,7 @@ const Dashboard = () => {
                 router.push("/dashboard/user")
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
     useEffect(() => {
@@ -72,6 +75,7 @@ const Dashboard = () => {
                     setLoading(false);
                 });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
     const getShifts = async () => {
@@ -88,9 +92,25 @@ const Dashboard = () => {
         console.debug(shifts);
     };
 
+    const getEvent = async () => {
+        const response = await axios.get(`/api/bluealliance/getEventInfo/${eventKey}`, {
+            onDownloadProgress: (progressEvent) => {
+                let percentCompleted = Math.round(
+                    (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
+                );
+                setValue(percentCompleted);
+            },
+        });
+        const data = await response.data;
+        setEventData(data);
+        console.debug(eventData);
+    };
+
     useEffect(() => {
         getShifts();
+        getEvent();
         setValue(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -112,7 +132,7 @@ const Dashboard = () => {
                     </Tabs>
                 </div>
                 <div id='cards' className="mt-4 overflow-y-auto flex-1 ">
-                    <CurrentGame matches={matches} loading={loading} eventName="Arizona East Regionals" time={currentTime} shifts={shifts} />
+                    <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''} time={currentTime} shifts={shifts} />
 
                     {selectedTab === "admin" ? (<DashCard title="Scouting Schedule" content={<AdminMatchSchedule matches={matches} loading={loading} time={currentTime} />} />) : (<DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />)}
                 </div>

@@ -45,7 +45,7 @@ export interface ScoutingData {
     id?: number;
     matchNumber: number;
     matchID: string;
-    teamNumber: number;
+    teamNumber: string;
     venue: string;
     submitTime: Date;
     auton: Auton;

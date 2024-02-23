@@ -19,12 +19,13 @@ const UserValidation = () => {
                 router.push("/dashboard/user");
             }
         }
-    }, [session]); 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [session]);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-slate-900 gap-4">
             <div className="text-xl ">
-                Verifying User 
+                Verifying User
             </div>
             <Spinner color="default" />
         </div>
