@@ -22,8 +22,10 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <head />
-      <body className={`${alata.className} transition-colors`}>
-        <Providers>{children}</Providers>
+      <body className={`${alata.className} transition-colors flex flex-col h-screen`}>
+        <div className="flex-1">
+          <Providers>{children}</Providers>
+        </div>
       </body>
     </html>
   );

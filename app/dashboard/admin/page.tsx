@@ -2,7 +2,7 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import React, { Suspense, useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
@@ -20,7 +20,7 @@ import { getCurrentEvent } from '@/components/getCurrentEvent';
 import { Event } from '@/types/Event';
 
 const Dashboard = () => {
-    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
+    const { value, setValue } = React.useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
     const router = useRouter();
     const { data: session } = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
