@@ -2,28 +2,27 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import React, { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import React, {useEffect, useState} from 'react';
+import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
-import MatchSchedule from '@/components/schedule';
 import CurrentGame from '@/components/currentgame';
-import { Input, Tabs, Tab } from '@nextui-org/react';
-import { Match } from '@/types/match';
-import { useRouter } from 'next/navigation';
+import {Input, Tab, Tabs} from '@nextui-org/react';
+import {useRouter} from 'next/navigation';
 import ScouterSchedule from '@/components/scouter-schedule';
 import AdminMatchSchedule from '@/components/scheduleAdmin';
 import axios from 'axios';
-import LoadStatus from '@/components/load-status';
-import { LoadStatusContext } from '@/components/LoadStatusContext';
-import { set } from 'zod';
-import { getCurrentEvent } from '@/components/getCurrentEvent';
-import { Event } from '@/types/Event';
+import {LoadStatusContext} from '@/components/LoadStatusContext';
+import {getCurrentEvent} from '@/components/getCurrentEvent';
+import {Event} from '@/types/Event';
 import Loading from '@/components/loading';
 
 const Dashboard = () => {
-    const { value, setValue } = React.useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
+    const {value, setValue} = React.useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
     const router = useRouter();
-    const { data: session } = useSession();
+    const {data: session} = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
     const [shifts, setShifts] = useState([]);
     const [eventData, setEventData] = useState<Event>();
@@ -120,15 +119,16 @@ const Dashboard = () => {
     }, []);
 
     if (loading) {
-        return <Loading />
+        return <Loading/>
     }
 
     return (
         <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar />
-            <NavBar />
+            <SideBar/>
+            <NavBar/>
             <div className="pt-6 pr-6 pl-6 flex flex-col flex-1">
-                <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
+                <Input type='number' placeholder='time' defaultValue='1679270078'
+                       onChange={(e) => setTime(Number(e.target.value))}/>
                 <div className='header flex justify-between'>
                     <span className="text-3xl">Welcome {firstName},</span>
                     <Tabs
@@ -137,14 +137,21 @@ const Dashboard = () => {
                         selectedKey={selectedTab}
                         onSelectionChange={(key) => setSelectedTab(String(key))}
                     >
-                        <Tab key="admin" title="Admin" />
-                        <Tab key="scouter" title="Scouter" />
+                        <Tab key="admin" title="Admin"/>
+                        <Tab key="scouter" title="Scouter"/>
                     </Tabs>
                 </div>
                 <div id='cards' className="mt-4 overflow-y-auto">
-                    <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''} time={currentTime} shifts={shifts} />
+                    <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''}
+                                 time={currentTime} shifts={shifts}/>
 
-                    {selectedTab === "admin" ? (<DashCard title="Scouting Schedule" content={<AdminMatchSchedule matches={matches} loading={loading} time={currentTime} />} />) : (<DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />)}
+                    {selectedTab === "admin" ? (<DashCard title="Scouting Schedule"
+                                                          content={<AdminMatchSchedule matches={matches}
+                                                                                       loading={loading}
+                                                                                       time={currentTime}/>}/>) : (
+                        <DashCard title="Scouting Schedule"
+                                  content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
+                                                            shifts={shifts}/>}/>)}
                 </div>
             </div>
         </main>

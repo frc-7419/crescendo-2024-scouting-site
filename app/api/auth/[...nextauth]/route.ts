@@ -1,9 +1,8 @@
 // app/api/auth/[...nextauth]/route.ts
 
-import { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
-import NextAuth, { AuthOptions, Session, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
+import NextAuth, {AuthOptions, Session, User} from "next-auth";
+import {JWT} from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 
@@ -12,11 +11,11 @@ const authOptions: AuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "text" },
-                password: { label: "Password", type: "password" },
+                email: {label: "Email", type: "text"},
+                password: {label: "Password", type: "password"},
             },
             async authorize(credentials, req) {
-                const { email, password } = credentials as {
+                const {email, password} = credentials as {
                     email: string;
                     password: string;
                 };
@@ -41,7 +40,7 @@ const authOptions: AuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user }: { token: JWT; user: User }) {
+        async jwt({token, user}: { token: JWT; user: User }) {
             if (user) {
                 return {
                     ...token,
@@ -50,7 +49,7 @@ const authOptions: AuthOptions = {
             }
             return token;
         },
-        async session({ session, token }: { session: Session, token: JWT }) {
+        async session({session, token}: { session: Session, token: JWT }) {
             if (token.user) {
                 session.user = token.user;
             }
@@ -98,4 +97,4 @@ async function createTestUser() {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST, authOptions };
+export {handler as GET, handler as POST, authOptions};

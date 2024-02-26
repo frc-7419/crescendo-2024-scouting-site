@@ -1,6 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/lib/prisma";
 
 export async function POST(
@@ -79,8 +78,8 @@ export async function POST(
                 },
                 robot: {
                     connectOrCreate: {
-                        where: { teamNumber: teamNumber },
-                        create: { teamNumber: teamNumber }
+                        where: {teamNumber: teamNumber},
+                        create: {teamNumber: teamNumber}
                     }
                 },
             },

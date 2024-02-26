@@ -1,11 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Match } from "@/types/match";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET(
     request: Request,
-    { params }: { params: { event: string } }
+    {params}: { params: { event: string } }
 ) {
     const session = await getServerSession(authOptions)
     const event = params.event
@@ -27,7 +25,7 @@ export async function GET(
             headers: new Headers({
                 'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
             }),
-            next: { revalidate: 3600 }
+            next: {revalidate: 3600}
         });
 
         if (!response.ok) {

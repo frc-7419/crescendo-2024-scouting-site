@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Progress } from '@nextui-org/react';
-import { LoadStatusContext } from './LoadStatusContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {Progress} from '@nextui-org/react';
+import {LoadStatusContext} from './LoadStatusContext';
 
 const LoadStatus = () => {
     const context = useContext(LoadStatusContext);
@@ -12,7 +12,7 @@ const LoadStatus = () => {
 
     useEffect(() => {
         if (context) {
-            const { value } = context;
+            const {value} = context;
             console.debug(value);
 
             if (value === 100) {
@@ -68,7 +68,7 @@ const LoadStatus = () => {
             size="sm"
             aria-label="Loading..."
             value={progressValue}
-            style={{ opacity }}
+            style={{opacity}}
             color={color}
         />
     );
@@ -85,7 +85,7 @@ const LoadStatusWrapper = () => {
                 zIndex: 1000,
             }}
         >
-            <LoadStatus />
+            <LoadStatus/>
         </div>
     );
 };

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
-import { useTheme } from "next-themes";
+import React, {useEffect, useState} from "react";
+import {Toaster} from "react-hot-toast";
+import {useTheme} from "next-themes";
 
 export default function Toast() {
-    const { theme, setTheme } = useTheme();
+    const {theme, setTheme} = useTheme();
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {

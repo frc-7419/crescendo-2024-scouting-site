@@ -1,20 +1,20 @@
 "use client"
 
-import React, { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import React, {useEffect, useState} from 'react';
+import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
 import CurrentGame from '@/components/currentgame';
 import ScouterSchedule from '@/components/scouter-schedule';
 import axios from 'axios';
-import { getCurrentEvent } from '@/components/getCurrentEvent';
-import { Event } from '@/types/Event';
+import {getCurrentEvent} from '@/components/getCurrentEvent';
+import {Event} from '@/types/Event';
 import Loading from '@/components/loading';
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
 
 
 const Dashboard = () => {
-    const { data: session } = useSession();
+    const {data: session} = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
 
     const eventKey = getCurrentEvent();
@@ -54,18 +54,21 @@ const Dashboard = () => {
     }
 
     if (loading) {
-        return <Loading />
+        return <Loading/>
     }
 
     return (
         <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar />
-            <NavBar />
+            <SideBar/>
+            <NavBar/>
             <div className="pt-6 pr-6 pl-6 flex flex-col flex-1">
                 <span className="text-3xl">Welcome {firstName},</span>
                 <div className="mt-4 overflow-y-auto">
-                    <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''} time={currentTime} shifts={shifts} />
-                    <DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />
+                    <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''}
+                                 time={currentTime} shifts={shifts}/>
+                    <DashCard title="Scouting Schedule"
+                              content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
+                                                        shifts={shifts}/>}/>
                 </div>
             </div>
         </main>

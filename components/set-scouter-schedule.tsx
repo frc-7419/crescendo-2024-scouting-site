@@ -1,18 +1,33 @@
 'use client';
 
-import { Match } from '@/types/match';
-import { Scouter, ScoutingSchedule } from '@/types/schedule';
-import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip, Input, Button, Selection, Avatar, Autocomplete, AutocompleteItem } from '@nextui-org/react';
-import { TeamRole } from '@prisma/client';
-import { match } from 'assert';
+import {Match} from '@/types/match';
+import {Scouter, ScoutingSchedule} from '@/types/schedule';
+import {
+    Autocomplete,
+    AutocompleteItem,
+    Avatar,
+    Button,
+    Chip,
+    Selection,
+    Spinner,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow
+} from '@nextui-org/react';
+import {TeamRole} from '@prisma/client';
 import axios from 'axios';
-import React, { FormEvent, Key, createRef, use, useContext, useEffect, useState } from 'react';
+import React, {createRef, FormEvent, Key, useContext, useEffect, useState} from 'react';
 import toast from 'react-hot-toast';
-import { set } from 'zod';
-import { LoadStatusContext } from './LoadStatusContext';
+import {LoadStatusContext} from './LoadStatusContext';
 
-const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
-    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
+const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
+    const {value, setValue} = useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
     const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
     const [playerMatches, setPlayerMatches] = useState<Match[]>([]);
     const [tableKey, setTableKey] = useState<string>('table');
@@ -314,16 +329,20 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                     <form ref={ref} className="flex flex-col p-2 rounded-xl gap-4" onSubmit={handleSubmit}>
                         <div className='align-right flex gap-4 flex-row w-full'>
                             <h1 className="text-2xl font-semibold flex-grow">Scouting Schedule</h1>
-                            <Button variant="bordered" color='primary' type="submit" isDisabled={submitting} isLoading={usersLoading}>
+                            <Button variant="bordered" color='primary' type="submit" isDisabled={submitting}
+                                    isLoading={usersLoading}>
                                 Submit
                             </Button>
-                            <Button variant="bordered" color='warning' onClick={() => ref.current?.reset()} isDisabled={submitting} isLoading={usersLoading}>
+                            <Button variant="bordered" color='warning' onClick={() => ref.current?.reset()}
+                                    isDisabled={submitting} isLoading={usersLoading}>
                                 Clear
                             </Button>
-                            <Button variant="bordered" onClick={handleClear} color='danger' isDisabled={submitting} isLoading={usersLoading}>
+                            <Button variant="bordered" onClick={handleClear} color='danger' isDisabled={submitting}
+                                    isLoading={usersLoading}>
                                 Delete
                             </Button>
-                            <Button variant="bordered" color='secondary' onClick={uploadSchedule} isLoading={submitting || usersLoading}>
+                            <Button variant="bordered" color='secondary' onClick={uploadSchedule}
+                                    isLoading={submitting || usersLoading}>
                                 Push Changes
                             </Button>
                         </div>
@@ -460,16 +479,20 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                                     </TableHeader>
                                     <TableBody
                                         items={playerMatches}
-                                        loadingContent={<Spinner label="Loading..." />}
+                                        loadingContent={<Spinner label="Loading..."/>}
                                     >
                                         {(item) => (
                                             <TableRow key={item.key}>
                                                 <TableCell>Qual {item.match_number}</TableCell>
-                                                <TableCell>{new Date(item.predicted_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</TableCell>
+                                                <TableCell>{new Date(item.predicted_time * 1000).toLocaleTimeString([], {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}</TableCell>
                                                 <TableCell>
                                                     <div className='flex flex-row justify-between'>
                                                         {item.alliances.blue.team_keys.map((teamKey, index) => (
-                                                            <div className='w-28 text-center flex flex-col gap-2' key={teamKey}>
+                                                            <div className='w-28 text-center flex flex-col gap-2'
+                                                                 key={teamKey}>
                                                                 {item.alliances.blue.scouters.length > 0 && (
                                                                     <>
                                                                         <Chip
@@ -495,7 +518,8 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                                                 <TableCell>
                                                     <div className='flex flex-row justify-between'>
                                                         {item.alliances.red.team_keys.map((teamKey, index) => (
-                                                            <div className='w-28 text-center flex flex-col gap-2' key={teamKey}>
+                                                            <div className='w-28 text-center flex flex-col gap-2'
+                                                                 key={teamKey}>
                                                                 {item.alliances.red.scouters.length > 0 && (
                                                                     <>
                                                                         <Chip
@@ -526,7 +550,7 @@ const SetScouterSchedule = ({ matches, loading, time }: { matches: Match[], load
                         </>
                     )
                     }
-                </div >
+                </div>
             </div>
         </>
     );

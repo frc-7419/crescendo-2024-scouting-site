@@ -1,9 +1,9 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { type NextRequest } from 'next/server'
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
-import { Match } from "@/types/match";
-import { Scouter } from "@/types/schedule";
+import {Match} from "@/types/match";
+import {Scouter} from "@/types/schedule";
 
 const getScoutedTeam = (match: Match, shift: Scouter) => {
     let team;

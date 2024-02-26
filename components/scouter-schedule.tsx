@@ -1,22 +1,52 @@
 'use client';
 
-import { Match } from '@/types/match';
-import { Scouter } from '@/types/schedule';
-import { faCog, faDoorOpen, faMailForward, faUser, faWarning } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Popover, PopoverTrigger, PopoverContent, Listbox, ListboxItem, useDisclosure, Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Button, Input, Autocomplete, AutocompleteItem } from '@nextui-org/react';
+import {Match} from '@/types/match';
+import {Scouter} from '@/types/schedule';
+import {faCog, faMailForward, faUser, faWarning} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {
+    Autocomplete,
+    AutocompleteItem,
+    Button,
+    Input,
+    Listbox,
+    ListboxItem,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+    Spinner,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow,
+    useDisclosure
+} from '@nextui-org/react';
 import Link from 'next/link';
-import React, { Key, use, useContext, useEffect, useState } from 'react';
-import { getCurrentEvent } from '@/components/getCurrentEvent';
+import React, {Key, useContext, useEffect, useState} from 'react';
+import {getCurrentEvent} from '@/components/getCurrentEvent';
 import axios from 'axios';
-import { LoadStatusContext } from './LoadStatusContext';
-import { on } from 'events';
+import {LoadStatusContext} from './LoadStatusContext';
 import toast from 'react-hot-toast';
 
 
-const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[], loading: any, time: Date, shifts: Scouter[] }) => {
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
+const ScouterSchedule = ({matches, loading, time, shifts}: {
+    matches: Match[],
+    loading: any,
+    time: Date,
+    shifts: Scouter[]
+}) => {
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {value, setValue} = useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
 
     const eventKey = getCurrentEvent();
 
@@ -35,7 +65,7 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
     }, [matches, time, shifts]);
 
 
-    const PopButton = ({ icon, text }: { icon: JSX.Element, text: string }) => {
+    const PopButton = ({icon, text}: { icon: JSX.Element, text: string }) => {
         return (
             <div className='flex justify-between items-center gap-4'>
                 <div className="">
@@ -162,17 +192,21 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
                                 </TableHeader>
                                 <TableBody
                                     items={filteredMatches}
-                                    loadingContent={<Spinner label="Loading..." />}
+                                    loadingContent={<Spinner label="Loading..."/>}
                                 >
                                     {(item) => (
-                                        <TableRow key={item.key} >
-                                            <TableCell >
+                                        <TableRow key={item.key}>
+                                            <TableCell>
                                                 <div className='flex flex-row items-center gap-4'>
-                                                    <div className={`${(getScoutedTeam(item).alliance == "Blue Alliance") ? 'bg-blue-600' : 'bg-red-600'} w-3 h-3`}></div>
-                                                    {new Date(item.predicted_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    <div
+                                                        className={`${(getScoutedTeam(item).alliance == "Blue Alliance") ? 'bg-blue-600' : 'bg-red-600'} w-3 h-3`}></div>
+                                                    {new Date(item.predicted_time * 1000).toLocaleTimeString([], {
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    })}
                                                 </div>
                                             </TableCell>
-                                            <TableCell >
+                                            <TableCell>
                                                 {
                                                     item.comp_level === 'qm' ?
                                                         `Qual ${item.match_number}` :
@@ -184,28 +218,31 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
                                             <TableCell id="yourscouting">
                                                 <div className='flex-grow'>
                                                     {getScoutedTeam(item) && (
-                                                        <span >You are scouting {getScoutedTeam(item).team} on the {getScoutedTeam(item).alliance}</span>
+                                                        <span>You are scouting {getScoutedTeam(item).team} on the {getScoutedTeam(item).alliance}</span>
                                                     )}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
                                                 {/* waiting for form component */}
-                                                <Link href={`/scouting/${item.key}`} className='text-center'>Open Form</Link>
+                                                <Link href={`/scouting/${item.key}`} className='text-center'>Open
+                                                    Form</Link>
                                             </TableCell>
                                             <TableCell>
                                                 <Popover showArrow>
                                                     <PopoverTrigger>
                                                         <button>
-                                                            <FontAwesomeIcon className='hover:animate-spin' icon={faCog} />
+                                                            <FontAwesomeIcon className='hover:animate-spin'
+                                                                             icon={faCog}/>
                                                         </button>
                                                     </PopoverTrigger>
                                                     <PopoverContent className="text-xl">
                                                         <Listbox
                                                             aria-label="Actions"
                                                         >
-                                                            <ListboxItem key="settings" onClick={() => openModal(item.key)}>
+                                                            <ListboxItem key="settings"
+                                                                         onClick={() => openModal(item.key)}>
                                                                 <PopButton
-                                                                    icon={<FontAwesomeIcon icon={faMailForward} />}
+                                                                    icon={<FontAwesomeIcon icon={faMailForward}/>}
                                                                     text="Dispute"
                                                                 />
                                                             </ListboxItem>
@@ -236,7 +273,8 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
                                         isRequired
                                         autoFocus
                                         endContent={
-                                            <FontAwesomeIcon icon={faWarning} className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                                            <FontAwesomeIcon icon={faWarning}
+                                                             className="text-2xl text-default-400 pointer-events-none flex-shrink-0"/>
                                         }
                                         label="Reason for Dispute"
                                         placeholder="i dont feel like it"
@@ -256,7 +294,8 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
                                         onSelectionChange={setDisputeUser}
                                         variant='bordered'
                                         endContent={
-                                            <FontAwesomeIcon icon={faUser} className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                                            <FontAwesomeIcon icon={faUser}
+                                                             className="text-2xl text-default-400 pointer-events-none flex-shrink-0"/>
                                         }
                                     >
                                         {(user) => (

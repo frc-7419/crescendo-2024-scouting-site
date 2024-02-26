@@ -1,16 +1,16 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import jamesPfp from '@/resources/james.webp';
 import ThemeToggle from './theme-toggle';
-import { signOut, useSession } from 'next-auth/react';
-import { Popover, Button, PopoverTrigger, PopoverContent, Listbox, ListboxItem, Avatar } from '@nextui-org/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faDoorOpen, faList } from '@fortawesome/free-solid-svg-icons';
+import {signOut, useSession} from 'next-auth/react';
+import {Avatar, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCog, faDoorOpen} from '@fortawesome/free-solid-svg-icons';
 import Dropdown from './dropdownMenu';
 
 export default function NavBar() {
-    const { data: session, status } = useSession();
+    const {data: session, status} = useSession();
     const [currentTime, setCurrentTime] = useState('');
 
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
@@ -41,7 +41,7 @@ export default function NavBar() {
         }
     }, []);
 
-    const PopButton = ({ icon, text }: { icon: JSX.Element, text: string }) => {
+    const PopButton = ({icon, text}: { icon: JSX.Element, text: string }) => {
         return (
             <div className='flex justify-between items-center'>
                 <div className="flex-1 text-right text-l">
@@ -58,12 +58,12 @@ export default function NavBar() {
         <nav id="nav" className={'flex justify-between items-center gap-4 p-6'}>
             {windowWidth > 1000 ? (<>
                 <span id="time" className='text-2xl text-left flex-grow'>{currentTime}</span>
-                <ThemeToggle />
+                <ThemeToggle/>
                 <Popover showArrow placement="bottom-end">
                     <PopoverTrigger>
                         <button className="text-xl text-right flex items-center gap-4 justify-between">
                             <span id='user' className='text-xl text-right'>{session?.user?.name}</span>
-                            <Avatar src={jamesPfp.src} alt="User Profile" className="w-10 h-10 rounded-full" />
+                            <Avatar src={jamesPfp.src} alt="User Profile" className="w-10 h-10 rounded-full"/>
                         </button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[10rem] text-right text-xl">
@@ -72,13 +72,13 @@ export default function NavBar() {
                         >
                             <ListboxItem key="settings">
                                 <PopButton
-                                    icon={<FontAwesomeIcon icon={faCog} />}
+                                    icon={<FontAwesomeIcon icon={faCog}/>}
                                     text="Settings"
                                 />
                             </ListboxItem>
                             <ListboxItem key="logout" className="text-danger" color="danger" onClick={() => signOut()}>
                                 <PopButton
-                                    icon={<FontAwesomeIcon icon={faDoorOpen} />}
+                                    icon={<FontAwesomeIcon icon={faDoorOpen}/>}
                                     text="Logout"
                                 />
                             </ListboxItem>
@@ -86,7 +86,7 @@ export default function NavBar() {
                     </PopoverContent>
                 </Popover>
             </>) : (
-                <Dropdown />
+                <Dropdown/>
             )}
         </nav>
     )

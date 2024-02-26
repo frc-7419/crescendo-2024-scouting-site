@@ -1,4 +1,4 @@
-import { TeamRole, User } from "@prisma/client";
+import {TeamRole, User} from "@prisma/client";
 
 interface ScoutingSchedule {
     id?: number;
@@ -17,4 +17,4 @@ interface Scouter {
     scoutingScheduleId?: number;
 }
 
-export type { ScoutingSchedule, Scouter };
+export type {ScoutingSchedule, Scouter};

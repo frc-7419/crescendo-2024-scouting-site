@@ -1,12 +1,12 @@
 'use client';
 
-import { Match } from '@/types/match';
-import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip } from '@nextui-org/react';
-import React, { useEffect, useState } from 'react';
-import { getCurrentEvent } from '@/components/getCurrentEvent';
+import {Match} from '@/types/match';
+import {Chip, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
+import React, {useEffect, useState} from 'react';
+import {getCurrentEvent} from '@/components/getCurrentEvent';
 
 
-const MatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
+const MatchSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
     const eventKey = getCurrentEvent();
 
     const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
@@ -35,7 +35,7 @@ const MatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: 
                             </TableHeader>
                             <TableBody
                                 items={filteredMatches}
-                                loadingContent={<Spinner label="Loading..." />}
+                                loadingContent={<Spinner label="Loading..."/>}
                             >
                                 {(item) => (
                                     <TableRow key={item.key}>
@@ -47,7 +47,10 @@ const MatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: 
                                                         `Semi-Finals ${item.set_number}` :
                                                         `Finals ${item.match_number}`
                                             }</TableCell>
-                                        <TableCell>{new Date(item.predicted_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</TableCell>
+                                        <TableCell>{new Date(item.predicted_time * 1000).toLocaleTimeString([], {
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}</TableCell>
                                         <TableCell>
                                             <div className='flex flex-row justify-between'>
                                                 {item.alliances.blue.team_keys.map((teamKey) => (

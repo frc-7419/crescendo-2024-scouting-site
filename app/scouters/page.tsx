@@ -2,21 +2,23 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import React, { FormEvent, Suspense, use, useContext, useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { Match } from '@/types/match';
-import { useRouter } from 'next/navigation';
+import React, {useContext, useEffect, useState} from 'react';
+import {useSession} from 'next-auth/react';
+import {Match} from '@/types/match';
+import {useRouter} from 'next/navigation';
 import SetScouterSchedule from '@/components/set-scouter-schedule';
-import Toast from "@/components/toast";
 import axios from 'axios';
-import { LoadStatusContext } from '@/components/LoadStatusContext';
-import { getCurrentEvent } from '@/components/getCurrentEvent';
+import {LoadStatusContext} from '@/components/LoadStatusContext';
+import {getCurrentEvent} from '@/components/getCurrentEvent';
 import Loading from '@/components/loading';
 
 const Scouters = () => {
     const router = useRouter();
-    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
-    const { data: session } = useSession();
+    const {value, setValue} = useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
+    const {data: session} = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
 
 
@@ -74,16 +76,16 @@ const Scouters = () => {
     }, [eventKey]);
 
     if (loading) {
-        return <Loading />
+        return <Loading/>
     }
 
     return (
         <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar />
-            <NavBar />
+            <SideBar/>
+            <NavBar/>
             <div id='dash' className="p-6 flex flex-col">
                 <div id='cards' className="overflow-y-scroll flex-1">
-                    <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime} />
+                    <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime}/>
                 </div>
             </div>
         </main>

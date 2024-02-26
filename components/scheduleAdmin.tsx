@@ -1,15 +1,28 @@
 'use client';
 
-import { Match } from '@/types/match';
-import { Scouter } from '@/types/schedule';
-import { Table, TableBody, TableRow, TableHeader, TableCell, TableColumn, Spinner, Chip, Avatar } from '@nextui-org/react';
-import React, { useContext, useEffect, useState } from 'react';
-import { LoadStatusContext } from './LoadStatusContext';
+import {Match} from '@/types/match';
+import {Scouter} from '@/types/schedule';
+import {
+    Avatar,
+    Chip,
+    Spinner,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow
+} from '@nextui-org/react';
+import React, {useContext, useEffect, useState} from 'react';
+import {LoadStatusContext} from './LoadStatusContext';
 import axios from 'axios';
 
 
-const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], loading: any, time: Date }) => {
-    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
+const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
+    const {value, setValue} = useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
     const [playerMatches, setPlayerMatches] = useState<Match[]>([]);
     const [tableKey, setTableKey] = useState<string>('table');
 
@@ -197,7 +210,7 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
                             </TableHeader>
                             <TableBody
                                 items={playerMatches}
-                                loadingContent={<Spinner label="Loading..." />}
+                                loadingContent={<Spinner label="Loading..."/>}
                             >
                                 {(item) => (
                                     <TableRow key={item.key}>
@@ -209,7 +222,10 @@ const AdminMatchSchedule = ({ matches, loading, time }: { matches: Match[], load
                                                         `Semi-Finals ${item.set_number}` :
                                                         `Finals ${item.match_number}`
                                             }</TableCell>
-                                        <TableCell>{new Date(item.predicted_time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</TableCell>
+                                        <TableCell>{new Date(item.predicted_time * 1000).toLocaleTimeString([], {
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}</TableCell>
                                         <TableCell>
                                             <div className='flex flex-row justify-between'>
                                                 {item.alliances.blue.team_keys.map((teamKey, index) => (

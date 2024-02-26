@@ -2,55 +2,56 @@
 
 'use client'
 
-import { usePathname, useSearchParams } from "next/navigation";
+import {usePathname, useSearchParams} from "next/navigation";
 import Script from "next/script";
-import { FC, PropsWithChildren, createContext, useEffect, useState } from "react";
+import {createContext, FC, PropsWithChildren, useEffect, useState} from "react";
 
-const ProxyContext = createContext<ProxyInstance>([undefined, () => { }]);
+const ProxyContext = createContext<ProxyInstance>([undefined, () => {
+}]);
 
-const ProxyProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
-  const [tips, setTips] = useState<string | undefined>();
-  const msg = tips === undefined ? tips : (tips || 'Are you sure want to leave this page?');
+const ProxyProvider: FC<PropsWithChildren<{}>> = ({children}) => {
+    const [tips, setTips] = useState<string | undefined>();
+    const msg = tips === undefined ? tips : (tips || 'Are you sure want to leave this page?');
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
-  const url = [pathname, searchParams].filter(i => i).join('?');
-  useEffect(() => {
-    setTips(undefined);
-  }, [url, setTips]);
+    const url = [pathname, searchParams].filter(i => i).join('?');
+    useEffect(() => {
+        setTips(undefined);
+    }, [url, setTips]);
 
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (msg === undefined) return msg;
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            if (msg === undefined) return msg;
 
-      event.preventDefault();
-      event.returnValue = msg;
+            event.preventDefault();
+            event.returnValue = msg;
 
-      return msg;
-    };
+            return msg;
+        };
 
-    const script = document.getElementById('proxy-script');
-    if (script) {
-      script.dataset.msg = msg || '';
-      script.dataset.href = location.href;
-    }
+        const script = document.getElementById('proxy-script');
+        if (script) {
+            script.dataset.msg = msg || '';
+            script.dataset.href = location.href;
+        }
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    }
-  }, [msg]);
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        }
+    }, [msg]);
 
-  return (
-    <ProxyContext.Provider
-      value={[msg, setTips]}
-    >
-      <Script
-        strategy="afterInteractive"
-        id="proxy-script"
-        dangerouslySetInnerHTML={{
-          __html: `(() => {
+    return (
+        <ProxyContext.Provider
+            value={[msg, setTips]}
+        >
+            <Script
+                strategy="afterInteractive"
+                id="proxy-script"
+                dangerouslySetInnerHTML={{
+                    __html: `(() => {
                         const originalPushState = history.pushState.bind(history);
                         let currentPoint = 0;
                         let point = 0;
@@ -81,17 +82,17 @@ const ProxyProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
                             }
                         });
                     })()`,
-        }}
-      ></Script>
-      {children}
-    </ProxyContext.Provider>
-  );
+                }}
+            ></Script>
+            {children}
+        </ProxyContext.Provider>
+    );
 };
 
 export type ProxyInstance = [
-  string | undefined, (tips?: string) => void
+        string | undefined, (tips?: string) => void
 ]
 
-export { ProxyContext };
+export {ProxyContext};
 
 export default ProxyProvider;

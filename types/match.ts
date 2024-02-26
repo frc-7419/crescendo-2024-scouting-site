@@ -1,22 +1,22 @@
 export interface Match {
     actual_time: number;
     alliances: {
-      blue: {
-        dq_team_keys: string[];
-        score: number;
-        surrogate_team_keys: string[];
-        team_keys: string[];
-        scouters: string[];
-        scoutersIDs: string[];
-      };
-      red: {
-        dq_team_keys: string[];
-        score: number;
-        surrogate_team_keys: string[];
-        team_keys: string[];
-        scouters: string[];
-        scoutersIDs: string[];
-      };
+        blue: {
+            dq_team_keys: string[];
+            score: number;
+            surrogate_team_keys: string[];
+            team_keys: string[];
+            scouters: string[];
+            scoutersIDs: string[];
+        };
+        red: {
+            dq_team_keys: string[];
+            score: number;
+            surrogate_team_keys: string[];
+            team_keys: string[];
+            scouters: string[];
+            scoutersIDs: string[];
+        };
     };
     comp_level: string;
     event_key: string;

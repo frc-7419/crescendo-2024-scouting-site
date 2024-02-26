@@ -1,12 +1,12 @@
 'use client';
 
-import { Spinner } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from 'next/navigation';
-import { useEffect } from "react";
+import {Spinner} from "@nextui-org/react";
+import {useSession} from "next-auth/react";
+import {useRouter} from 'next/navigation';
+import {useEffect} from "react";
 
 const UserValidation = () => {
-    const { data: session } = useSession();
+    const {data: session} = useSession();
     const router = useRouter();
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const UserValidation = () => {
             <div className="text-xl ">
                 Verifying User
             </div>
-            <Spinner color="default" />
+            <Spinner color="default"/>
         </div>
     );
 };
