@@ -17,7 +17,7 @@ export default function SideBar() {
         return (
             <Link
                 href={route}
-                className={`transition-colors flex items-center gap-4 my-auto text-md py-5 ${colorClass}`}
+                className={`transition-colors flex items-center gap-4 my-auto text-md py-5 ${colorClass} animate-fade-down animate-normal`}
             >
                 <div className="text-3xl w-[30px]">
                     {icon}
@@ -63,7 +63,7 @@ export default function SideBar() {
                     </>
                 ) : null}
                 <MenuItem
-                    name= "Blue Alliance"
+                    name="Blue Alliance"
                     route="/BlueAlliance"
                     icon={<FontAwesomeIcon icon={faHandPaper} />}
                 />

@@ -9,6 +9,7 @@ import { Spinner } from '@nextui-org/react';
 import { ScoutingFormData } from '@/types/form';
 import axios from 'axios';
 import { LoadStatusContext } from '@/components/LoadStatusContext';
+import ProxyProvider from '@/components/unsavedprovider';
 
 const Scouting = ({ params }: { params: { match: string } }) => {
     const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
@@ -43,25 +44,27 @@ const Scouting = ({ params }: { params: { match: string } }) => {
 
     if (loading) {
         return (
-            <main className="h-screen overflow-clip dark:bg-slate-950">
-                <SideBar />
-                <NavBar />
-                <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
-                    <div className='flex justify-between'>
-                        <span className="text-3xl">Currently Scouting</span>
-                        <span className="text-3xl"><Spinner /></span>
+            <ProxyProvider>
+                <main className="min-h-screen overflow-clip dark:bg-slate-950">
+                    <SideBar />
+                    <NavBar />
+                    <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
+                        <div className='flex justify-between'>
+                            <span className="text-3xl">Currently Scouting</span>
+                            <span className="text-3xl"><Spinner /></span>
+                        </div>
+                        <div id='cards' className="mt-4 overflow-y-auto flex-1">
+                            <div>Loading...</div>
+                        </div>
                     </div>
-                    <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                        <div>Loading...</div>
-                    </div>
-                </div>
-            </main>
+                </main>
+            </ProxyProvider>
         );
     }
 
     if (errored) {
         return (
-            <main className="h-screen overflow-clip dark:bg-slate-950">
+            <main className="min-h-screen overflow-clip dark:bg-slate-950">
                 <SideBar />
                 <NavBar />
                 <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
@@ -74,7 +77,7 @@ const Scouting = ({ params }: { params: { match: string } }) => {
     }
 
     return (
-        <main className="h-screen overflow-clip dark:bg-slate-950">
+        <main className="min-h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">

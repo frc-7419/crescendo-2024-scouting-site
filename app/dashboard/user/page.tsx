@@ -56,18 +56,16 @@ const Dashboard = () => {
     if (loading) {
         return <Loading />
     }
-    
+
     return (
-        <main className="min-h-screen flex flex-col lg:flex-row overflow-clip dark:bg-slate-950">
+        <main className="min-h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
-            <div className="lg:w-4/5">
-                <div className="pt-6 pr-6 pl-6 flex flex-col flex-1">
-                    <span className="text-3xl">Welcome {firstName},</span>
-                    <div className="mt-4 overflow-y-auto">
-                        <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''} time={currentTime} shifts={shifts} />
-                        <DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />
-                    </div>
+            <div className="pt-6 pr-6 pl-6 flex flex-col flex-1">
+                <span className="text-3xl">Welcome {firstName},</span>
+                <div className="mt-4 overflow-y-auto">
+                    <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''} time={currentTime} shifts={shifts} />
+                    <DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />
                 </div>
             </div>
         </main>

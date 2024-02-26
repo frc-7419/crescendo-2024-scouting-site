@@ -114,7 +114,7 @@ const ScouterSchedule = ({ matches, loading, time, shifts }: { matches: Match[],
                                                         `Finals ${item.match_number}`
                                             }
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell id="yourscouting">
                                             <div className='flex-grow'>
                                                 {getScoutedTeam(item) && (
                                                     <span >You are scouting {getScoutedTeam(item).team} on the {getScoutedTeam(item).alliance}</span>

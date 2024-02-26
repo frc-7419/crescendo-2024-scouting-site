@@ -99,8 +99,25 @@ main {
     grid-area: 2 / 1 / 3 / 2;
     /* Adjust position of dashboard */
   }
+
+  main {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
+@media screen and (max-width: 550px) {
+  .allianceView {
+    display: none;
+  }
+  #yourscouting {
+    display: none;
+  }
+  .scoutformentry {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}
 .currentMatchCard {
   display: grid;
   grid-template-columns: 20rem;
@@ -128,4 +145,13 @@ main {
   grid-template-rows: 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
+}
+
+#dropdown {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
 }

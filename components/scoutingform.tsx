@@ -265,47 +265,50 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
 
     return (
         <>
+            <div className="bg-amber-700 max-w-full p-6 rounded-lg mb-6">
+                Your changes will NOT be saved if you leave this page.
+            </div>
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg p-6 mb-6 drop-shadow-lg shadow-inner">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='pb-4'>
                         <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Auton</h1>
-                        <div className="grid grid-cols-2 grid-rows-3 text-3xl font-thin">
+                        <div className="grid grid-cols-2 grid-rows-3 text-3xl font-thin gap-4 scoutformentry">
                             <ScoutModule text="Has Preload" moduleKey="preload" type='checkbox' control={control} />
-                            <ScoutModule className="pl-4" text="Left Community" moduleKey="leftCommunity" type='checkbox' control={control} />
+                            <ScoutModule text="Left Community" moduleKey="leftCommunity" type='checkbox' control={control} />
                             <ScoutModule text="Speaker" moduleKey="autospeaker" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutModule className="pl-4" text="Amp" moduleKey="autoamp" type='number' control={control} rules={{ validate: validateNonNegative }} />
+                            <ScoutModule text="Amp" moduleKey="autoamp" type='number' control={control} rules={{ validate: validateNonNegative }} />
                             <ScoutCommentModule text="Comments" moduleKey="autocomments" control={control} />
                         </div>
                     </div>
                     <div className='pb-4'>
                         <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Teleop</h1>
-                        <div className="grid grid-cols-2 grid-rows-7 text-3xl font-thin">
+                        <div className="grid grid-cols-2 grid-rows-7 text-3xl font-thin gap-4 scoutformentry">
                             <ScoutModule text="Defensive" moduleKey="defensive" type='checkbox' control={control} />
-                            <ScoutModule className="pl-4" text="Intake" moduleKey="intake" type='dropdown' items={
+                            <ScoutModule text="Intake" moduleKey="intake" type='dropdown' items={
                                 [
                                     { key: 'OTB', value: 'Over the Bumper' },
                                     { key: 'UTB', value: 'Under the Bumper' },]
                             } control={control} />
                             <ScoutModule text="Amp" moduleKey="teleopamp" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutModule className="pl-4" text="Speaker" moduleKey="teleopspeaker" type='number' control={control} rules={{ validate: validateNonNegative }} />
+                            <ScoutModule text="Speaker" moduleKey="teleopspeaker" type='number' control={control} rules={{ validate: validateNonNegative }} />
                             <ScoutModule text="Times Amped" moduleKey="timesAmped" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutModule className="pl-4" text="Pickup From" moduleKey="pickupFrom" type='dropdown' items={[
+                            <ScoutModule text="Pickup From" moduleKey="pickupFrom" type='dropdown' items={[
                                 { key: 'FLOOR', value: 'Floor' },
                                 { key: 'SOURCE', value: 'Source' },
                                 { key: 'BOTH', value: 'Both' },
                                 { key: 'NOT_ATTEMPTED', value: 'Did Not Attempt' },
                             ]} control={control} />
                             <ScoutModule text="Is Disabled" moduleKey="isRobotDisabled" type='checkbox' control={control} />
-                            <ScoutModule className="pl-4" text="Disabled At" moduleKey="disabledAt" type='datetime' control={control} />
+                            <ScoutModule text="Disabled At" moduleKey="disabledAt" type='datetime' control={control} />
                             <ScoutModule text="Is Hanging" moduleKey="isHanging" type='checkbox' control={control} />
-                            <ScoutModule className="pl-4" text="Trap" moduleKey="trap" type='number' control={control} rules={{ validate: validateNonNegative }} />
+                            <ScoutModule text="Trap" moduleKey="trap" type='number' control={control} rules={{ validate: validateNonNegative }} />
                             <ScoutModule text="Spot Light" moduleKey="spotLight" type='checkbox' control={control} />
                             <ScoutCommentModule text="Comments" moduleKey="teleopcomments" control={control} />
                         </div>
                     </div>
                     <div className='pb-4'>
                         <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Misc</h1>
-                        <div className="grid grid-cols-2 grid-rows-2 text-3xl font-thin">
+                        <div className="grid grid-cols-2 grid-rows-2 text-3xl font-thin gap-4 scoutformentry">
                             <ScoutModule text="Defense" moduleKey="defense" type='dropdown' items={[
                                 { key: '0', value: 'Did Not Play Defense' },
                                 { key: '1', value: 'Poor' },

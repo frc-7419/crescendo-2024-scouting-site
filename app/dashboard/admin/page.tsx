@@ -124,10 +124,10 @@ const Dashboard = () => {
     }
 
     return (
-        <main className="h-screen overflow-clip dark:bg-slate-950">
+        <main className="min-h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
-            <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
+            <div className="pt-6 pr-6 pl-6 flex flex-col flex-1">
                 <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
                 <div className='header flex justify-between'>
                     <span className="text-3xl">Welcome {firstName},</span>
@@ -141,7 +141,7 @@ const Dashboard = () => {
                         <Tab key="scouter" title="Scouter" />
                     </Tabs>
                 </div>
-                <div id='cards' className="mt-4 overflow-y-auto flex-1 ">
+                <div id='cards' className="mt-4 overflow-y-auto">
                     <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''} time={currentTime} shifts={shifts} />
 
                     {selectedTab === "admin" ? (<DashCard title="Scouting Schedule" content={<AdminMatchSchedule matches={matches} loading={loading} time={currentTime} />} />) : (<DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />)}

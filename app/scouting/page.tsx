@@ -75,7 +75,7 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <main className="h-screen overflow-clip dark:bg-slate-950">
+        <main className="min-h-screen overflow-clip dark:bg-slate-950">
             <SideBar />
             <NavBar />
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">

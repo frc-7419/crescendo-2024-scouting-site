@@ -6,20 +6,39 @@ import ThemeToggle from './theme-toggle';
 import { signOut, useSession } from 'next-auth/react';
 import { Popover, Button, PopoverTrigger, PopoverContent, Listbox, ListboxItem, Avatar } from '@nextui-org/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faDoorOpen } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faDoorOpen, faList } from '@fortawesome/free-solid-svg-icons';
+import Dropdown from './dropdownMenu';
 
 export default function NavBar() {
     const { data: session, status } = useSession();
     const [currentTime, setCurrentTime] = useState('');
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const date = new Date();
-            const time = date.toLocaleTimeString();
-            setCurrentTime(time);
-        }, 1000);
+    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
 
-        return () => clearInterval(interval);
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', handleResize);
+
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
+        }
+    }, []);
+
+    useEffect(() => {
+        if (windowWidth > 1000) {
+            const interval = setInterval(() => {
+                const date = new Date();
+                const time = date.toLocaleTimeString();
+                setCurrentTime(time);
+            }, 1000);
+
+            return () => clearInterval(interval);
+        }
     }, []);
 
     const PopButton = ({ icon, text }: { icon: JSX.Element, text: string }) => {
@@ -37,34 +56,38 @@ export default function NavBar() {
 
     return (
         <nav id="nav" className={'flex justify-between items-center gap-4 p-6'}>
-            <span id="time" className='text-2xl text-left flex-grow'>{currentTime}</span>
-            <ThemeToggle />
-            <Popover showArrow placement="bottom-end">
-                <PopoverTrigger>
-                    <button className="text-xl text-right flex items-center gap-4 justify-between">
-                        <span id='user' className='text-xl text-right'>{session?.user?.name}</span>
-                        <Avatar src={jamesPfp.src} alt="User Profile" className="w-10 h-10 rounded-full" />
-                    </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[10rem] text-right text-xl">
-                    <Listbox
-                        aria-label="Actions"
-                    >
-                        <ListboxItem key="settings">
-                            <PopButton
-                                icon={<FontAwesomeIcon icon={faCog} />}
-                                text="Settings"
-                            />
-                        </ListboxItem>
-                        <ListboxItem key="logout" className="text-danger" color="danger" onClick={() => signOut()}>
-                            <PopButton
-                                icon={<FontAwesomeIcon icon={faDoorOpen} />}
-                                text="Logout"
-                            />
-                        </ListboxItem>
-                    </Listbox>
-                </PopoverContent>
-            </Popover>
+            {windowWidth > 1000 ? (<>
+                <span id="time" className='text-2xl text-left flex-grow'>{currentTime}</span>
+                <ThemeToggle />
+                <Popover showArrow placement="bottom-end">
+                    <PopoverTrigger>
+                        <button className="text-xl text-right flex items-center gap-4 justify-between">
+                            <span id='user' className='text-xl text-right'>{session?.user?.name}</span>
+                            <Avatar src={jamesPfp.src} alt="User Profile" className="w-10 h-10 rounded-full" />
+                        </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[10rem] text-right text-xl">
+                        <Listbox
+                            aria-label="Actions"
+                        >
+                            <ListboxItem key="settings">
+                                <PopButton
+                                    icon={<FontAwesomeIcon icon={faCog} />}
+                                    text="Settings"
+                                />
+                            </ListboxItem>
+                            <ListboxItem key="logout" className="text-danger" color="danger" onClick={() => signOut()}>
+                                <PopButton
+                                    icon={<FontAwesomeIcon icon={faDoorOpen} />}
+                                    text="Logout"
+                                />
+                            </ListboxItem>
+                        </Listbox>
+                    </PopoverContent>
+                </Popover>
+            </>) : (
+                <Dropdown />
+            )}
         </nav>
     )
 }
