@@ -8,8 +8,10 @@ import ScouterSchedule from '@/components/scouter-schedule';
 import axios from 'axios';
 import { getCurrentEvent } from '@/components/getCurrentEvent';
 import { Event } from '@/types/Event';
+import Loading from '@/components/loading';
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
+
 
 const Dashboard = () => {
     const { data: session } = useSession();
@@ -51,6 +53,10 @@ const Dashboard = () => {
         setCurrentTime(timee);
     }
 
+    if (loading) {
+        return <Loading />
+    }
+    
     return (
         <main className="min-h-screen flex flex-col lg:flex-row overflow-clip dark:bg-slate-950">
             <SideBar />

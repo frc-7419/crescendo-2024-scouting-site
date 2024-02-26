@@ -12,6 +12,7 @@ import { Match } from '@/types/match';
 import axios, { AxiosHeaders } from 'axios';
 import { LoadStatusContext } from '@/components/LoadStatusContext';
 import { getCurrentEvent } from '@/components/getCurrentEvent';
+import Loading from '@/components/loading';
 
 const Dashboard = () => {
     const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
@@ -56,6 +57,10 @@ const Dashboard = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
+    if (loading) {
+        return <Loading />
+    }
+    
     return (
         <main className="h-screen overflow-clip dark:bg-slate-950">
             <SideBar />

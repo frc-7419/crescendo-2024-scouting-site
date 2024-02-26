@@ -1,7 +1,9 @@
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import { Alata } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import Loading from "@/components/loading";
 
 const alata = Alata({
   subsets: ["latin"],
@@ -22,10 +24,12 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <head />
-      <body className={`${alata.className} transition-colors flex flex-col h-screen`}>
-        <div className="flex-1">
-          <Providers>{children}</Providers>
-        </div>
+      <body className={`${alata.className} transition-colors`}>
+        <Providers>
+          <Suspense fallback={<Loading />}>
+            {children}
+          </Suspense>
+        </Providers>
       </body>
     </html>
   );
