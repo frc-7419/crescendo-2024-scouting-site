@@ -7,13 +7,17 @@ import {useSession} from 'next-auth/react';
 import {Match} from '@/types/match';
 import {useRouter} from 'next/navigation';
 import SetScouterSchedule from '@/components/set-scouter-schedule';
-import axios from 'axios';
+import Axios from 'axios';
 import {LoadStatusContext} from '@/components/LoadStatusContext';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import Loading from '@/components/loading';
+import {setupCache} from "axios-cache-interceptor";
 
 const Scouters = () => {
     const router = useRouter();
+    const instance = Axios.create();
+    const axios = setupCache(instance);
+
     const {value, setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>

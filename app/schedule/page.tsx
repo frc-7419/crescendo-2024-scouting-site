@@ -5,12 +5,16 @@ import SideBar from '@/components/side-bar';
 import React, {useContext, useEffect, useState} from 'react';
 import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
-import axios from 'axios';
+import Axios from 'axios';
 import {LoadStatusContext} from '@/components/LoadStatusContext';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import Loading from '@/components/loading';
+import {setupCache} from "axios-cache-interceptor";
 
 const Dashboard = () => {
+    const instance = Axios.create();
+    const axios = setupCache(instance);
+
     const {value, setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>

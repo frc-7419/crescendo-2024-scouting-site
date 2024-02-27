@@ -5,15 +5,19 @@ import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
 import CurrentGame from '@/components/currentgame';
 import ScouterSchedule from '@/components/scouter-schedule';
-import axios from 'axios';
+import Axios from 'axios';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import {Event} from '@/types/Event';
 import Loading from '@/components/loading';
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
+import {setupCache} from "axios-cache-interceptor";
 
 
 const Dashboard = () => {
+    const instance = Axios.create();
+    const axios = setupCache(instance);
+
     const {data: session} = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
 
