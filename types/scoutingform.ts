@@ -1,4 +1,4 @@
-import { FieldValues } from 'react-hook-form';
+import {FieldValues} from 'react-hook-form';
 
 type Alliance = 'RED' | 'BLUE';
 
@@ -55,7 +55,7 @@ export interface ScoutingData {
     teleopId?: number;
     miscId?: number;
     scouterId: string;
-};
+}
 
 export interface ReturnedFormData extends FieldValues {
     preload: boolean;

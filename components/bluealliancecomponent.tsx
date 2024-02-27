@@ -1,19 +1,18 @@
 'use client';
 
-import React, { use, useContext, useEffect, useState } from 'react';
-import NavBar from '@/components/nav-bar';
-import SideBar from '@/components/side-bar';
-import { Event } from '@/types/Event';
-import { Team } from '@/types/Team';
+import React, {useContext, useEffect, useState} from 'react';
+import {Event} from '@/types/Event';
+import {Team} from '@/types/Team';
 import '@/app/globals.css';
-import { Button, Card, CardBody, Input, Image, Accordion, AccordionItem, Spacer, Divider, Link } from '@nextui-org/react';
-import { Select, SelectSection, SelectItem } from "@nextui-org/react";
-import { LoadStatusContext } from './LoadStatusContext';
+import {Accordion, AccordionItem, Card, CardBody, Divider, Input, Link, Select, SelectItem} from '@nextui-org/react';
+import {LoadStatusContext} from './LoadStatusContext';
 import axios from 'axios';
-import { set } from 'zod';
 
 const BlueAllianceComponent: React.FC = () => {
-    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
+    const {value, setValue} = useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
     const [teamNumber, setTeamNumber] = useState('');
     const [teamData, setTeamData] = useState<Team | null>(null);
     const [teamEvents, setTeamEvents] = useState<Event[]>([]);
@@ -122,26 +121,30 @@ const BlueAllianceComponent: React.FC = () => {
                                         <p className="font-bold text-2xl">{teamData.team_number}: {teamData.nickname}</p>
                                         <p className='text-small font-medium'>{teamData.name}</p>
                                     </div>
-                                    <Link href={`https://www.google.com/maps/search/?api=1&query=${teamData.city},${teamData.state_prov} ${teamData.school_name}`} className="text-medium font-medium">{teamData.city}, {teamData.state_prov}</Link>
+                                    <Link
+                                        href={`https://www.google.com/maps/search/?api=1&query=${teamData.city},${teamData.state_prov} ${teamData.school_name}`}
+                                        className="text-medium font-medium">{teamData.city}, {teamData.state_prov}</Link>
                                 </div>
                                 <div className="flex h-5 items-center space-x-2">
                                     <p>Since {teamData.rookie_year}</p>
                                     {teamData.website && (
                                         <>
-                                            <Divider orientation="vertical" />
+                                            <Divider orientation="vertical"/>
                                             <p>Website: <Link href={teamData.website}>{teamData.website}</Link></p>
                                         </>
                                     )}
                                 </div>
                             </div>
-                            <Divider className="my-4" />
+                            <Divider className="my-4"/>
                             <div>
                                 {teamEvents.length > 0 ? (
                                     <div>
                                         <p className='text-xl'>Events in Season {selectedSeason}</p>
                                         <Accordion>
                                             {teamEvents.map(event => (
-                                                <AccordionItem key={event.key} aria-label={event.name} title={event.name} subtitle={`${event.event_type_string} - Week ${event.week}`}>
+                                                <AccordionItem key={event.key} aria-label={event.name}
+                                                               title={event.name}
+                                                               subtitle={`${event.event_type_string} - Week ${event.week}`}>
                                                     <div className="accordion-item-content">
                                                         <p></p>
                                                         <p>Event Code: {event.event_code}</p>
@@ -150,8 +153,10 @@ const BlueAllianceComponent: React.FC = () => {
                                                             <span>{event.start_date && event.end_date ? new Date(event.start_date).toLocaleDateString() + ' - ' + new Date(event.end_date).toLocaleDateString() : ''}</span>
                                                         </p>
                                                         {event.address && <p>Address: {event.address}</p>}
-                                                        {event.gmaps_url && <Link href={event.gmaps_url}>Open In Google Maps</Link>}
-                                                        {event.website && <p>Website: <Link href={event.website}>{event.website}</Link></p>}
+                                                        {event.gmaps_url &&
+                                                            <Link href={event.gmaps_url}>Open In Google Maps</Link>}
+                                                        {event.website && <p>Website: <Link
+                                                            href={event.website}>{event.website}</Link></p>}
                                                     </div>
                                                 </AccordionItem>
                                             ))}

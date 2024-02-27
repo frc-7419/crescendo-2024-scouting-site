@@ -1,9 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/lib/prisma";
 import ScoutingSchedule from "@/lib/schemas";
-import { ScoutingSchedule as ScoutingScheduleInterface } from "@/types/schedule";
+import {ScoutingSchedule as ScoutingScheduleInterface} from "@/types/schedule";
 
 export async function POST(
     request: Request,
@@ -57,7 +56,7 @@ export async function POST(
                 const response = ScoutingSchedule.safeParse(match);
 
                 if (!response.success) {
-                    const { errors } = response.error;
+                    const {errors} = response.error;
 
                     return new Response(`Invalid ${errors}`, {
                         status: 400,

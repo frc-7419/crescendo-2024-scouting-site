@@ -1,19 +1,32 @@
-import { ScoutingFormData } from '@/types/form';
-import { Autocomplete, AutocompleteItem, Button, Checkbox, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, useDisclosure } from '@nextui-org/react';
-import React, { FormEvent, use, useContext, useEffect, useRef, useState } from 'react';
-import { Controller, SubmitHandler, useController, useForm, useWatch } from 'react-hook-form';
-import { ReturnedFormData, ScoutingData } from '@/types/scoutingform';
-import { FieldValues } from 'react-hook-form';
-import { LoadStatusContext } from './LoadStatusContext';
+import {ScoutingFormData} from '@/types/form';
+import {
+    Autocomplete,
+    AutocompleteItem,
+    Button,
+    Checkbox,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    Textarea,
+    useDisclosure
+} from '@nextui-org/react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {Controller, FieldValues, SubmitHandler, useForm} from 'react-hook-form';
+import {ReturnedFormData, ScoutingData} from '@/types/scoutingform';
+import {LoadStatusContext} from './LoadStatusContext';
 import toast from 'react-hot-toast';
 import SuccessAnim from '@/resources/Success.json';
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 
-const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
-    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
+const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
+    const {value, setValue} = useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
     const [submittingForm, setSubmittingForm] = useState<boolean>(false);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const { control, handleSubmit, formState: { errors }, getValues } = useForm();
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {control, handleSubmit, formState: {errors}, getValues} = useForm();
     const router = useRouter();
     const [formSuccess, setFormSuccess] = useState(false);
 
@@ -75,16 +88,16 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
     }
 
     const ScoutModule = ({
-        text,
-        moduleKey,
-        type,
-        className,
-        items = [],
-        min,
-        max,
-        control,
-        rules,
-    }: {
+                             text,
+                             moduleKey,
+                             type,
+                             className,
+                             items = [],
+                             min,
+                             max,
+                             control,
+                             rules,
+                         }: {
         text: string;
         moduleKey: string;
         type: string;
@@ -103,7 +116,7 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
                         <Controller
                             name={moduleKey}
                             control={control}
-                            render={({ field }) => <Checkbox {...field} color="primary" />}
+                            render={({field}) => <Checkbox {...field} color="primary"/>}
                             rules={rules}
                         />
                     </>
@@ -114,7 +127,7 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
                         <Controller
                             name={moduleKey}
                             control={control}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Input
                                     {...field}
                                     placeholder="0"
@@ -136,7 +149,7 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
                         <Controller
                             name={moduleKey}
                             control={control}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Autocomplete
                                     label={text}
                                     isRequired
@@ -145,7 +158,7 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
                                     onSelectionChange={(value) => field.onChange(value)}
                                     value={field.value}
                                 >
-                                    {items?.map(({ key: itemKey, value: itemValue }) => (
+                                    {items?.map(({key: itemKey, value: itemValue}) => (
                                         <AutocompleteItem key={itemKey} value={itemValue}>
                                             {itemValue}
                                         </AutocompleteItem>
@@ -163,8 +176,8 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
                         <Controller
                             name={moduleKey}
                             control={control}
-                            render={({ field }) => (
-                                <Input {...field} className="w-25" variant="bordered" type="time" defaultValue='00:00' />
+                            render={({field}) => (
+                                <Input {...field} className="w-25" variant="bordered" type="time" defaultValue='00:00'/>
                             )}
                             rules={rules}
                         />
@@ -176,7 +189,7 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
                         <Controller
                             name={moduleKey}
                             control={control}
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <Input
                                     {...field}
                                     isRequired
@@ -195,15 +208,20 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
         );
     };
 
-    const ScoutCommentModule = ({ text, moduleKey, rules, control }: { text: string; moduleKey: string; control: any; rules?: any; }) => {
+    const ScoutCommentModule = ({text, moduleKey, rules, control}: {
+        text: string;
+        moduleKey: string;
+        control: any;
+        rules?: any;
+    }) => {
         return (
             <div className='pt-4 pb-4 col-start-1 col-end-3'>
                 <p className='pb-4'>{text}</p>
                 <Controller
                     name={moduleKey}
                     control={control}
-                    render={({ field }) => (
-                        <Textarea {...field} variant="faded" key={moduleKey} color='primary' />
+                    render={({field}) => (
+                        <Textarea {...field} variant="faded" key={moduleKey} color='primary'/>
                     )}
                 />
             </div>
@@ -265,70 +283,83 @@ const ScoutingForm = ({ formData }: { formData: ScoutingFormData }) => {
 
     return (
         <>
+            <div className="bg-amber-700 max-w-full p-6 rounded-lg mb-6">
+                Your changes will NOT be saved if you leave this page.
+            </div>
             <div className="dark:bg-slate-800 bg-slate-200 rounded-lg p-6 mb-6 drop-shadow-lg shadow-inner">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='pb-4'>
                         <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Auton</h1>
-                        <div className="grid grid-cols-2 grid-rows-3 text-3xl font-thin">
-                            <ScoutModule text="Has Preload" moduleKey="preload" type='checkbox' control={control} />
-                            <ScoutModule className="pl-4" text="Left Community" moduleKey="leftCommunity" type='checkbox' control={control} />
-                            <ScoutModule text="Speaker" moduleKey="autospeaker" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutModule className="pl-4" text="Amp" moduleKey="autoamp" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutCommentModule text="Comments" moduleKey="autocomments" control={control} />
+                        <div className="grid grid-cols-2 grid-rows-3 text-3xl font-thin gap-4 scoutformentry">
+                            <ScoutModule text="Has Preload" moduleKey="preload" type='checkbox' control={control}/>
+                            <ScoutModule text="Left Community" moduleKey="leftCommunity" type='checkbox'
+                                         control={control}/>
+                            <ScoutModule text="Speaker" moduleKey="autospeaker" type='number' control={control}
+                                         rules={{validate: validateNonNegative}}/>
+                            <ScoutModule text="Amp" moduleKey="autoamp" type='number' control={control}
+                                         rules={{validate: validateNonNegative}}/>
+                            <ScoutCommentModule text="Comments" moduleKey="autocomments" control={control}/>
                         </div>
                     </div>
                     <div className='pb-4'>
                         <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Teleop</h1>
-                        <div className="grid grid-cols-2 grid-rows-7 text-3xl font-thin">
-                            <ScoutModule text="Defensive" moduleKey="defensive" type='checkbox' control={control} />
-                            <ScoutModule className="pl-4" text="Intake" moduleKey="intake" type='dropdown' items={
+                        <div className="grid grid-cols-2 grid-rows-7 text-3xl font-thin gap-4 scoutformentry">
+                            <ScoutModule text="Defensive" moduleKey="defensive" type='checkbox' control={control}/>
+                            <ScoutModule text="Intake" moduleKey="intake" type='dropdown' items={
                                 [
-                                    { key: 'OTB', value: 'Over the Bumper' },
-                                    { key: 'UTB', value: 'Under the Bumper' },]
-                            } control={control} />
-                            <ScoutModule text="Amp" moduleKey="teleopamp" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutModule className="pl-4" text="Speaker" moduleKey="teleopspeaker" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutModule text="Times Amped" moduleKey="timesAmped" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutModule className="pl-4" text="Pickup From" moduleKey="pickupFrom" type='dropdown' items={[
-                                { key: 'FLOOR', value: 'Floor' },
-                                { key: 'SOURCE', value: 'Source' },
-                                { key: 'BOTH', value: 'Both' },
-                                { key: 'NOT_ATTEMPTED', value: 'Did Not Attempt' },
-                            ]} control={control} />
-                            <ScoutModule text="Is Disabled" moduleKey="isRobotDisabled" type='checkbox' control={control} />
-                            <ScoutModule className="pl-4" text="Disabled At" moduleKey="disabledAt" type='datetime' control={control} />
-                            <ScoutModule text="Is Hanging" moduleKey="isHanging" type='checkbox' control={control} />
-                            <ScoutModule className="pl-4" text="Trap" moduleKey="trap" type='number' control={control} rules={{ validate: validateNonNegative }} />
-                            <ScoutModule text="Spot Light" moduleKey="spotLight" type='checkbox' control={control} />
-                            <ScoutCommentModule text="Comments" moduleKey="teleopcomments" control={control} />
+                                    {key: 'OTB', value: 'Over the Bumper'},
+                                    {key: 'UTB', value: 'Under the Bumper'},]
+                            } control={control}/>
+                            <ScoutModule text="Amp" moduleKey="teleopamp" type='number' control={control}
+                                         rules={{validate: validateNonNegative}}/>
+                            <ScoutModule text="Speaker" moduleKey="teleopspeaker" type='number' control={control}
+                                         rules={{validate: validateNonNegative}}/>
+                            <ScoutModule text="Times Amped" moduleKey="timesAmped" type='number' control={control}
+                                         rules={{validate: validateNonNegative}}/>
+                            <ScoutModule text="Pickup From" moduleKey="pickupFrom" type='dropdown' items={[
+                                {key: 'FLOOR', value: 'Floor'},
+                                {key: 'SOURCE', value: 'Source'},
+                                {key: 'BOTH', value: 'Both'},
+                                {key: 'NOT_ATTEMPTED', value: 'Did Not Attempt'},
+                            ]} control={control}/>
+                            <ScoutModule text="Is Disabled" moduleKey="isRobotDisabled" type='checkbox'
+                                         control={control}/>
+                            <ScoutModule text="Disabled At" moduleKey="disabledAt" type='datetime' control={control}/>
+                            <ScoutModule text="Is Hanging" moduleKey="isHanging" type='checkbox' control={control}/>
+                            <ScoutModule text="Trap" moduleKey="trap" type='number' control={control}
+                                         rules={{validate: validateNonNegative}}/>
+                            <ScoutModule text="Spot Light" moduleKey="spotLight" type='checkbox' control={control}/>
+                            <ScoutCommentModule text="Comments" moduleKey="teleopcomments" control={control}/>
                         </div>
                     </div>
                     <div className='pb-4'>
                         <h1 className={`text-4xl font-thin border-b-1 pb-1 ${formData.alliance === 'BLUE' ? 'border-blue-600' : 'border-red-600'}`}>Misc</h1>
-                        <div className="grid grid-cols-2 grid-rows-2 text-3xl font-thin">
+                        <div className="grid grid-cols-2 grid-rows-2 text-3xl font-thin gap-4 scoutformentry">
                             <ScoutModule text="Defense" moduleKey="defense" type='dropdown' items={[
-                                { key: '0', value: 'Did Not Play Defense' },
-                                { key: '1', value: 'Poor' },
-                                { key: '2', value: 'Fair' },
-                                { key: '3', value: 'Good' },
-                                { key: '4', value: 'Excellent' },
-                            ]} control={control} />
+                                {key: '0', value: 'Did Not Play Defense'},
+                                {key: '1', value: 'Poor'},
+                                {key: '2', value: 'Fair'},
+                                {key: '3', value: 'Good'},
+                                {key: '4', value: 'Excellent'},
+                            ]} control={control}/>
                             <ScoutModule text="Reliability" moduleKey="reliability" type='dropdown' items={[
-                                { key: '1', value: '1 - Dropped Many Notes, Unstable Cycle Times' },
-                                { key: '2', value: '2 - Some Drops, Inconsistent Cycle Times' },
-                                { key: '3', value: '3 - Few Drops, Fairly Consistent Cycle Times' },
-                                { key: '4', value: '4 - Rare Drops, Consistent Cycle Times' },
-                                { key: '5', value: '5 - No Drops, Consistent Cycle Times' }
-                            ]} control={control} />
-                            <ScoutCommentModule text="Comments" moduleKey="misccomments" control={control} />
+                                {key: '1', value: '1 - Dropped Many Notes, Unstable Cycle Times'},
+                                {key: '2', value: '2 - Some Drops, Inconsistent Cycle Times'},
+                                {key: '3', value: '3 - Few Drops, Fairly Consistent Cycle Times'},
+                                {key: '4', value: '4 - Rare Drops, Consistent Cycle Times'},
+                                {key: '5', value: '5 - No Drops, Consistent Cycle Times'}
+                            ]} control={control}/>
+                            <ScoutCommentModule text="Comments" moduleKey="misccomments" control={control}/>
                         </div>
                     </div>
-                    <Button fullWidth color="primary" size="lg" variant="shadow" type='submit' isLoading={submittingForm}>
+                    <Button fullWidth color="primary" size="lg" variant="shadow" type='submit'
+                            isLoading={submittingForm}>
                         Submit
                     </Button>
-                </form >
-            </div >
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} hideCloseButton>
+                </form>
+            </div>
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}
+                   hideCloseButton>
                 <ModalContent>
                     {(onClose) => (
                         <>

@@ -1,12 +1,10 @@
-import next, { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Match } from "@/types/match";
-import { NextRequest } from "next/server";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {NextRequest} from "next/server";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { team: string } }
+    {params}: { params: { team: string } }
 ) {
     const session = await getServerSession(authOptions)
     const team = params.team
@@ -29,7 +27,7 @@ export async function GET(
             headers: new Headers({
                 'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
             }),
-            next: { revalidate: 3600 }
+            next: {revalidate: 3600}
         });
         const teamResponse = await response.json();
         console.debug('Team Data:', teamResponse);
@@ -38,11 +36,11 @@ export async function GET(
             headers: new Headers({
                 'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
             }),
-            next: { revalidate: 3600 }
+            next: {revalidate: 3600}
         }).then(response => response.json());
         console.debug('Team Events:', eventsResponse);
         eventsResponse.sort((a: { week: number; }, b: { week: number; }) => a.week - b.week);
-        const responseBody = JSON.stringify({ teamResponse, eventsResponse });
+        const responseBody = JSON.stringify({teamResponse, eventsResponse});
         const headers = new Headers({
             'Content-Type': 'application/json',
             'Content-Length': responseBody.length.toString()

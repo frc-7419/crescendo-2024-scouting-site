@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
-import { useTheme } from "next-themes";
+import React, {useEffect, useState} from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faMoon, faSun} from '@fortawesome/free-solid-svg-icons';
+import {useTheme} from "next-themes";
 
 export default function ThemeToggle() {
     const [isDarkMode, setIsDarkMode] = useState(false);
-    const { theme, setTheme } = useTheme();
+    const {theme, setTheme} = useTheme();
 
     useEffect(() => {
         if (theme === 'dark') {
@@ -24,7 +24,8 @@ export default function ThemeToggle() {
 
     return (
         <button onClick={toggleDarkMode}>
-            <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} size="xl" fixedWidth className='transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300' />
+            <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} size="xl" fixedWidth
+                             className='transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300'/>
         </button>
     );
 }

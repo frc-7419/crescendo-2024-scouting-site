@@ -2,20 +2,22 @@
 
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
-import React, { Suspense, useContext, useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import React, {useContext, useEffect, useState} from 'react';
+import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
-import { Input } from '@nextui-org/react';
+import {Input} from '@nextui-org/react';
 import ScouterSchedule from '@/components/scouter-schedule';
-import { LoadStatusContext } from '@/components/LoadStatusContext';
+import {LoadStatusContext} from '@/components/LoadStatusContext';
 import axios from 'axios';
-import { set } from 'zod';
-import { getCurrentEvent } from '@/components/getCurrentEvent';
+import {getCurrentEvent} from '@/components/getCurrentEvent';
 
 const Dashboard = () => {
-    const { data: session } = useSession();
+    const {data: session} = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
-    const { value, setValue } = useContext(LoadStatusContext) as { value: number; setValue: React.Dispatch<React.SetStateAction<number>> };
+    const {value, setValue} = useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
 
 
     const eventKey = getCurrentEvent();
@@ -75,13 +77,16 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <main className="h-screen overflow-clip dark:bg-slate-950">
-            <SideBar />
-            <NavBar />
+        <main className="min-h-screen overflow-clip dark:bg-slate-950">
+            <SideBar/>
+            <NavBar/>
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
-                <Input type='number' placeholder='time' defaultValue='1679270078' onChange={(e) => setTime(Number(e.target.value))} />
+                <Input type='number' placeholder='time' defaultValue='1679270078'
+                       onChange={(e) => setTime(Number(e.target.value))}/>
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                    <DashCard title="Scouting Schedule" content={<ScouterSchedule matches={matches} loading={loading} time={currentTime} shifts={shifts} />} />
+                    <DashCard title="Scouting Schedule"
+                              content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
+                                                        shifts={shifts}/>}/>
                 </div>
             </div>
         </main>

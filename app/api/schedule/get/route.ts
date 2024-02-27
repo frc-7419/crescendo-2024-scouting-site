@@ -1,9 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { type NextRequest } from 'next/server'
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
-import { TeamRole } from "@prisma/client";
+import {TeamRole} from "@prisma/client";
 
 export async function GET(
     request: NextRequest,
@@ -36,15 +35,35 @@ export async function GET(
         },
     });
 
-    const output: { venue: string, entries: { matchNumber: number; matchID: string; venue: string; scouters: { scouterId: string; role: TeamRole }[] }[] } = {
+    const output: {
+        venue: string,
+        entries: {
+            matchNumber: number;
+            matchID: string;
+            venue: string;
+            scouters: { scouterId: string; role: TeamRole }[]
+        }[]
+    } = {
         venue: "",
         entries: [],
     };
 
     output.venue = venue;
     for (const schedule of schedules) {
-        const { id, matchNumber, matchID, scouters } = schedule;
-        const scouterData = scouters.map((scouter) => {
+        const {id, matchNumber, matchID, scouters} = schedule;
+        const sortedScouters = scouters.sort((a, b) => {
+            const roleOrder = {
+                "BLUEONE": 1,
+                "BLUETWO": 2,
+                "BLUETHREE": 3,
+                "REDONE": 4,
+                "REDTWO": 5,
+                "REDTHREE": 6
+            };
+            return roleOrder[a.role] - roleOrder[b.role];
+        });
+
+        const scouterData = sortedScouters.map((scouter) => {
             return {
                 scouterId: scouter.scouterId,
                 role: scouter.role,

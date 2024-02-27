@@ -3,129 +3,158 @@
 @tailwind utilities;
 
 main {
-  display: grid;
-  grid-template-columns: 15rem calc(100vw - 15rem);
-  grid-template-rows: 5rem calc(100vh - 5rem);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
+    display: grid;
+    grid-template-columns: 15rem calc(100vw - 15rem);
+    grid-template-rows: 5rem calc(100vh - 5rem);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 }
 
 #sidebar {
-  grid-area: 1 / 1 / 3 / 2;
+    grid-area: 1 / 1 / 3 / 2;
 }
 
 #navbar {
-  grid-area: 1 / 2 / 2 / 6;
+    grid-area: 1 / 2 / 2 / 6;
 }
 
 #dash {
-  grid-area: 2 / 2 / 3 / 3;
+    grid-area: 2 / 2 / 3 / 3;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .text-balance {
+        text-wrap: balance;
+    }
 }
 
 /* Form Styles */
 .form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: var(--form-bg-color);
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--form-bg-color);
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
 }
 
 .form input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-  color: var(--text-color);
-  background-color: var(--form-input-bg-color);
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    color: var(--text-color);
+    background-color: var(--form-input-bg-color);
 }
 
 .form button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: var(--form-button-bg-color);
-  color: var(--text-color);
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--form-button-bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .form button:hover {
-  background-color: var(--form-button-bg-color-hover);
+    background-color: var(--form-button-bg-color-hover);
 }
 
 /* Text Styles */
 .text {
-  font-size: 18px;
-  color: var(--text-color);
-  text-align: center;
-  margin-bottom: 20px;
+    font-size: 18px;
+    color: var(--text-color);
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 @media screen and (max-width: 1000px) {
-  main {
-    grid-template-columns: 1fr;
-    /* Sidebar collapses to full width */
-    grid-template-rows: 5rem 1fr;
-  }
+    main {
+        grid-template-columns: 1fr;
+        /* Sidebar collapses to full width */
+        grid-template-rows: 5rem 1fr;
+    }
 
-  #sidebar {
-    display: none;
-    /* Hide sidebar */
-  }
+    #sidebar {
+        display: none;
+        /* Hide sidebar */
+    }
 
-  #navbar {
-    grid-area: 1 / 1 / 2 / 2;
-    /* Adjust position of navbar */
-  }
+    #navbar {
+        grid-area: 1 / 1 / 2 / 2;
+        /* Adjust position of navbar */
+    }
 
-  #dash {
-    grid-area: 2 / 1 / 3 / 2;
-    /* Adjust position of dashboard */
-  }
+    #dash {
+        grid-area: 2 / 1 / 3 / 2;
+        /* Adjust position of dashboard */
+    }
+
+    main {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .allianceView {
+        display: none;
+    }
+
+    #yourscouting {
+        display: none;
+    }
+
+    .scoutformentry {
+        display: flex !important;
+        flex-direction: column !important;
+    }
 }
 
 .currentMatchCard {
-  display: grid;
-  grid-template-columns: 20rem;
-  grid-template-rows: repeat(5, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
+    display: grid;
+    grid-template-columns: 20rem;
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 }
 
 .nextShift {
-  grid-area: 5 / 1 / 6 / 2;
+    grid-area: 5 / 1 / 6 / 2;
 }
 
 .currentEvent {
-  grid-area: 1 / 1 / 2 / 2;
+    grid-area: 1 / 1 / 2 / 2;
 }
 
 .qual {
-  grid-area: 2 / 1 / 3 / 2;
+    grid-area: 2 / 1 / 3 / 2;
 }
 
 .blueAllianceView,
 .redAllianceView {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+#dropdown {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
 }

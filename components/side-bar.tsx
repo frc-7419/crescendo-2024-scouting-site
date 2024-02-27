@@ -1,23 +1,24 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'
-import { faCalendarDays, faDatabase, faGauge, faHandPaper, faPerson, faPoll } from '@fortawesome/free-solid-svg-icons';
-import { useSession } from 'next-auth/react';
+import {usePathname} from 'next/navigation'
+import {faCalendarDays, faDatabase, faGauge, faHandPaper, faPerson, faPoll} from '@fortawesome/free-solid-svg-icons';
+import {useSession} from 'next-auth/react';
+
 export default function SideBar() {
     const pathname = usePathname();
-    const { data: session } = useSession();
+    const {data: session} = useSession();
 
-    const MenuItem = ({ icon, name, route }: { icon: React.JSX.Element, name: string, route: string }) => {
+    const MenuItem = ({icon, name, route}: { icon: React.JSX.Element, name: string, route: string }) => {
         // Highlight menu item based on currently displayed route
         const colorClass = pathname.startsWith(route) ? "dark:text-white" : "dark:text-white/50 text-black/50 hover:text-gray-800 dark:hover:text-white";
 
         return (
             <Link
                 href={route}
-                className={`transition-colors flex items-center gap-4 my-auto text-md py-5 ${colorClass}`}
+                className={`transition-colors flex items-center gap-4 my-auto text-md py-5 ${colorClass} animate-fade-down animate-normal`}
             >
                 <div className="text-3xl w-[30px]">
                     {icon}
@@ -36,36 +37,36 @@ export default function SideBar() {
                 <MenuItem
                     name="Dashboard"
                     route="/dashboard"
-                    icon={<FontAwesomeIcon icon={faGauge} />}
+                    icon={<FontAwesomeIcon icon={faGauge}/>}
                 />
                 <MenuItem
                     name="Schedule"
                     route="/schedule"
-                    icon={<FontAwesomeIcon icon={faCalendarDays} />}
+                    icon={<FontAwesomeIcon icon={faCalendarDays}/>}
                 />
                 <MenuItem
                     name="Scouting"
                     route="/scouting"
-                    icon={<FontAwesomeIcon icon={faPoll} />}
+                    icon={<FontAwesomeIcon icon={faPoll}/>}
                 />
                 {(session?.user?.role === "ADMIN" || session?.user?.role === "SITEADMIN") ? (
                     <>
                         <MenuItem
                             name="Scouters"
                             route="/scouters"
-                            icon={<FontAwesomeIcon icon={faPerson} />}
+                            icon={<FontAwesomeIcon icon={faPerson}/>}
                         />
                         <MenuItem
                             name="Data"
                             route="/data"
-                            icon={<FontAwesomeIcon icon={faDatabase} />}
+                            icon={<FontAwesomeIcon icon={faDatabase}/>}
                         />
                     </>
                 ) : null}
                 <MenuItem
-                    name= "Blue Alliance"
+                    name="Blue Alliance"
                     route="/BlueAlliance"
-                    icon={<FontAwesomeIcon icon={faHandPaper} />}
+                    icon={<FontAwesomeIcon icon={faHandPaper}/>}
                 />
             </div>
         </div>

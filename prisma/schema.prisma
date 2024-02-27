@@ -19,16 +19,17 @@ datasource db {
 }
 
 model User {
-  id           String         @id @default(uuid())
-  email        String         @unique
+  id           String             @id @default(uuid())
+  email        String             @unique
   name         String
   password     String?
-  role         Role           @default(USER)
+  role         Role               @default(USER)
   ScoutingData ScoutingData[]
   Scouter      Scouter[]
   hours        ShopHour[]
   meetings     Meeting[]
-  Profile      Profile[]
+  ScouterOrig  ScheduleDisputes[] @relation(name: "ScouterOrig")
+  ToScouter    ScheduleDisputes[] @relation(name: "ToScouter")
 }
 
 enum Role {
@@ -153,11 +154,14 @@ model ShopHour {
   approved           Boolean  @default(false)
 }
 
-model Profile {
-  id     String @id @default(uuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  pfpUrl String
+model ScheduleDisputes {
+  id          Int    @id @default(autoincrement())
+  matchID     String
+  reason      String
+  scouter     User   @relation(name: "ScouterOrig", fields: [scouterId], references: [id])
+  scouterId   String
+  toScouter   User   @relation(name: "ToScouter", fields: [toScouterId], references: [id])
+  toScouterId String
 }
 
 enum Alliance {
