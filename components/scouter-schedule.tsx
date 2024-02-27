@@ -57,7 +57,7 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
     const [disputeUser, setDisputeUser] = useState<Key>('');
     const [reason, setReason] = useState('');
     const [matchId, setMatchId] = useState('');
-    const [sumbittingDispute, setSubmittingDispute] = useState(false);
+    const [submittingDispute, setSubmittingDispute] = useState(false);
 
     useEffect(() => {
         const filtered = matches.filter((match: Match) => (new Date(match.predicted_time * 1000) >= time) && shifts.some((shift) => shift.ScoutingSchedule?.matchID === match.key));
@@ -160,17 +160,21 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
     }
 
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+        if (submittingDispute) return;
+        setSubmittingDispute(true);
+        toast.loading('Submitting Dispute. Please wait... Do not spam button.');
         e.preventDefault();
         try {
-            const response = await axios.post('/api/dispute', {
+            const response = await axios.post('/api/disputes/create', {
                 reason,
                 matchId,
                 disputeUser
             });
             toast.success('Dispute submitted');
         } catch (error) {
-            toast.error('Error submitting dispute');
+            toast.error('Error submitting disputes');
         }
+        setSubmittingDispute(false);
     }
     return (
         <>
@@ -309,7 +313,8 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
                                     <Button color="danger" variant="flat" onPress={onClose}>
                                         Cancel
                                     </Button>
-                                    <Button color="primary" type='submit'>
+                                    <Button color="primary" type='submit' isLoading={submittingDispute}
+                                            onPress={onClose}>
                                         Submit
                                     </Button>
                                 </ModalFooter>

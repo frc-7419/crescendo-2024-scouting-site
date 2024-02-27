@@ -6,8 +6,10 @@ import ThemeToggle from './theme-toggle';
 import {signOut, useSession} from 'next-auth/react';
 import {Avatar, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faCog, faDoorOpen} from '@fortawesome/free-solid-svg-icons';
+import {faCog, faDoorOpen, faMailForward} from '@fortawesome/free-solid-svg-icons';
 import Dropdown from './dropdownMenu';
+import Notifications from "@/components/notifications";
+import {useRouter} from "next/navigation";
 
 export default function NavBar() {
     const {data: session, status} = useSession();
@@ -15,6 +17,7 @@ export default function NavBar() {
 
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
 
+    const router = useRouter();
     useEffect(() => {
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -58,6 +61,7 @@ export default function NavBar() {
         <nav id="nav" className={'flex justify-between items-center gap-4 p-6'}>
             {windowWidth > 1000 ? (<>
                 <span id="time" className='text-2xl text-left flex-grow'>{currentTime}</span>
+                <Notifications/>
                 <ThemeToggle/>
                 <Popover showArrow placement="bottom-end">
                     <PopoverTrigger>
@@ -70,6 +74,12 @@ export default function NavBar() {
                         <Listbox
                             aria-label="Actions"
                         >
+                            <ListboxItem key="disputes" onClick={() => router.push("/disputes")}>
+                                <PopButton
+                                    icon={<FontAwesomeIcon icon={faMailForward}/>}
+                                    text="Disputes"
+                                />
+                            </ListboxItem>
                             <ListboxItem key="settings">
                                 <PopButton
                                     icon={<FontAwesomeIcon icon={faCog}/>}

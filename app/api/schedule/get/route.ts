@@ -51,7 +51,19 @@ export async function GET(
     output.venue = venue;
     for (const schedule of schedules) {
         const {id, matchNumber, matchID, scouters} = schedule;
-        const scouterData = scouters.map((scouter) => {
+        const sortedScouters = scouters.sort((a, b) => {
+            const roleOrder = {
+                "BLUEONE": 1,
+                "BLUETWO": 2,
+                "BLUETHREE": 3,
+                "REDONE": 4,
+                "REDTWO": 5,
+                "REDTHREE": 6
+            };
+            return roleOrder[a.role] - roleOrder[b.role];
+        });
+
+        const scouterData = sortedScouters.map((scouter) => {
             return {
                 scouterId: scouter.scouterId,
                 role: scouter.role,
