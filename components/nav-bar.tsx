@@ -1,7 +1,6 @@
 'use client'
 
 import React, {useEffect, useState} from 'react';
-import jamesPfp from '@/resources/james.webp';
 import ThemeToggle from './theme-toggle';
 import {signOut, useSession} from 'next-auth/react';
 import {Avatar, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
@@ -10,6 +9,7 @@ import {faCog, faDoorOpen, faMailForward} from '@fortawesome/free-solid-svg-icon
 import Dropdown from './dropdownMenu';
 import Notifications from "@/components/notifications";
 import {useRouter} from "next/navigation";
+import crypto from "crypto"
 
 export default function NavBar() {
     const {data: session, status} = useSession();
@@ -17,6 +17,7 @@ export default function NavBar() {
 
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
 
+    const emailmd5 = crypto.createHash('md5').update(session?.user?.email || "null").digest('hex')
     const router = useRouter();
     useEffect(() => {
         const handleResize = () => {
@@ -67,7 +68,9 @@ export default function NavBar() {
                     <PopoverTrigger>
                         <button className="text-xl text-right flex items-center gap-4 justify-between">
                             <span id='user' className='text-xl text-right'>{session?.user?.name}</span>
-                            <Avatar src={jamesPfp.src} alt="User Profile" className="w-10 h-10 rounded-full"/>
+
+                            <Avatar src={`https://www.gravatar.com/avatar/${emailmd5}`} alt="User Profile"
+                                    className="w-10 h-10 rounded-full"/>
                         </button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[10rem] text-right text-xl">
@@ -80,7 +83,8 @@ export default function NavBar() {
                                     text="Disputes"
                                 />
                             </ListboxItem>
-                            <ListboxItem key="settings">
+                            <ListboxItem key="settings"
+                                         onClick={() => router.push("https://gravatar.com/profile/avatars/")}>
                                 <PopButton
                                     icon={<FontAwesomeIcon icon={faCog}/>}
                                     text="Settings"

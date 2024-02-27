@@ -16,6 +16,7 @@ import {
 import React, {useContext, useEffect, useState} from 'react';
 import {LoadStatusContext} from './LoadStatusContext';
 import axios from 'axios';
+import crypto from "crypto"
 
 
 const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
@@ -38,7 +39,11 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
         return users.find((user) => user.uuid === uuid);
     };
 
-    const [users, setUsers] = useState<{ name: string; uuid: string }[]>([]);
+    const getEmail = (uuid: string) => {
+        return users.find((user) => user.uuid === uuid)?.email;
+    };
+
+    const [users, setUsers] = useState<{ name: string; uuid: string; email: string }[]>([]);
 
     const abbreviate_name = (name: string) => {
         const words = name.split(' ');
@@ -80,9 +85,10 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
                 }
             });
             const data = await response.data;
-            const users = data.map((user: { name: string, id: string }) => ({
+            const users = data.map((user: { name: string, id: string, email: string }) => ({
                 name: user.name,
-                uuid: user.id
+                uuid: user.id,
+                email: user.email
             }));
             // Store the fetched users
             setUsers(users);
@@ -237,7 +243,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
                                                                     avatar={
                                                                         <Avatar
                                                                             name={item.alliances.blue.scouters[index]}
-                                                                            src={`https://i.pravatar.cc/300?u=${item.alliances.blue.scouters[index]}`}
+                                                                            src={`https://www.gravatar.com/avatar/${crypto.createHash('md5').update(getEmail(item.alliances.blue.scoutersIDs[index]) || "null").digest('hex')}`}
                                                                         />
                                                                     }
                                                                 >
@@ -263,7 +269,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
                                                                     avatar={
                                                                         <Avatar
                                                                             name={item.alliances.red.scouters[index]}
-                                                                            src={`https://i.pravatar.cc/300?u=${item.alliances.red.scouters[index]}`}
+                                                                            src={`https://www.gravatar.com/avatar/${crypto.createHash('md5').update(getEmail(item.alliances.red.scoutersIDs[index]) || "null").digest('hex')}`}
                                                                         />
                                                                     }
                                                                 >
