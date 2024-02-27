@@ -48,10 +48,15 @@ const Dashboard = () => {
         }
     }, [eventKey]);
 
-    const setTime = (time: number) => {
-        const timee = new Date(time * 1000);
-        setCurrentTime(timee);
-    }
+    const updateTime = () => {
+        setCurrentTime(new Date());
+    };
+
+    useEffect(() => {
+        const interval = setInterval(updateTime, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     if (loading) {
         return <Loading/>

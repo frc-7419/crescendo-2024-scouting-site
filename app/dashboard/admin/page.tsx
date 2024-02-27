@@ -6,7 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
 import CurrentGame from '@/components/currentgame';
-import {Input, Tab, Tabs} from '@nextui-org/react';
+import {Tab, Tabs} from '@nextui-org/react';
 import {useRouter} from 'next/navigation';
 import ScouterSchedule from '@/components/scouter-schedule';
 import AdminMatchSchedule from '@/components/scheduleAdmin';
@@ -35,10 +35,16 @@ const Dashboard = () => {
     const [selectedTab, setSelectedTab] = useState("admin")
 
     const setTime = (time: number) => {
-        const date = new Date();
-        const timee = new Date(time * 1000)
-        setCurrentTime(timee);
+        setCurrentTime(new Date());
     }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(0);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         if (session?.user?.role) {
@@ -127,8 +133,6 @@ const Dashboard = () => {
             <SideBar/>
             <NavBar/>
             <div className="pt-6 pr-6 pl-6 flex flex-col flex-1">
-                <Input type='number' placeholder='time' defaultValue='1679270078'
-                       onChange={(e) => setTime(Number(e.target.value))}/>
                 <div className='header flex justify-between'>
                     <span className="text-3xl">Welcome {firstName},</span>
                     <Tabs

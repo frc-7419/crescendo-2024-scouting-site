@@ -5,7 +5,6 @@ import SideBar from '@/components/side-bar';
 import React, {useContext, useEffect, useState} from 'react';
 import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
-import {Input} from '@nextui-org/react';
 import axios from 'axios';
 import {LoadStatusContext} from '@/components/LoadStatusContext';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
@@ -23,10 +22,16 @@ const Dashboard = () => {
 
 
     const setTime = (time: number) => {
-        const date = new Date();
-        const timee = new Date(time * 1000)
-        setCurrentTime(timee);
+        setCurrentTime(new Date());
     }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(0);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         setValue(0);
@@ -66,8 +71,6 @@ const Dashboard = () => {
             <SideBar/>
             <NavBar/>
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
-                <Input type='number' placeholder='time' defaultValue='1679270078'
-                       onChange={(e) => setTime(Number(e.target.value))}/>
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
                     <DashCard title="Upcoming Matches"
                               content={<MatchSchedule matches={matches} loading={loading} time={currentTime}/>}/>

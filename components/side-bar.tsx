@@ -7,18 +7,22 @@ import {usePathname} from 'next/navigation'
 import {faCalendarDays, faDatabase, faGauge, faHandPaper, faPerson, faPoll} from '@fortawesome/free-solid-svg-icons';
 import {useSession} from 'next-auth/react';
 
-export default function SideBar() {
+function SideBar() {
     const pathname = usePathname();
     const {data: session} = useSession();
 
-    const MenuItem = ({icon, name, route}: { icon: React.JSX.Element, name: string, route: string }) => {
+    const MenuItem = React.memo(function MenuItem({icon, name, route}: {
+        icon: React.JSX.Element,
+        name: string,
+        route: string
+    }) {
         // Highlight menu item based on currently displayed route
         const colorClass = pathname.startsWith(route) ? "dark:text-white" : "dark:text-white/50 text-black/50 hover:text-gray-800 dark:hover:text-white";
 
         return (
             <Link
                 href={route}
-                className={`transition-colors flex items-center gap-4 my-auto text-md py-5 ${colorClass} animate-fade-down animate-normal`}
+                className={`transition-colors flex items-center gap-4 my-auto text-md py-5 ${colorClass} animate-fade-down animate-once`}
             >
                 <div className="text-3xl w-[30px]">
                     {icon}
@@ -28,7 +32,8 @@ export default function SideBar() {
                 </div>
             </Link>
         );
-    };
+    });
+    MenuItem.displayName = 'MenuItem';
 
     return (
         <div id='sidebar' className='flex flex-col dark:bg-slate-900 bg-slate-100 p-6'>
@@ -72,3 +77,5 @@ export default function SideBar() {
         </div>
     );
 }
+
+export default React.memo(SideBar);

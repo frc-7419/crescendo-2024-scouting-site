@@ -43,6 +43,18 @@ const Scouters = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
+    const setTime = (time: number) => {
+        setCurrentTime(new Date());
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(0);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     useEffect(() => {
         setValue(0);
         // eslint-disable-next-line react-hooks/exhaustive-deps

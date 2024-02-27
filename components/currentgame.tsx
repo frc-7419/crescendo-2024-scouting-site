@@ -41,11 +41,7 @@ const CurrentGame = ({eventName, loading, matches, time, shifts}: {
 }) => {
     const {match, isLoading, error} = useCurrentMatch(loading ? [] : matches, time);
     const [nextUserShift, setUserNextShift] = useState<Scouter>();
-    const [tickTock, setTickTock] = useState<boolean>(false);
     const [shiftNumber, setShiftNumber] = useState<number>(0);
-    const toggleTickTock = () => {
-        setTickTock(!tickTock);
-    };
 
     console.debug(error)
 
@@ -84,15 +80,6 @@ const CurrentGame = ({eventName, loading, matches, time, shifts}: {
         getNextShift();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [shifts, time]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            toggleTickTock();
-        }, 1000);
-        return () => clearInterval(interval);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
 
     useEffect(() => {
         if (nextUserShift) {

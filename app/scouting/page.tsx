@@ -5,7 +5,6 @@ import SideBar from '@/components/side-bar';
 import React, {useContext, useEffect, useState} from 'react';
 import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
-import {Input} from '@nextui-org/react';
 import ScouterSchedule from '@/components/scouter-schedule';
 import {LoadStatusContext} from '@/components/LoadStatusContext';
 import axios from 'axios';
@@ -27,10 +26,16 @@ const Dashboard = () => {
     const [shifts, setShifts] = useState([]);
 
     const setTime = (time: number) => {
-        const date = new Date();
-        const timee = new Date(time * 1000)
-        setCurrentTime(timee);
+        setCurrentTime(new Date());
     }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(0);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         if (eventKey) {
@@ -81,8 +86,6 @@ const Dashboard = () => {
             <SideBar/>
             <NavBar/>
             <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
-                <Input type='number' placeholder='time' defaultValue='1679270078'
-                       onChange={(e) => setTime(Number(e.target.value))}/>
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
                     <DashCard title="Scouting Schedule"
                               content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
