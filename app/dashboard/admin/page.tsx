@@ -16,6 +16,7 @@ import {getCurrentEvent} from '@/components/getCurrentEvent';
 import {Event} from '@/types/Event';
 import Loading from '@/components/loading';
 import {setupCache} from "axios-cache-interceptor";
+import {getEvent, getMatches, getShifts} from "@/components/fetches/bluealliance";
 
 const Dashboard = () => {
     const instance = Axios.create();
@@ -38,17 +39,14 @@ const Dashboard = () => {
 
     const [selectedTab, setSelectedTab] = useState("admin")
 
-    const setTime = (time: number) => {
+    const updateTime = (time: number) => {
         setCurrentTime(new Date());
     }
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTime(0);
-        }, 1000);
+    const interval = setInterval(() => {
+        updateTime(0);
+    }, 1000);
 
-        return () => clearInterval(interval);
-    }, []);
 
     useEffect(() => {
         if (session?.user?.role) {
@@ -64,69 +62,32 @@ const Dashboard = () => {
         console.debug(selectedTab)
     }, [selectedTab]);
 
-    useEffect(() => {
-        const fetchMatches = async () => {
-            if (eventKey) {
-                try {
-                    const response = await axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
-                        onDownloadProgress: (progressEvent) => {
-                            let percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 1));
-                            setValue(percentCompleted);
-                        },
-                    });
-                    setMatches(response.data);
-                    setLoading(false);
-                } catch (error) {
-                    console.error(error);
-                    setLoading(false);
-                }
-            }
-        };
-
-        fetchMatches();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [eventKey]);
-
-    const getShifts = async () => {
-        const response = await axios.get(`/api/schedule/user/get`, {
-            onDownloadProgress: (progressEvent) => {
-                let percentCompleted = Math.round(
-                    (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                );
-                setValue(percentCompleted);
-            },
-        });
-        const data = await response.data;
-        setShifts(data);
-        console.debug(shifts);
-    };
-
-    const getEvent = async () => {
-        const response = await axios.get(`/api/bluealliance/getEventInfo/${eventKey}`, {
-            onDownloadProgress: (progressEvent) => {
-                let percentCompleted = Math.round(
-                    (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                );
-                setValue(percentCompleted);
-            },
-        });
-        const data = await response.data;
-        setEventData(data);
-        console.debug(eventData);
-    };
-
-    const preFetch = async () => {
+    const preFetch = () => {
         router.prefetch('/dashboard/scouting');
         router.prefetch('/dashboard/schedule');
     }
 
     useEffect(() => {
-        getShifts();
-        getEvent();
-        setValue(0);
-        preFetch();
+        try {
+            setValue(0);
+            getMatches(eventKey).then(data => {
+                setMatches(data);
+            })
+            getShifts().then(data => {
+                setShifts(data);
+            });
+            getEvent(eventKey).then(data => {
+                setEventData(data)
+            });
+            setValue(100)
+            setLoading(false)
+            preFetch();
+        } catch (error) {
+            setValue(500)
+            console.error(error);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [eventKey]);
 
     if (loading) {
         return <Loading/>

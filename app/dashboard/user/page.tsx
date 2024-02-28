@@ -12,6 +12,9 @@ import Loading from '@/components/loading';
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
 import {setupCache} from "axios-cache-interceptor";
+import {getEvent, getMatches, getShifts} from "@/components/fetches/bluealliance";
+import {LoadStatusContext} from "@/components/LoadStatusContext";
+import {useRouter} from "next/navigation";
 
 
 const Dashboard = () => {
@@ -21,6 +24,11 @@ const Dashboard = () => {
     const {data: session} = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
 
+    const {value, setValue} = React.useContext(LoadStatusContext) as {
+        value: number;
+        setValue: React.Dispatch<React.SetStateAction<number>>
+    };
+    const router = useRouter();
     const eventKey = getCurrentEvent();
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,39 +36,39 @@ const Dashboard = () => {
     const [shifts, setShifts] = useState([]);
     const [eventData, setEventData] = useState<Event>();
 
+    const preFetch = () => {
+        router.prefetch('/dashboard/scouting');
+        router.prefetch('/dashboard/schedule');
+    }
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [matchesResponse, shiftsResponse, eventResponse] = await Promise.all([
-                    axios.get(`/api/bluealliance/getMatches/${eventKey}`),
-                    axios.get(`/api/schedule/user/get`),
-                    axios.get(`/api/bluealliance/getEventInfo/${eventKey}`)
-                ]);
-
-                setMatches(matchesResponse.data);
-                setShifts(shiftsResponse.data);
-                setEventData(eventResponse.data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setLoading(false);
-            }
-        };
-
-        if (eventKey) {
-            fetchData();
+        try {
+            setValue(0);
+            getMatches(eventKey).then(data => {
+                setMatches(data);
+            })
+            getShifts().then(data => {
+                setShifts(data);
+            });
+            getEvent(eventKey).then(data => {
+                setEventData(data)
+            });
+            setValue(100)
+            setLoading(false)
+            preFetch();
+        } catch (error) {
+            setValue(500)
+            console.error(error);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
     const updateTime = () => {
         setCurrentTime(new Date());
     };
 
-    useEffect(() => {
-        const interval = setInterval(updateTime, 1000);
+    const interval = setInterval(updateTime, 1000);
 
-        return () => clearInterval(interval);
-    }, []);
 
     if (loading) {
         return <Loading/>

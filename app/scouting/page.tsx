@@ -10,11 +10,13 @@ import {LoadStatusContext} from '@/components/LoadStatusContext';
 import Axios from 'axios';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import {setupCache} from "axios-cache-interceptor";
+import {getMatches, getShifts} from "@/components/fetches/bluealliance";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
     const instance = Axios.create();
     const axios = setupCache(instance);
-    
+
     const {data: session} = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -42,45 +44,24 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
-        if (eventKey) {
-            axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
-                onDownloadProgress: (progressEvent) => {
-                    let percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                    );
-                    setValue(percentCompleted);
-                }
+        try {
+            getMatches(eventKey).then(data => {
+                setMatches(data);
+                setLoading(false);
+                setValue(100)
             })
-                .then(response => response.data)
-                .then(data => {
-                    console.debug(data);
-                    setMatches(data);
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error(error);
-                    setLoading(false);
-                });
+        } catch (error) {
+            toast.error('Error Loading Matches');
+            setLoading(false);
+            setValue(500)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
-    const getShifts = async () => {
-        const response = await axios.get(`/api/schedule/user/get`, {
-            onDownloadProgress: (progressEvent) => {
-                let percentCompleted = Math.round(
-                    (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                );
-                setValue(percentCompleted);
-            },
-        });
-        const data = await response.data;
-        setShifts(data);
-        console.debug(shifts);
-    };
-
     useEffect(() => {
-        getShifts();
+        getShifts().then(data => {
+            setShifts(data);
+        });
         setValue(0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
