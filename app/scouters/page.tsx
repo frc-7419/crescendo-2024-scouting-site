@@ -7,16 +7,13 @@ import {useSession} from 'next-auth/react';
 import {Match} from '@/types/match';
 import {useRouter} from 'next/navigation';
 import SetScouterSchedule from '@/components/set-scouter-schedule';
-import Axios from 'axios';
 import {LoadStatusContext} from '@/components/LoadStatusContext';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import Loading from '@/components/loading';
-import {setupCache} from "axios-cache-interceptor";
+import {getMatches} from "@/components/fetches/apicalls";
 
 const Scouters = () => {
     const router = useRouter();
-    const instance = Axios.create();
-    const axios = setupCache(instance);
 
     const {value, setValue} = useContext(LoadStatusContext) as {
         value: number;
@@ -57,7 +54,7 @@ const Scouters = () => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [currentTime]);
 
     useEffect(() => {
         setValue(0);
@@ -65,29 +62,17 @@ const Scouters = () => {
     }, []);
 
     useEffect(() => {
-        if (loading) return;
-        console.debug(loading)
-        setLoading(true);
-        if (eventKey) {
-            axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
-                onDownloadProgress: (progressEvent) => {
-                    let percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                    );
-                    setValue(percentCompleted);
-                }
+        try {
+            setValue(0);
+            getMatches(eventKey).then(data => {
+                setMatches(data);
             })
-                .then(response => response.data)
-                .then(data => {
-                    console.debug(data);
-                    setMatches(data);
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error(error);
-                    setLoading(false);
-                });
+            setValue(100)
+        } catch (error) {
+            setValue(500)
+            console.error(error);
         }
+        setLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 

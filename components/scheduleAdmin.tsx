@@ -15,8 +15,8 @@ import {
 } from '@nextui-org/react';
 import React, {useContext, useEffect, useState} from 'react';
 import {LoadStatusContext} from './LoadStatusContext';
-import axios from 'axios';
 import crypto from "crypto"
+import {getSchedule, getUsers} from "@/components/fetches/apicalls";
 
 
 const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
@@ -72,36 +72,24 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
     };
 
     const fetchUsers = async () => {
+        setValue(0)
         if (users.length > 0) return;
         if (usersRequested) return;
         setUsersRequested(true);
         try {
-            const response = await axios.get('/api/users/getusers', {
-                onDownloadProgress: (progressEvent) => {
-                    let percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                    );
-                    setValue(percentCompleted);
-                }
-            });
-            const data = await response.data;
-            const users = data.map((user: { name: string, id: string, email: string }) => ({
-                name: user.name,
-                uuid: user.id,
-                email: user.email
-            }));
-            // Store the fetched users
-            setUsers(users);
+            const fetchedUsers = await getUsers()
+            setUsers(fetchedUsers)
             setUsersLoading(false)
+            setValue(100)
         } catch (error) {
             console.error('Error fetching users:', error);
+            setValue(500)
         }
         setUsersRequested(false);
     };
 
     useEffect(() => {
         fetchUsers();
-        setValue(0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -145,15 +133,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
         console.debug("hi")
         setUsersLoading(true);
         try {
-            const response = await axios.get(`/api/schedule/get?venue=${matches[0].event_key}`, {
-                onDownloadProgress: (progressEvent) => {
-                    let percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                    );
-                    setValue(percentCompleted);
-                }
-            })
-            const data = await response.data;
+            const data = await getSchedule(matches[0].event_key)
             const entryArray = Object.entries(data.entries) as [string, { matchID: string; scouters: any }][];
             entryArray.forEach((entry: [string, { matchID: string; scouters: any }]) => {
                 editColumn(entry[1].matchID, entry[1].scouters)
@@ -169,7 +149,11 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
     };
 
     useEffect(() => {
-        loadData();
+        try {
+            loadData().then(r => setValue(100));
+        } catch {
+            setValue(500)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [users, playerMatches]);
 

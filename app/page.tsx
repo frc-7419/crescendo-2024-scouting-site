@@ -1,18 +1,14 @@
 'use client';
 
-import Image from "next/image";
-import LoginForm from "../components/login-form";
-import {ThemeProvider} from "next-themes";
+import ThemeToggle from "@/components/theme-toggle";
 
 export default function Home() {
     return (
-        <ThemeProvider>
-            <main className="transition-all flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
-                <div className="max-w-md w-full">
-                    <Image src="/your-image.jpg" alt="Your image" width={500} height={500}/>
-                    <LoginForm/>
-                </div>
-            </main>
-        </ThemeProvider>
+        <main className="flex min-h-screen flex-col items-center justify-between p-24 dark:bg-slate-950 relative">
+            <p>Hello</p>
+            <div className="absolute bottom-4 right-4 m-4">
+                <ThemeToggle/>
+            </div>
+        </main>
     );
 }

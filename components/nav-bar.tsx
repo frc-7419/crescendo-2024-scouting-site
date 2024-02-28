@@ -43,7 +43,7 @@ export default function NavBar() {
 
             return () => clearInterval(interval);
         }
-    }, []);
+    }, [currentTime]);
 
     const PopButton = ({icon, text}: { icon: JSX.Element, text: string }) => {
         return (

@@ -59,7 +59,6 @@ const CurrentGame = ({eventName, loading, matches, time, shifts}: {
                 const match = matches.find((match) => match.key === shift.ScoutingSchedule?.matchID);
                 if (match) {
                     const matchDate = new Date(match.predicted_time * 1000)
-                    console.debug(matchDate, time);
                     if (matchDate > time) {
                         return shift;
                     }
@@ -79,7 +78,7 @@ const CurrentGame = ({eventName, loading, matches, time, shifts}: {
     useEffect(() => {
         getNextShift();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [shifts, time]);
+    }, [time]);
 
     useEffect(() => {
         if (nextUserShift) {

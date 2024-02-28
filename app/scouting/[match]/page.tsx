@@ -10,6 +10,7 @@ import Axios from 'axios';
 import {LoadStatusContext} from '@/components/LoadStatusContext';
 import ProxyProvider from '@/components/unsavedprovider';
 import {setupCache} from "axios-cache-interceptor";
+import {getFormData} from "@/components/fetches/apicalls";
 
 const Scouting = ({params}: { params: { match: string } }) => {
     const instance = Axios.create();
@@ -23,28 +24,17 @@ const Scouting = ({params}: { params: { match: string } }) => {
     const [errored, setErrored] = useState(false);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await axios.get(`/api/schedule/user/get/form?matchId=${params.match}`, {
-                    onDownloadProgress: (progressEvent) => {
-                        let percentCompleted = Math.round(
-                            (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                        );
-                        setValue(percentCompleted);
-                    }
-                });
-                const data = res.data;
-                console.debug(data);
+        try {
+            setValue(0);
+            getFormData(params.match).then(data => {
                 setForm(data);
-                setLoading(false);
-            } catch (error) {
-                console.error(error);
-                setErrored(true);
-                setLoading(false);
-            }
-        };
-
-        fetchData();
+            })
+            setValue(100)
+        } catch (error) {
+            setValue(500)
+            console.error(error);
+        }
+        setLoading(false)
     }, [params.match, setValue]);
 
     if (errored) {

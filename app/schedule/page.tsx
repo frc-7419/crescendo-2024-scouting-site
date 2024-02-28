@@ -10,6 +10,7 @@ import {LoadStatusContext} from '@/components/LoadStatusContext';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import Loading from '@/components/loading';
 import {setupCache} from "axios-cache-interceptor";
+import {getMatches} from "@/components/fetches/apicalls";
 
 const Dashboard = () => {
     const instance = Axios.create();
@@ -35,7 +36,7 @@ const Dashboard = () => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [currentTime]);
 
     useEffect(() => {
         setValue(0);
@@ -43,26 +44,17 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
-        if (eventKey) {
-            axios.get(`/api/bluealliance/getMatches/${eventKey}`, {
-                onDownloadProgress: (progressEvent) => {
-                    let percentCompleted = Math.round(
-                        (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                    );
-                    setValue(percentCompleted);
-                },
+        try {
+            setValue(0);
+            getMatches(eventKey).then(data => {
+                setMatches(data);
             })
-                .then(response => response.data)
-                .then(data => {
-                    console.debug(data);
-                    setMatches(data);
-                    setLoading(false);
-                })
-                .catch(error => {
-                    console.error(error);
-                    setLoading(false);
-                });
+            setValue(100)
+        } catch (error) {
+            setValue(500)
+            console.error(error);
         }
+        setLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 

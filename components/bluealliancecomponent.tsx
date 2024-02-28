@@ -36,15 +36,6 @@ const BlueAllianceComponent: React.FC = () => {
                     },
                 })
                     .then(response => response.data)
-                axios.get(`/api/bluealliance/getTeamInfo/${teamKey}?season=${selectedSeason}`, {
-                    onDownloadProgress: (progressEvent) => {
-                        let percentCompleted = Math.round(
-                            (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                        );
-                        setValue(percentCompleted);
-                    },
-                })
-                    .then(response => response.data)
                     .then(data => {
                         setTeamData(data.teamResponse);
                         setTeamEvents(data.eventsResponse);

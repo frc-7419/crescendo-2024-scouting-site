@@ -12,7 +12,7 @@ import Loading from '@/components/loading';
 import NavBar from '@/components/nav-bar';
 import SideBar from '@/components/side-bar';
 import {setupCache} from "axios-cache-interceptor";
-import {getEvent, getMatches, getShifts} from "@/components/fetches/bluealliance";
+import {getEvent, getMatches, getShifts} from "@/components/fetches/apicalls";
 import {LoadStatusContext} from "@/components/LoadStatusContext";
 import {useRouter} from "next/navigation";
 
@@ -54,20 +54,25 @@ const Dashboard = () => {
                 setEventData(data)
             });
             setValue(100)
-            setLoading(false)
             preFetch();
         } catch (error) {
             setValue(500)
             console.error(error);
         }
+        setLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
     const updateTime = () => {
         setCurrentTime(new Date());
-    };
+    }
 
-    const interval = setInterval(updateTime, 1000);
+    useEffect(() => {
+        const id = setInterval(() => {
+            updateTime();
+        }, 1000)
+        return () => clearInterval(id);
+    }, [currentTime]);
 
 
     if (loading) {

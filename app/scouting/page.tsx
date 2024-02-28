@@ -10,7 +10,7 @@ import {LoadStatusContext} from '@/components/LoadStatusContext';
 import Axios from 'axios';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import {setupCache} from "axios-cache-interceptor";
-import {getMatches, getShifts} from "@/components/fetches/bluealliance";
+import {getMatches, getShifts} from "@/components/fetches/apicalls";
 import toast from "react-hot-toast";
 
 const Dashboard = () => {

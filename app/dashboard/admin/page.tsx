@@ -16,7 +16,7 @@ import {getCurrentEvent} from '@/components/getCurrentEvent';
 import {Event} from '@/types/Event';
 import Loading from '@/components/loading';
 import {setupCache} from "axios-cache-interceptor";
-import {getEvent, getMatches, getShifts} from "@/components/fetches/bluealliance";
+import {getEvent, getMatches, getShifts} from "@/components/fetches/apicalls";
 
 const Dashboard = () => {
     const instance = Axios.create();
@@ -39,14 +39,17 @@ const Dashboard = () => {
 
     const [selectedTab, setSelectedTab] = useState("admin")
 
-    const updateTime = (time: number) => {
+    const updateTime = () => {
         setCurrentTime(new Date());
+        console.log("tick tock")
     }
 
-    const interval = setInterval(() => {
-        updateTime(0);
-    }, 1000);
-
+    useEffect(() => {
+        const id = setInterval(() => {
+            updateTime();
+        }, 1000)
+        return () => clearInterval(id);
+    }, [currentTime]);
 
     useEffect(() => {
         if (session?.user?.role) {
@@ -80,12 +83,12 @@ const Dashboard = () => {
                 setEventData(data)
             });
             setValue(100)
-            setLoading(false)
             preFetch();
         } catch (error) {
             setValue(500)
             console.error(error);
         }
+        setLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
