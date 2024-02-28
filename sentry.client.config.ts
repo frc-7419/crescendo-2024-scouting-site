@@ -6,6 +6,12 @@ import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
     dsn: "https://e87f1663b6987c18bea8ab24fdb68bd5@o4506817294368768.ingest.sentry.io/4506817295941632",
+    beforeSend(event, hint) {
+        if (event.exception && event.event_id) {
+            Sentry.showReportDialog({eventId: event.event_id});
+        }
+        return event;
+    },
 
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: 1,
@@ -26,5 +32,6 @@ Sentry.init({
             maskAllText: true,
             blockAllMedia: true,
         }),
+        Sentry.feedbackIntegration(),
     ],
 });
