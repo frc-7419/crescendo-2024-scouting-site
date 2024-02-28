@@ -26,8 +26,6 @@ model User {
   role         Role               @default(USER)
   ScoutingData ScoutingData[]
   Scouter      Scouter[]
-  hours        ShopHour[]
-  meetings     Meeting[]
   ScouterOrig  ScheduleDisputes[] @relation(name: "ScouterOrig")
   ToScouter    ScheduleDisputes[] @relation(name: "ToScouter")
 }
@@ -130,28 +128,6 @@ model Session {
   sid       String   @unique
   data      String
   expiresAt DateTime
-}
-
-model Meeting {
-  id        String   @id @default(uuid())
-  name      String
-  date      DateTime
-  hours     Decimal
-  code      String
-  attendees User[]
-}
-
-model ShopHour {
-  id                 String   @id @default(uuid())
-  user               User     @relation(fields: [userId], references: [id])
-  userId             String
-  hours              Decimal
-  date               DateTime
-  name               String
-  description        String
-  supervisor_name    String
-  supervisor_contact String
-  approved           Boolean  @default(false)
 }
 
 model ScheduleDisputes {
