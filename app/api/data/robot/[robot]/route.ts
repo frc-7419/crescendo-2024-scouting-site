@@ -3,11 +3,89 @@ import {authOptions} from "@/components/util/auth-options"
 import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
 
+async function getAll(teamNumber: string) {
+    const scoutingData = await prisma.robot.findUnique({
+        where: {teamNumber},
+        include: {scoutingData: {include: {auton: true, teleop: true, misc: true}}},
+    });
+
+    if (!scoutingData) {
+        return new Response('Scouting data not found for the specified robot', {
+            status: 404,
+        });
+    }
+
+    const responseBody = JSON.stringify(scoutingData);
+    const headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': responseBody.length.toString(),
+    };
+
+    return new Response(responseBody, {
+        status: 200,
+        headers: headers,
+    });
+}
+
+async function getAvg(teamNumber: string) {
+    const scoutingData = await prisma.scoutingData.findMany({
+        where: {
+            teamNumber,
+        },
+        include: {
+            auton: true,
+            teleop: true,
+            misc: true,
+        },
+    });
+
+    if (!scoutingData || !scoutingData.length) {
+        return new Response('Scouting data not found for the specified robot', {
+            status: 404,
+        });
+    }
+
+    const avgAmpAuton = (scoutingData.reduce((acc, data) => acc + (data.auton?.amp || 0), 0) / scoutingData.length).toFixed(2);
+    const avgSpeakerAuton = (scoutingData.reduce((acc, data) => acc + (data.auton?.speaker || 0), 0) / scoutingData.length).toFixed(2);
+    const avgAmpTeleop = (scoutingData.reduce((acc, data) => acc + (data.teleop?.amp || 0), 0) / scoutingData.length).toFixed(2);
+    const avgAmpSpeaker = (scoutingData.reduce((acc, data) => acc + (data.teleop?.speaker || 0), 0) / scoutingData.length).toFixed(2);
+    const avgTimesAmped = (scoutingData.reduce((acc, data) => acc + (data.teleop?.timesAmped || 0), 0) / scoutingData.length).toFixed(2);
+    const avgTrap = (scoutingData.reduce((acc, data) => acc + (data.teleop?.trap || 0), 0) / scoutingData.length).toFixed(2);
+    const avgDefense = (scoutingData.reduce((acc, data) => acc + (data.misc?.defense || 0), 0) / scoutingData.length).toFixed(2);
+    const avgReliability = (scoutingData.reduce((acc, data) => acc + (data.misc?.reliability || 0), 0) / scoutingData.length).toFixed(2);
+
+    const responseBody = JSON.stringify({
+        avgAmpAuton,
+        avgSpeakerAuton,
+        avgAmpTeleop,
+        avgAmpSpeaker,
+        avgTimesAmped,
+        avgTrap,
+        avgDefense,
+        avgReliability,
+    });
+
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': responseBody.length.toString(),
+    };
+
+    return new Response(responseBody, {
+        status: 200,
+        headers: headers,
+    });
+}
+
+
 export async function GET(
     request: NextRequest,
     {params}: { params: { robot: string } }
 ) {
     const session = await getServerSession(authOptions);
+
+    const searchParams = request.nextUrl.searchParams
+    const type = searchParams.get('type') as string;
 
     const teamNumber = params.robot
 
@@ -19,32 +97,19 @@ export async function GET(
     }
     */
 
+
+    if (type === 'avg') {
+        return await getAvg(teamNumber);
+    } else {
+        return await getAll(teamNumber);
+    }
+
     if (request.method !== "GET") return new Response("Oops, Invalid Method.", {
         status: 400,
     });
 
     try {
-        const scoutingData = await prisma.robot.findUnique({
-            where: {teamNumber},
-            include: {scoutingData: {include: {auton: true, teleop: true, misc: true}}},
-        });
 
-        if (!scoutingData) {
-            return new Response('Scouting data not found for the specified robot', {
-                status: 404,
-            });
-        }
-
-        const responseBody = JSON.stringify(scoutingData);
-        const headers = {
-            'Content-Type': 'application/json',
-            'Content-Length': responseBody.length.toString(),
-        };
-
-        return new Response(responseBody, {
-            status: 200,
-            headers: headers,
-        });
     } catch (error) {
         console.error('Error retrieving scouting data:', error);
         return new Response('Internal Server Error', {
