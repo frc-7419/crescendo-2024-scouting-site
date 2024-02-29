@@ -64,33 +64,34 @@ export async function GET(
         status: 400,
     });
 
-    const form = await prisma.scouter.findFirst({
-        where: {
-            scouterId: session?.user?.id,
-            ScoutingSchedule: {
-                matchID: matchId,
-            },
-        },
-        include: {
-            ScoutingSchedule: true,
-        },
-    });
-
-    if (!form) {
-        return new Response('No form found.', {
-            status: 404,
-        });
-    }
-
-    const formData = {
-        matchID: form.ScoutingSchedule?.matchID,
-        matchNumber: form.ScoutingSchedule?.matchNumber,
-        venue: form.ScoutingSchedule?.venue,
-        scouterId: form.scouterId,
-        role: form.role,
-    };
 
     try {
+        const form = await prisma.scouter.findFirst({
+            where: {
+                scouterId: session?.user?.id,
+                ScoutingSchedule: {
+                    matchID: matchId,
+                },
+            },
+            include: {
+                ScoutingSchedule: true,
+            },
+        });
+
+        if (!form) {
+            return new Response('No form found.', {
+                status: 404,
+            });
+        }
+
+        const formData = {
+            matchID: form.ScoutingSchedule?.matchID,
+            matchNumber: form.ScoutingSchedule?.matchNumber,
+            venue: form.ScoutingSchedule?.venue,
+            scouterId: form.scouterId,
+            role: form.role,
+        };
+
         const response = await fetch(`https://www.thebluealliance.com/api/v3/match/${matchId}/simple`, {
             headers: new Headers({
                 'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
