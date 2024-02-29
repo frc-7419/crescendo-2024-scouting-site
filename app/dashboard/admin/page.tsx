@@ -1,7 +1,5 @@
 'use client';
 
-import NavBar from '@/components/nav-bar';
-import SideBar from '@/components/side-bar';
 import React, {useEffect, useState} from 'react';
 import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
@@ -17,6 +15,7 @@ import {Event} from '@/types/Event';
 import Loading from '@/components/loading';
 import {setupCache} from "axios-cache-interceptor";
 import {getEvent, getMatches, getShifts} from "@/components/fetches/apicalls";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const Dashboard = () => {
     const instance = Axios.create();
@@ -97,36 +96,32 @@ const Dashboard = () => {
     }
 
     return (
-        <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar/>
-            <NavBar/>
-            <div className="pt-6 pr-6 pl-6 flex flex-col flex-1">
-                <div className='header flex justify-between'>
-                    <span className="text-3xl">Welcome {firstName},</span>
-                    <Tabs
-                        aria-label="Tabs colors"
-                        radius="full"
-                        selectedKey={selectedTab}
-                        onSelectionChange={(key) => setSelectedTab(String(key))}
-                    >
-                        <Tab key="admin" title="Admin"/>
-                        <Tab key="scouter" title="Scouter"/>
-                    </Tabs>
-                </div>
-                <div id='cards' className="mt-4 overflow-y-auto">
-                    <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''}
-                                 time={currentTime} shifts={shifts}/>
-
-                    {selectedTab === "admin" ? (<DashCard title="Scouting Schedule"
-                                                          content={<AdminMatchSchedule matches={matches}
-                                                                                       loading={loading}
-                                                                                       time={currentTime}/>}/>) : (
-                        <DashCard title="Scouting Schedule"
-                                  content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
-                                                            shifts={shifts}/>}/>)}
-                </div>
+        <DashboardLayout>
+            <div className='header flex justify-between'>
+                <span className="text-3xl">Welcome {firstName},</span>
+                <Tabs
+                    aria-label="Tabs colors"
+                    radius="full"
+                    selectedKey={selectedTab}
+                    onSelectionChange={(key) => setSelectedTab(String(key))}
+                >
+                    <Tab key="admin" title="Admin"/>
+                    <Tab key="scouter" title="Scouter"/>
+                </Tabs>
             </div>
-        </main>
+            <div id='cards' className="mt-4 overflow-y-auto">
+                <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''}
+                             time={currentTime} shifts={shifts}/>
+
+                {selectedTab === "admin" ? (<DashCard title="Scouting Schedule"
+                                                      content={<AdminMatchSchedule matches={matches}
+                                                                                   loading={loading}
+                                                                                   time={currentTime}/>}/>) : (
+                    <DashCard title="Scouting Schedule"
+                              content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
+                                                        shifts={shifts}/>}/>)}
+            </div>
+        </DashboardLayout>
     );
 };
 

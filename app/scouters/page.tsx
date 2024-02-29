@@ -1,7 +1,5 @@
 'use client';
 
-import NavBar from '@/components/nav-bar';
-import SideBar from '@/components/side-bar';
 import React, {useContext, useEffect, useState} from 'react';
 import {useSession} from 'next-auth/react';
 import {Match} from '@/types/match';
@@ -11,6 +9,7 @@ import {LoadStatusContext} from '@/components/LoadStatusContext';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import Loading from '@/components/loading';
 import {getMatches} from "@/components/fetches/apicalls";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const Scouters = () => {
     const router = useRouter();
@@ -81,15 +80,11 @@ const Scouters = () => {
     }
 
     return (
-        <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar/>
-            <NavBar/>
-            <div id='dash' className="p-6 flex flex-col">
-                <div id='cards' className="overflow-y-scroll flex-1">
-                    <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime}/>
-                </div>
+        <DashboardLayout>
+            <div id='cards' className="overflow-y-scroll flex-1">
+                <SetScouterSchedule matches={filteredMatches} loading={loading} time={currentTime}/>
             </div>
-        </main>
+        </DashboardLayout>
     );
 };
 

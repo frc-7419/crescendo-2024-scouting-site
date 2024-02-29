@@ -1,19 +1,15 @@
 import React from 'react';
-import BlueAllianceComponent from '@/components/bluealliancecomponent';
-import SideBar from '@/components/side-bar';
-import NavBar from '@/components/nav-bar';
+import Teamlookupcomponent from '@/components/teamlookupcomponent';
 import DashCard from '@/components/templates/dash-card';
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const Page = () => {
     return (
-        <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar/>
-            <NavBar/>
+        <DashboardLayout>
             <div id='dash' className="overflow-auto lg:overflow-hidden pt-6 pr-6 pl-6">
-                <DashCard title="Blue Alliance Team Information" content={<BlueAllianceComponent/>}/>
+                <DashCard title="Blue Alliance Team Information" content={<Teamlookupcomponent/>}/>
             </div>
-
-        </main>
+        </DashboardLayout>
     );
 };
 

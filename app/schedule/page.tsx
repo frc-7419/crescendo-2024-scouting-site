@@ -1,7 +1,5 @@
 'use client';
 
-import NavBar from '@/components/nav-bar';
-import SideBar from '@/components/side-bar';
 import React, {useContext, useEffect, useState} from 'react';
 import DashCard from '@/components/templates/dash-card';
 import MatchSchedule from '@/components/schedule';
@@ -11,8 +9,9 @@ import {getCurrentEvent} from '@/components/getCurrentEvent';
 import Loading from '@/components/loading';
 import {setupCache} from "axios-cache-interceptor";
 import {getMatches} from "@/components/fetches/apicalls";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 
-const Dashboard = () => {
+const Schedule = () => {
     const instance = Axios.create();
     const axios = setupCache(instance);
 
@@ -63,17 +62,13 @@ const Dashboard = () => {
     }
 
     return (
-        <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar/>
-            <NavBar/>
-            <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
-                <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                    <DashCard title="Upcoming Matches"
-                              content={<MatchSchedule matches={matches} loading={loading} time={currentTime}/>}/>
-                </div>
+        <DashboardLayout>
+            <div id='cards' className="mt-4 overflow-y-auto flex-1">
+                <DashCard title="Upcoming Matches"
+                          content={<MatchSchedule matches={matches} loading={loading} time={currentTime}/>}/>
             </div>
-        </main>
+        </DashboardLayout>
     );
 };
 
-export default Dashboard;
+export default Schedule;

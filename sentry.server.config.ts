@@ -12,4 +12,6 @@ Sentry.init({
 
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
+
+    profilesSampleRate: 1.0, // Profiling sample rate is relative to tracesSampleRate
 });

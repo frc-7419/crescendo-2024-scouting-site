@@ -1,7 +1,5 @@
 'use client';
 
-import NavBar from '@/components/nav-bar';
-import SideBar from '@/components/side-bar';
 import React, {useContext, useEffect, useState} from 'react';
 import ScoutingForm from '@/components/scoutingform';
 import {Spinner} from '@nextui-org/react';
@@ -11,6 +9,7 @@ import {LoadStatusContext} from '@/components/LoadStatusContext';
 import ProxyProvider from '@/components/unsavedprovider';
 import {setupCache} from "axios-cache-interceptor";
 import {getFormData} from "@/components/fetches/apicalls";
+import DashboardLayout from '@/components/layouts/DashboardLayout';
 
 const Scouting = ({params}: { params: { match: string } }) => {
     const instance = Axios.create();
@@ -39,38 +38,28 @@ const Scouting = ({params}: { params: { match: string } }) => {
 
     if (errored) {
         return (
-            <main className="min-h-screen overflow-clip dark:bg-slate-950">
-                <SideBar/>
-                <NavBar/>
-                <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
-                    <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                        <div>Error occurred while loading form.</div>
-                    </div>
-                </div>
-            </main>
+            <div id='cards' className="mt-4 overflow-y-auto flex-1">
+                <div>Error occurred while loading form.</div>
+            </div>
         );
     }
 
     return (
-        <main className="min-h-screen overflow-clip dark:bg-slate-950">
+        <DashboardLayout>
             <ProxyProvider>
-                <SideBar/>
-                <NavBar/>
-                <div id='dash' className="pt-6 pr-6 pl-6 flex flex-col">
-                    <div className='flex justify-between'>
-                        <span className="text-3xl">Currently Scouting</span>
-                        {loading && <Spinner/>}
-                        {!loading && !errored &&
-                            <span className="text-3xl">Qual {form.matchNumber} - Team {form.team}</span>}
-                    </div>
-                    <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                        {loading && <div>Loading...</div>}
-                        {!loading && errored && <div>Error occurred while loading form.</div>}
-                        {!loading && !errored && <ScoutingForm formData={form}/>}
-                    </div>
+                <div className='flex justify-between'>
+                    <span className="text-3xl">Currently Scouting</span>
+                    {loading && <Spinner/>}
+                    {!loading && !errored &&
+                        <span className="text-3xl">Qual {form.matchNumber} - Team {form.team}</span>}
+                </div>
+                <div id='cards' className="mt-4 overflow-y-auto flex-1">
+                    {loading && <div>Loading...</div>}
+                    {!loading && errored && <div>Error occurred while loading form.</div>}
+                    {!loading && !errored && <ScoutingForm formData={form}/>}
                 </div>
             </ProxyProvider>
-        </main>
+        </DashboardLayout>
     );
 };
 

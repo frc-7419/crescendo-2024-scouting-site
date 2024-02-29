@@ -8,6 +8,7 @@ import {
     faGauge,
     faHandPaper,
     faList,
+    faMailForward,
     faPerson,
     faPoll,
     faX
@@ -94,6 +95,11 @@ export default function Dropdown() {
                                 name="Blue Alliance"
                                 route="/BlueAlliance"
                                 icon={<FontAwesomeIcon icon={faHandPaper}/>}
+                            />
+                            <MenuItem
+                                name="Disputes"
+                                route="/disputes"
+                                icon={<FontAwesomeIcon icon={faMailForward}/>}
                             />
                         </div>
                     </div>
