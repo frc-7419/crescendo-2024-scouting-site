@@ -43,7 +43,6 @@ const LoadStatus = () => {
                 clearTimeout(timeoutID as NodeJS.Timeout);
             }
         }
-        console.log('sdfsfsdf')
     }, [context]);
 
     if (!showProgress) {

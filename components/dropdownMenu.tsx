@@ -20,7 +20,6 @@ export default function Dropdown() {
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
-        console.log("hi")
     }
 
     const pathname = usePathname();
