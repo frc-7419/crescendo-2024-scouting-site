@@ -40,7 +40,7 @@ const Dashboard = () => {
 
     const updateTime = () => {
         setCurrentTime(new Date());
-        console.log("tick tock")
+        console.debug("tick tock")
     }
 
     useEffect(() => {
@@ -90,7 +90,7 @@ const Dashboard = () => {
     }, [eventKey]);
 
     useEffect(() => {
-        console.log("load", value)
+        console.debug("load", value)
     }, [value]);
 
 

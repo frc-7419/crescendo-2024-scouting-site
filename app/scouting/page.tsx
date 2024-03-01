@@ -9,6 +9,7 @@ import {getCurrentEvent} from '@/components/getCurrentEvent';
 import {getMatches, getShifts} from "@/components/fetches/apicalls";
 import toast from "react-hot-toast";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
+import ManualScouting from "@/components/manual-scouting";
 
 const Dashboard = () => {
     const {data: session} = useSession();
@@ -66,6 +67,7 @@ const Dashboard = () => {
                 <DashCard title="Scouting Schedule"
                           content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
                                                     shifts={shifts}/>}/>
+                <DashCard title={"Manual Scouting"} content={<ManualScouting/>}/>
             </div>
         </DashboardLayout>
     );
