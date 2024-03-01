@@ -17,25 +17,31 @@ export async function GET(
     if (request.method !== "GET") return new Response("Oops, Invalid Method.", {
         status: 400,
     });
+    try {
+        const schedules = await prisma.scouter.findMany({
+            where: {
+                scouterId: session?.user?.id,
+                // scouterId: '94af928c-26ae-42e1-9ecb-e0428cfcd9f1'
+            },
+            include: {
+                ScoutingSchedule: true,
+            },
+        });
 
-    const schedules = await prisma.scouter.findMany({
-        where: {
-            scouterId: session?.user?.id,
-            // scouterId: '94af928c-26ae-42e1-9ecb-e0428cfcd9f1'
-        },
-        include: {
-            ScoutingSchedule: true,
-        },
-    });
+        const responseBody = JSON.stringify(schedules);
+        const headers = {
+            'Content-Type': 'application/json',
+            'Content-Length': responseBody.length.toString(),
+        };
 
-    const responseBody = JSON.stringify(schedules);
-    const headers = {
-        'Content-Type': 'application/json',
-        'Content-Length': responseBody.length.toString(),
-    };
-
-    return new Response(responseBody, {
-        status: 200,
-        headers: headers,
-    });
+        return new Response(responseBody, {
+            status: 200,
+            headers: headers,
+        });
+    } catch (error) {
+        console.error(error);
+        return new Response(String(error), {
+            status: 500,
+        });
+    }
 }

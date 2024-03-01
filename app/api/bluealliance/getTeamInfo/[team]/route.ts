@@ -2,6 +2,7 @@ import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/components/util/auth-options";
 import {NextRequest} from "next/server";
 
+
 export async function GET(
     request: NextRequest,
     {params}: { params: { team: string } }
@@ -43,7 +44,10 @@ export async function GET(
         const responseBody = JSON.stringify({teamResponse, eventsResponse});
         const headers = new Headers({
             'Content-Type': 'application/json',
-            'Content-Length': responseBody.length.toString()
+            'Content-Length': responseBody.length.toString(),
+            'Cache-Control': 'public, s-maxage=3600',
+            'CDN-Cache-Control': 'public, s-maxage=7200',
+            'Vercel-CDN-Cache-Control': 'public, s-maxage=14400',
         });
         return new Response(responseBody, {
             status: 200,

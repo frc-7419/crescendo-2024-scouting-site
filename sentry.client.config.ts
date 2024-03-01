@@ -14,7 +14,8 @@ Sentry.init({
     },
 
     // Adjust this value in production, or use tracesSampler for greater control
-    tracesSampleRate: 1,
+    tracesSampleRate: 1.0,
+    profilesSampleRate: 1.0,
 
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
@@ -29,9 +30,11 @@ Sentry.init({
     integrations: [
         Sentry.replayIntegration({
             // Additional Replay configuration goes in here, for example:
-            maskAllText: true,
+            maskAllText: false,
             blockAllMedia: true,
         }),
         Sentry.feedbackIntegration(),
+        Sentry.browserTracingIntegration(),
+        Sentry.browserProfilingIntegration()
     ],
 });

@@ -1,10 +1,9 @@
 'use client';
 
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import SideBar from '@/components/side-bar';
-import NavBar from '@/components/nav-bar';
 import {LoadStatusContext} from '@/components/LoadStatusContext';
 import SuccessAnim from '@/resources/Success.json';
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const Page = () => {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -35,16 +34,12 @@ const Page = () => {
     }, []);
 
     return (
-        <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar/>
-            <NavBar/>
-            <div id='dash' className="overflow-scroll pt-6 pr-6 pl-6 flex flex-col">
-                <div className='w-60'>
-                    <div ref={aRef}></div>
-                    <div className="text-3xl">Success!</div>
-                </div>
+        <DashboardLayout>
+            <div className='w-60'>
+                <div ref={aRef}></div>
+                <div className="text-3xl">Success!</div>
             </div>
-        </main>
+        </DashboardLayout>
     )
 };
 

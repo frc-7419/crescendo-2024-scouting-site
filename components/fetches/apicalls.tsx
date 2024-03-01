@@ -1,11 +1,11 @@
-'use client';
-
 import Axios from "axios";
-import {setupCache} from "axios-cache-interceptor";
+import {buildMemoryStorage, buildWebStorage, setupCache} from "axios-cache-interceptor";
 
 const instance = Axios.create();
+const storage = typeof window !== 'undefined' ? buildWebStorage(localStorage, 'axios-cache:') : buildMemoryStorage();
+
 const axios = setupCache(instance, {
-    // storage: buildWebStorage(localStorage, 'axios-cache:')
+    storage: storage
 });
 
 export async function getMatches(eventKey: string) {
@@ -65,20 +65,50 @@ export async function getSchedule(venue: string) {
 }
 
 export async function getUsers() {
-    try {
-        const response = await axios.get('/api/users/getusers', {
-            cache: {
-                ttl: 60 * 10
-            }
-        });
-        const data = await response.data;
-        // Store the fetched users
-        return data.map((user: { name: string, id: string, email: string }) => ({
-            name: user.name,
-            uuid: user.id,
-            email: user.email
-        }))
-    } catch (error) {
-        console.error('Error fetching users:', error);
-    }
+    const response = await axios.get('/api/users/getusers', {
+        cache: {
+            ttl: 60 * 10
+        }
+    });
+    const data = await response.data;
+    // Store the fetched users
+    return data.map((user: { name: string, id: string, email: string }) => ({
+        name: user.name,
+        uuid: user.id,
+        email: user.email
+    }))
+}
+
+export async function getRobotData(robotNumber: string) {
+    const res = await axios.get(`/api/data/robot/${robotNumber}`, {
+        cache: {
+            ttl: 60
+        }
+    })
+    const data = await res.data;
+    console.debug(data)
+    return (data)
+}
+
+export async function getTeamBlueAllianceData(team: string, season: string) {
+    const res = await axios.get(`/api/bluealliance/getTeamInfo/${team}?season=${season}`, {
+        cache: {
+            ttl: 60 * 60 * 3
+        }
+    })
+
+    const data = await res.data;
+    console.debug(data)
+    return data;
+}
+
+export async function getRobotAverages(robotNumber: string) {
+    const res = await axios.get(`/api/data/robot/${robotNumber}?type=avg`, {
+        cache: {
+            ttl: 60
+        }
+    })
+    const data = await res.data;
+    console.debug(data)
+    return (data)
 }

@@ -1,55 +1,51 @@
 'use client';
 
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Event} from '@/types/Event';
 import {Team} from '@/types/Team';
 import '@/app/globals.css';
 import {Accordion, AccordionItem, Card, CardBody, Divider, Input, Link, Select, SelectItem} from '@nextui-org/react';
 import {LoadStatusContext} from './LoadStatusContext';
-import axios from 'axios';
+import {getTeamBlueAllianceData} from "@/components/fetches/apicalls";
 
-const BlueAllianceComponent: React.FC = () => {
+export default function Teamlookupcomponent() {
     const {value, setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
     const [teamNumber, setTeamNumber] = useState('');
-    const [teamData, setTeamData] = useState<Team | null>(null);
+    const [teamInfo, setTeamInfo] = useState<Team | null>(null);
     const [teamEvents, setTeamEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(false);
     const [errored, setErrored] = useState(false);
     const [selectedSeason, setSelectedSeason] = useState<string>('2024');
 
+
     const getTeamInfo = () => {
         if (teamNumber && /^\d+$/.test(teamNumber)) {
+            setValue(0);
             setErrored(false);
             setLoading(true);
             const teamKey = `frc${teamNumber}`;
             try {
-                setValue(0);
-                axios.get(`/api/bluealliance/getTeamInfo/${teamKey}?season=${selectedSeason}`, {
-                    onDownloadProgress: (progressEvent) => {
-                        let percentCompleted = Math.round(
-                            (progressEvent.loaded * 100) / (progressEvent.total ?? 1)
-                        );
-                        setValue(percentCompleted);
-                    },
-                })
-                    .then(response => response.data)
+                getTeamBlueAllianceData(teamKey, selectedSeason)
                     .then(data => {
-                        setTeamData(data.teamResponse);
+                        setTeamInfo(data.teamResponse);
                         setTeamEvents(data.eventsResponse);
                         setLoading(false);
+                        setValue(100)
                     })
                     .catch(error => {
                         console.error(error);
                         setErrored(true);
                         setLoading(false);
+                        setValue(500);
                     });
             } catch (error) {
                 console.error(error);
                 setErrored(true);
                 setLoading(false);
+                setValue(500);
             }
         }
     }
@@ -62,9 +58,6 @@ const BlueAllianceComponent: React.FC = () => {
         setSelectedSeason(event.target.value);
     };
 
-    useEffect(() => {
-        setValue(100);
-    }, []);
     return (
         <>
             <div className='flex'>
@@ -99,7 +92,7 @@ const BlueAllianceComponent: React.FC = () => {
                 <p>Loading...</p>
             ) : errored ? (
                 <p>No data available. Please enter a valid team number.</p>
-            ) : teamData ? (
+            ) : teamInfo ? (
                 <><Card
                     isBlurred
                     className='mt-4'
@@ -109,19 +102,19 @@ const BlueAllianceComponent: React.FC = () => {
                             <div className="flex flex-col gap-4">
                                 <div className="flex justify-between align-middle">
                                     <div className='flex flex-col'>
-                                        <p className="font-bold text-2xl">{teamData.team_number}: {teamData.nickname}</p>
-                                        <p className='text-small font-medium'>{teamData.name}</p>
+                                        <p className="font-bold text-2xl">{teamInfo.team_number}: {teamInfo.nickname}</p>
+                                        <p className='text-small font-medium'>{teamInfo.name}</p>
                                     </div>
                                     <Link
-                                        href={`https://www.google.com/maps/search/?api=1&query=${teamData.city},${teamData.state_prov} ${teamData.school_name}`}
-                                        className="text-medium font-medium">{teamData.city}, {teamData.state_prov}</Link>
+                                        href={`https://www.google.com/maps/search/?api=1&query=${teamInfo.city},${teamInfo.state_prov} ${teamInfo.school_name}`}
+                                        className="text-medium font-medium">{teamInfo.city}, {teamInfo.state_prov}</Link>
                                 </div>
                                 <div className="flex h-5 items-center space-x-2">
-                                    <p>Since {teamData.rookie_year}</p>
-                                    {teamData.website && (
+                                    <p>Since {teamInfo.rookie_year}</p>
+                                    {teamInfo.website && (
                                         <>
                                             <Divider orientation="vertical"/>
-                                            <p>Website: <Link href={teamData.website}>{teamData.website}</Link></p>
+                                            <p>Website: <Link href={teamInfo.website}>{teamInfo.website}</Link></p>
                                         </>
                                     )}
                                 </div>
@@ -135,7 +128,8 @@ const BlueAllianceComponent: React.FC = () => {
                                             {teamEvents.map(event => (
                                                 <AccordionItem key={event.key} aria-label={event.name}
                                                                title={event.name}
-                                                               subtitle={`${event.event_type_string} - Week ${event.week}`}>
+                                                               subtitle={`${event.event_type_string !== 'Offseason' && event.week !== undefined && event.week !== null ? `Week ${event.week + 1}` : ''}`}
+                                                >
                                                     <div className="accordion-item-content">
                                                         <p></p>
                                                         <p>Event Code: {event.event_code}</p>
@@ -166,5 +160,3 @@ const BlueAllianceComponent: React.FC = () => {
         </>
     );
 }
-
-export default BlueAllianceComponent;

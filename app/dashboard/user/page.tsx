@@ -9,12 +9,11 @@ import Axios from 'axios';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
 import {Event} from '@/types/Event';
 import Loading from '@/components/loading';
-import NavBar from '@/components/nav-bar';
-import SideBar from '@/components/side-bar';
 import {setupCache} from "axios-cache-interceptor";
 import {getEvent, getMatches, getShifts} from "@/components/fetches/apicalls";
 import {LoadStatusContext} from "@/components/LoadStatusContext";
 import {useRouter} from "next/navigation";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 
 const Dashboard = () => {
@@ -80,20 +79,16 @@ const Dashboard = () => {
     }
 
     return (
-        <main className="min-h-screen overflow-clip dark:bg-slate-950">
-            <SideBar/>
-            <NavBar/>
-            <div className="pt-6 pr-6 pl-6 flex flex-col flex-1">
-                <span className="text-3xl">Welcome {firstName},</span>
-                <div className="mt-4 overflow-y-auto">
-                    <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''}
-                                 time={currentTime} shifts={shifts}/>
-                    <DashCard title="Scouting Schedule"
-                              content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
-                                                        shifts={shifts}/>}/>
-                </div>
+        <DashboardLayout>
+            <span className="text-3xl">Welcome {firstName},</span>
+            <div className="mt-4 overflow-y-auto">
+                <CurrentGame matches={matches} loading={loading} eventName={eventData?.name || ''}
+                             time={currentTime} shifts={shifts}/>
+                <DashCard title="Scouting Schedule"
+                          content={<ScouterSchedule matches={matches} loading={loading} time={currentTime}
+                                                    shifts={shifts}/>}/>
             </div>
-        </main>
+        </DashboardLayout>
     );
 };
 
