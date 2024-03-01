@@ -5,7 +5,7 @@
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
-    dsn: "https://e87f1663b6987c18bea8ab24fdb68bd5@o4506817294368768.ingest.sentry.io/4506817295941632",
+    dsn: "https://e87f1663b6987c18bea8ab24fdb68bd5@o4506817294368768.ingest.us.sentry.io/4506817295941632",
     beforeSend(event, hint) {
         if (event.exception && event.event_id) {
             Sentry.showReportDialog({eventId: event.event_id});
@@ -14,8 +14,7 @@ Sentry.init({
     },
 
     // Adjust this value in production, or use tracesSampler for greater control
-    tracesSampleRate: 1.0,
-    profilesSampleRate: 1.0,
+    tracesSampleRate: 1,
 
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
@@ -30,11 +29,9 @@ Sentry.init({
     integrations: [
         Sentry.replayIntegration({
             // Additional Replay configuration goes in here, for example:
-            maskAllText: false,
+            maskAllText: true,
             blockAllMedia: true,
         }),
         Sentry.feedbackIntegration(),
-        Sentry.browserTracingIntegration(),
-        Sentry.browserProfilingIntegration()
     ],
 });
