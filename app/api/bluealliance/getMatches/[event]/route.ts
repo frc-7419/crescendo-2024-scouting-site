@@ -2,6 +2,7 @@ import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/components/util/auth-options";
 import {Match} from "@/types/match";
 
+
 export async function GET(
     request: Request,
     {params}: { params: { event: string } }
@@ -43,6 +44,9 @@ export async function GET(
         const headers = {
             'Content-Type': 'application/json',
             'Content-Length': responseBody.length.toString(),
+            'Cache-Control': 'public, s-maxage=10',
+            'CDN-Cache-Control': 'public, s-maxage=30',
+            'Vercel-CDN-Cache-Control': 'public, s-maxage=1800',
         };
 
         return new Response(responseBody, {

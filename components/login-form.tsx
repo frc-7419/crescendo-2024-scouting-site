@@ -8,6 +8,7 @@ import {signIn, useSession} from "next-auth/react";
 import {useTheme} from "next-themes";
 import {toast} from 'react-hot-toast';
 import {LoadStatusContext} from './LoadStatusContext';
+import Image from 'next/image';
 
 export default function LoginForm() {
     const router = useRouter();
@@ -64,10 +65,12 @@ export default function LoginForm() {
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 dark:bg-slate-950">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <img
+                <Image
                     className="mx-auto h-12"
                     src={isDark ? logoLight.src : logoDark.src}
                     alt="Tech Support"
+                    width={logoLight.width}
+                    height={logoLight.height}
                 />
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100">
                     FRC Team 7419 Scouting App

@@ -38,6 +38,9 @@ export async function GET(
         const headers = {
             'Content-Type': 'application/json',
             'Content-Length': responseBody.length.toString(),
+            'Cache-Control': 'public, s-maxage=3600',
+            'CDN-Cache-Control': 'public, s-maxage=7200',
+            'Vercel-CDN-Cache-Control': 'public, s-maxage=14400',
         };
 
         return new Response(responseBody, {
