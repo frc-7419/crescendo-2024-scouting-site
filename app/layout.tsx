@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
     return (
         <html suppressHydrationWarning>
-        <head/>
+        <head><title>7419 Scouting App</title></head>
         <body className={`${alata.className} transition-colors`}>
         <Providers>
             <Suspense fallback={<Loading/>}>

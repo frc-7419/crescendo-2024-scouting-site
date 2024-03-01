@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Event} from '@/types/Event';
 import {Team} from '@/types/Team';
 import '@/app/globals.css';
@@ -23,23 +23,24 @@ export default function Teamlookupcomponent() {
 
     const getTeamInfo = () => {
         if (teamNumber && /^\d+$/.test(teamNumber)) {
+            setValue(0);
             setErrored(false);
             setLoading(true);
             const teamKey = `frc${teamNumber}`;
             try {
-                setValue(0);
                 getTeamBlueAllianceData(teamKey, selectedSeason)
                     .then(data => {
                         setTeamInfo(data.teamResponse);
                         setTeamEvents(data.eventsResponse);
                         setLoading(false);
+                        setValue(100)
                     })
                     .catch(error => {
                         console.error(error);
                         setErrored(true);
                         setLoading(false);
+                        setValue(500);
                     });
-                setValue(100)
             } catch (error) {
                 console.error(error);
                 setErrored(true);
@@ -57,9 +58,6 @@ export default function Teamlookupcomponent() {
         setSelectedSeason(event.target.value);
     };
 
-    useEffect(() => {
-        setValue(100);
-    }, []);
     return (
         <>
             <div className='flex'>

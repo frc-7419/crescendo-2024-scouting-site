@@ -47,8 +47,8 @@ const Schedule = () => {
             setValue(0);
             getMatches(eventKey).then(data => {
                 setMatches(data);
+                setValue(100)
             })
-            setValue(100)
         } catch (error) {
             setValue(500)
             console.error(error);

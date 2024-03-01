@@ -2,6 +2,7 @@ import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/components/util/auth-options"
 import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
+import {getCurrentEvent} from "@/components/getCurrentEvent";
 
 async function getAll(teamNumber: string) {
     const scoutingData = await prisma.robot.findUnique({
@@ -28,43 +29,20 @@ async function getAll(teamNumber: string) {
 }
 
 async function getAvg(teamNumber: string) {
-    const scoutingData = await prisma.scoutingData.findMany({
+    const scoutingData = await prisma.averages.findFirst({
         where: {
             teamNumber,
-        },
-        include: {
-            auton: true,
-            teleop: true,
-            misc: true,
-        },
-    });
+            venue: getCurrentEvent()
+        }
+    })
 
-    if (!scoutingData || !scoutingData.length) {
+    if (!scoutingData) {
         return new Response('Scouting data not found for the specified robot', {
             status: 404,
         });
     }
 
-    const avgAmpAuton = (scoutingData.reduce((acc, data) => acc + (data.auton?.amp || 0), 0) / scoutingData.length).toFixed(2);
-    const avgSpeakerAuton = (scoutingData.reduce((acc, data) => acc + (data.auton?.speaker || 0), 0) / scoutingData.length).toFixed(2);
-    const avgAmpTeleop = (scoutingData.reduce((acc, data) => acc + (data.teleop?.amp || 0), 0) / scoutingData.length).toFixed(2);
-    const avgAmpSpeaker = (scoutingData.reduce((acc, data) => acc + (data.teleop?.speaker || 0), 0) / scoutingData.length).toFixed(2);
-    const avgTimesAmped = (scoutingData.reduce((acc, data) => acc + (data.teleop?.timesAmped || 0), 0) / scoutingData.length).toFixed(2);
-    const avgTrap = (scoutingData.reduce((acc, data) => acc + (data.teleop?.trap || 0), 0) / scoutingData.length).toFixed(2);
-    const avgDefense = (scoutingData.reduce((acc, data) => acc + (data.misc?.defense || 0), 0) / scoutingData.length).toFixed(2);
-    const avgReliability = (scoutingData.reduce((acc, data) => acc + (data.misc?.reliability || 0), 0) / scoutingData.length).toFixed(2);
-
-    const responseBody = JSON.stringify({
-        avgAmpAuton,
-        avgSpeakerAuton,
-        avgAmpTeleop,
-        avgAmpSpeaker,
-        avgTimesAmped,
-        avgTrap,
-        avgDefense,
-        avgReliability,
-    });
-
+    const responseBody = JSON.stringify(scoutingData)
 
     const headers = {
         'Content-Type': 'application/json',
@@ -116,6 +94,4 @@ export async function GET(
             status: 500,
         });
     }
-
-
 }

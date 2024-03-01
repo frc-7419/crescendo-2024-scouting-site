@@ -41,6 +41,7 @@ model Robot {
   teamNumber   String         @unique
   scoutingData ScoutingData[]
   winloss      Float          @default(1.0)
+  Averages     Averages[]
 }
 
 model ScoutingData {
@@ -128,6 +129,22 @@ model Session {
   sid       String   @unique
   data      String
   expiresAt DateTime
+}
+
+model Averages {
+  id               Int      @id @default(autoincrement())
+  teamNumber       String
+  venue            String
+  robot            Robot    @relation(fields: [teamNumber], references: [teamNumber])
+  avgampauton      Float
+  avgspeakerauton  Float
+  avgampteleop     Float
+  avgspeakerteleop Float
+  avgtimesamped    Float
+  avgtrap          Float
+  avgdefense       Float
+  avgreliability   Float
+  lastUpdated      DateTime @default(now())
 }
 
 model ScheduleDisputes {

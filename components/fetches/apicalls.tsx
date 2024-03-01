@@ -101,3 +101,14 @@ export async function getTeamBlueAllianceData(team: string, season: string) {
     console.debug(data)
     return data;
 }
+
+export async function getRobotAverages(robotNumber: string) {
+    const res = await axios.get(`/api/data/robot/${robotNumber}?type=avg`, {
+        cache: {
+            ttl: 60
+        }
+    })
+    const data = await res.data;
+    console.debug(data)
+    return (data)
+}

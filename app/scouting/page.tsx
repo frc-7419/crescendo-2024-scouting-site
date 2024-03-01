@@ -5,17 +5,12 @@ import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
 import ScouterSchedule from '@/components/scouter-schedule';
 import {LoadStatusContext} from '@/components/LoadStatusContext';
-import Axios from 'axios';
 import {getCurrentEvent} from '@/components/getCurrentEvent';
-import {setupCache} from "axios-cache-interceptor";
 import {getMatches, getShifts} from "@/components/fetches/apicalls";
 import toast from "react-hot-toast";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const Dashboard = () => {
-    const instance = Axios.create();
-    const axios = setupCache(instance);
-
     const {data: session} = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
     const {value, setValue} = useContext(LoadStatusContext) as {

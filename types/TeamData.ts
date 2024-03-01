@@ -1,6 +1,6 @@
-import {ScoutingData} from "@prisma/client";
+import {ScoutingData} from "@/types/scoutingform";
 
-interface TeamData {
+export default interface TeamData {
     id: number;
     teamNumber: string;
     winloss: number;

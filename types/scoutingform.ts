@@ -79,3 +79,14 @@ export interface ReturnedFormData extends FieldValues {
     reliability: number;
     misccomments: string;
 }
+
+export interface ScoutingDataAvg {
+    avgampauton: number;
+    avgspeakerauton: number;
+    avgampteleop: number;
+    avgspeakerteleop: number;
+    avgtimesamped: number;
+    avgtrap: number;
+    avgdefense: number;
+    avgreliability: number;
+}

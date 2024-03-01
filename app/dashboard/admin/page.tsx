@@ -81,19 +81,23 @@ const Dashboard = () => {
             getEvent(eventKey).then(data => {
                 setEventData(data)
             });
-            setValue(100)
             preFetch();
         } catch (error) {
-            setValue(500)
             console.error(error);
         }
         setLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
+    useEffect(() => {
+        console.log("load", value)
+    }, [value]);
+
+
     if (loading) {
         return <Loading/>
     }
+
 
     return (
         <DashboardLayout>
