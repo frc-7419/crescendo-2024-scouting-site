@@ -117,6 +117,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                             name={moduleKey}
                             control={control}
                             render={({field}) => <Checkbox {...field} color="primary"/>}
+                            shouldUnregister={false}
                             rules={rules}
                         />
                     </>
@@ -139,6 +140,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                                     errorMessage={errors[moduleKey]?.message as String}
                                 />
                             )}
+                            shouldUnregister={false}
                             rules={rules}
                         />
                     </>
@@ -165,6 +167,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                                     ))}
                                 </Autocomplete>
                             )}
+                            shouldUnregister={false}
                             rules={rules}
                         />
                     </>
@@ -177,9 +180,10 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                             name={moduleKey}
                             control={control}
                             render={({field}) => (
-                                <Input {...field} className="w-25" variant="bordered" type="text" defaultValue='mm:ss'
+                                <Input {...field} className="w-25" variant="bordered" type="text" defaultValue='00:00'
                                        pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$"/>
                             )}
+                            shouldUnregister={false}
                             rules={rules}
                         />
                     </>
@@ -201,6 +205,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                                     max={max}
                                 />
                             )}
+                            shouldUnregister={false}
                             rules={rules}
                         />
                     </>
@@ -224,12 +229,14 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                     render={({field}) => (
                         <Textarea {...field} variant="faded" key={moduleKey} color='primary'/>
                     )}
+                    shouldUnregister={false}
                 />
             </div>
         )
     }
 
-    const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const onSubmit: SubmitHandler<FieldValues> = (data, event) => {
+        event?.preventDefault();
         setValue(0);
         setSubmittingForm(true);
         console.debug("Starting Submit")
@@ -284,6 +291,9 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
 
     return (
         <>
+            <div className="bg-red-700 max-w-full p-6 rounded-lg mb-6">
+                Please double check your data before submitting. Form will reset if invalid. We cannot fix that issue.
+            </div>
             <div className="bg-amber-700 max-w-full p-6 rounded-lg mb-6">
                 Your changes will NOT be saved if you leave this page.
             </div>
