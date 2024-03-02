@@ -177,7 +177,8 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                             name={moduleKey}
                             control={control}
                             render={({field}) => (
-                                <Input {...field} className="w-25" variant="bordered" type="time" defaultValue='00:00'/>
+                                <Input {...field} className="w-25" variant="bordered" type="text" defaultValue='mm:ss'
+                                       pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$"/>
                             )}
                             rules={rules}
                         />
