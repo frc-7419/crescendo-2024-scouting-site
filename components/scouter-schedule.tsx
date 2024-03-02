@@ -50,6 +50,7 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
 
     const eventKey = getCurrentEvent();
 
+    const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
     const [users, setUsers] = useState<{ name: string; uuid: string }[]>([]);
     const [usersRequested, setUsersRequested] = useState(false);
     const [usersLoading, setUsersLoading] = useState(true);
@@ -57,6 +58,12 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
     const [reason, setReason] = useState('');
     const [matchId, setMatchId] = useState('');
     const [submittingDispute, setSubmittingDispute] = useState(false);
+
+    useEffect(() => {
+        const filtered = matches.filter((match: Match) => (new Date(match.predicted_time * 1000) >= time) && shifts.some((shift) => shift.ScoutingSchedule?.matchID === match.key));
+        setFilteredMatches(filtered);
+    }, [matches, time, shifts]);
+
 
     const PopButton = ({icon, text}: { icon: JSX.Element, text: string }) => {
         return (
@@ -176,7 +183,7 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
                     <p>Loading...</p>
                 ) : (
                     <>
-                        {matches.length === 0 ? (
+                        {filteredMatches.length === 0 ? (
                             <p>No upcoming matches</p>
                         ) : (
                             <Table hideHeader>
@@ -188,7 +195,7 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
                                     <TableColumn key="settings">Settings</TableColumn>
                                 </TableHeader>
                                 <TableBody
-                                    items={matches}
+                                    items={filteredMatches}
                                     loadingContent={<Spinner label="Loading..."/>}
                                 >
                                     {(item) => (
