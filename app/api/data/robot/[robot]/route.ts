@@ -67,19 +67,10 @@ export async function GET(
 
     const teamNumber = params.robot
 
-    /*
     if (!session) {
         return new Response('You must be logged in. Session Invalid.', {
             status: 401,
         });
-    }
-    */
-
-
-    if (type === 'avg') {
-        return await getAvg(teamNumber);
-    } else {
-        return await getAll(teamNumber);
     }
 
     if (request.method !== "GET") return new Response("Oops, Invalid Method.", {
@@ -87,7 +78,11 @@ export async function GET(
     });
 
     try {
-
+        if (type === 'avg') {
+            return await getAvg(teamNumber);
+        } else {
+            return await getAll(teamNumber);
+        }
     } catch (error) {
         console.error('Error retrieving scouting data:', error);
         return new Response('Internal Server Error', {

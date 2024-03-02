@@ -90,3 +90,18 @@ export interface ScoutingDataAvg {
     avgdefense: number;
     avgreliability: number;
 }
+
+export interface AvgModal {
+    id: string;
+    ranking: number;
+    teamNumber: string;
+    venue: string;
+    avgampauton: number;
+    avgspeakerauton: number;
+    avgampteleop: number;
+    avgspeakerteleop: number;
+    avgtimesamped: number;
+    avgtrap: number;
+    avgdefense: number;
+    avgreliability: number;
+}

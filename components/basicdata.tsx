@@ -1,12 +1,12 @@
 'use client';
 
-import React, {useContext, useState} from 'react';
-import '@/app/globals.css';
+import React, {useContext, useEffect, useState} from 'react';
 import {Input, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
 import {LoadStatusContext} from './LoadStatusContext';
-import {getRobotAverages, getRobotData} from "@/components/fetches/apicalls";
+import {getAverages, getRobotAverages, getRobotData} from "@/components/fetches/apicalls";
 import TeamData from "@/types/TeamData";
-import {Averages} from "@prisma/client";
+import {getCurrentEvent} from "@/components/getCurrentEvent";
+import {AvgModal} from "@/types/scoutingform";
 
 export default function BasicData() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -15,10 +15,11 @@ export default function BasicData() {
     };
     const [teamNumber, setTeamNumber] = useState('');
     const [teamData, setTeamData] = useState<TeamData>();
-    const [teamAverages, setTeamAverages] = useState<Averages>();
+    const [teamAverages, setTeamAverages] = useState<AvgModal>();
     const [loading, setLoading] = useState(false);
     const [errored, setErrored] = useState(false);
-
+    const [allAverages, setAllAverages] = useState<AvgModal[]>([]);
+    const [averagesLoaded, setAveragesLoaded] = useState(false)
     const getTeamInfo = async () => {
         if (teamNumber) {
             setValue(0);
@@ -41,12 +42,113 @@ export default function BasicData() {
         }
     }
 
+    const fetchAllAverages = async () => {
+        if (averagesLoaded) return;
+        try {
+            const averages = await getAverages(getCurrentEvent())
+            setAllAverages(averages);
+            setAveragesLoaded(true)
+            setValue(100);
+        } catch (error) {
+            console.error(error);
+            setErrored(true);
+            setValue(500);
+        }
+    }
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTeamNumber(event.target.value.replace(/\D/g, ''));
     };
 
+    useEffect(() => {
+        fetchAllAverages()
+    }, []);
+
     return (
         <>
+            <p className={'p-2 text-lg'}>Leaderboard by Overall Performance:</p>
+            <div className={'max-h-96 mb-4'}>
+                {allAverages.length != 0 && (
+                    <Table
+                        key={"allAverages"}
+                        isHeaderSticky
+                        className={'max-h-96'}
+                    >
+                        <TableHeader>
+                            <TableColumn key="rank">#</TableColumn>
+                            <TableColumn key="team">Team</TableColumn>
+                            <TableColumn key="avgampauton">Avg Auton Amp</TableColumn>
+                            <TableColumn key="avgspeakerauton">Avg Auton Speaker</TableColumn>
+                            <TableColumn key="avgampteleop">Avg Teleop Amp</TableColumn>
+                            <TableColumn key="avgspeakerteleop">Avg Teleop Speaker</TableColumn>
+                            <TableColumn key="avgtimesamped">Avg Times Amped</TableColumn>
+                            <TableColumn key="avgtrap">Avg Trap</TableColumn>
+                            <TableColumn key="avgdefense">Avg Misc Defense</TableColumn>
+                            <TableColumn key="avgreliability">Avg Misc Reliablity</TableColumn>
+                        </TableHeader>
+                        <TableBody
+                            items={allAverages}
+                            loadingContent={<Spinner label="Loading..."/>}
+                        >
+                            {(item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>
+                                        #{
+                                        item.ranking
+                                    }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.teamNumber
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.avgampauton
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.avgspeakerauton
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.avgampteleop
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.avgspeakerteleop
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.avgtimesamped
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.avgtrap
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.avgdefense
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.avgreliability
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            )}
+
+                        </TableBody>
+                    </Table>
+                )}
+            </div>
             <div className='flex'>
                 <Input
                     fullWidth

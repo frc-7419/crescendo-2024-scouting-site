@@ -8,13 +8,11 @@ export async function GET(
     const session = await getServerSession(authOptions)
     const event = params.event
 
-    /*
     if (!session) {
         return new Response('You must be logged in. Session Invalid.', {
             status: 401,
         })
     }
-    */
 
     if (request.method !== "GET") return new Response("Oops, Invalid Method.", {
         status: 400,

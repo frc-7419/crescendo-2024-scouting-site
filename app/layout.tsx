@@ -1,9 +1,8 @@
-import React, {Suspense} from "react";
+import React from "react";
 import type {Metadata} from "next";
 import {Alata} from "next/font/google";
 import "./globals.css";
 import {Providers} from "./providers";
-import Loading from "@/components/loading";
 
 const alata = Alata({
     subsets: ["latin"],
@@ -26,9 +25,7 @@ export default function RootLayout({
         <head><title>7419 Scouting App</title></head>
         <body className={`${alata.className} transition-colors`}>
         <Providers>
-            <Suspense fallback={<Loading/>}>
-                {children}
-            </Suspense>
+            {children}
         </Providers>
         </body>
         </html>
