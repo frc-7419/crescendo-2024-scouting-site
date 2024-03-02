@@ -85,6 +85,7 @@ export default function BasicData() {
                             <TableColumn key="avgtrap">Avg Trap</TableColumn>
                             <TableColumn key="avgdefense">Avg Misc Defense</TableColumn>
                             <TableColumn key="avgreliability">Avg Misc Reliablity</TableColumn>
+                            <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
                         </TableHeader>
                         <TableBody
                             items={allAverages}
@@ -142,6 +143,11 @@ export default function BasicData() {
                                             item.avgreliability
                                         }
                                     </TableCell>
+                                    <TableCell>
+                                        {
+                                            135 / (item.avgampteleop + item.avgspeakerteleop)
+                                        }
+                                    </TableCell>
                                 </TableRow>
                             )}
 
@@ -184,6 +190,9 @@ export default function BasicData() {
                                 <TableColumn key="avgtrap">Trap</TableColumn>
                                 <TableColumn key="avgdefense">Misc Defense</TableColumn>
                                 <TableColumn key="avgreliability">Misc Reliablity</TableColumn>
+                                {/*
+                                <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
+                                */}
                             </TableHeader>
 
                             <TableBody>
@@ -228,6 +237,13 @@ export default function BasicData() {
                                             teamAverages?.avgreliability
                                         }
                                     </TableCell>
+                                    {/*
+                                    <TableCell>
+                                        {
+                                            135 / ((teamAverages?.avgampteleop ?? 0) + (teamAverages?.avgspeakerteleop ?? 0))
+                                        }
+                                    </TableCell>
+                                    */}
                                 </TableRow>
                             </TableBody>
 
@@ -254,6 +270,7 @@ export default function BasicData() {
                             <TableColumn key="teleopSpotLight">Teleop Spotlit</TableColumn>
                             <TableColumn key="miscDefense">Misc Defense</TableColumn>
                             <TableColumn key="miscReliability">Misc Reliability</TableColumn>
+                            <TableColumn key="miscReliability">Avg Cycle Time</TableColumn>
                         </TableHeader>
 
                         <TableBody
@@ -335,6 +352,11 @@ export default function BasicData() {
                                     <TableCell>
                                         {
                                             item.misc.reliability
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            135 / (item.teleop.amp + item.teleop.speaker)
                                         }
                                     </TableCell>
                                 </TableRow>
