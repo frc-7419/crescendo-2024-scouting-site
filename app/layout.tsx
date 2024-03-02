@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import type {Metadata} from "next";
 import {Alata} from "next/font/google";
 import "./globals.css";
@@ -25,7 +25,9 @@ export default function RootLayout({
         <head><title>7419 Scouting App</title></head>
         <body className={`${alata.className} transition-colors`}>
         <Providers>
-            {children}
+            <Suspense>
+                {children}
+            </Suspense>
         </Providers>
         </body>
         </html>
