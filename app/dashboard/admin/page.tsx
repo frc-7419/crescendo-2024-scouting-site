@@ -64,8 +64,12 @@ const Dashboard = () => {
     }, [selectedTab]);
 
     const preFetch = () => {
-        router.prefetch('/dashboard/scouting');
-        router.prefetch('/dashboard/schedule');
+        try {
+            router.prefetch('/scouting');
+            router.prefetch('/schedule');
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {
