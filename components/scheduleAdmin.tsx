@@ -162,7 +162,8 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
     }, [playerMatches]);
 
     useEffect(() => {
-        const updatedMatches = filteredMatches.map((match) => {
+        if (!usersLoading) return;
+        const updatedMatches = matches.map((match) => {
             match.alliances.blue.scouters = [];
             match.alliances.blue.scoutersIDs = [];
             match.alliances.red.scouters = [];
@@ -171,12 +172,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
         });
         setPlayerMatches(updatedMatches)
         setArrayInitialized(true)
-    }, [filteredMatches]);
-
-    useEffect(() => {
-        const filtered = matches.filter((match: Match) => new Date(match.predicted_time * 1000) >= time);
-        setFilteredMatches(filtered);
-    }, [matches, time]);
+    }, [matches]);
 
 
     return (
