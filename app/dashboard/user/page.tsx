@@ -36,8 +36,12 @@ const Dashboard = () => {
     const [eventData, setEventData] = useState<Event>();
 
     const preFetch = () => {
-        router.prefetch('/dashboard/scouting');
-        router.prefetch('/dashboard/schedule');
+        try {
+            router.prefetch('/scouting');
+            router.prefetch('/schedule');
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     useEffect(() => {
