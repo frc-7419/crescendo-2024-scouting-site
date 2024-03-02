@@ -53,7 +53,6 @@ const Dashboard = () => {
     useEffect(() => {
         if (session?.user?.role) {
             if (!(session?.user?.role === "ADMIN" || session?.user?.role === "SITEADMIN")) {
-                alert(session?.user?.role)
                 router.push("/dashboard/user")
             }
         }
