@@ -17,9 +17,9 @@ async function getAll(teamNumber: string) {
     }
 
     const responseBody = JSON.stringify(scoutingData);
+    console.log(responseBody)
     const headers = {
         'Content-Type': 'application/json',
-        'Content-Length': responseBody.length.toString(),
     };
 
     return new Response(responseBody, {
@@ -67,12 +67,14 @@ export async function GET(
 
     const teamNumber = params.robot
 
+    /*
     if (!session) {
         return new Response('You must be logged in. Session Invalid.', {
             status: 401,
         });
     }
 
+    */
     if (request.method !== "GET") return new Response("Oops, Invalid Method.", {
         status: 400,
     });
