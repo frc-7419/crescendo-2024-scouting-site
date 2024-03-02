@@ -60,9 +60,11 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
     const [submittingDispute, setSubmittingDispute] = useState(false);
 
     useEffect(() => {
+
         const filtered = matches.filter((match: Match) => shifts.some((shift) => shift.ScoutingSchedule?.matchID === match.key));
         setFilteredMatches(filtered);
     }, [matches, shifts]);
+
 
 
     const PopButton = ({icon, text}: { icon: JSX.Element, text: string }) => {
