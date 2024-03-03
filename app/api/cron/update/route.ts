@@ -52,14 +52,18 @@ export async function GET(
                 if (existingAverage) {
                     if (existingAverage.lastUpdated > entry.submitTime) {
                         console.log("skipping update as it already exists")
-                        return
+                        return new Response('Skipping update as it already exists', {
+                            status: 200,
+                        });
                     }
                 }
 
                 const scoutingDataPull = await prisma.$queryRaw(getAverages(entry.teamNumber, getCurrentEvent())) as any
                 const scoutingDataAvg: ScoutingDataAvg = scoutingDataPull[0];
                 if (!scoutingDataAvg) {
-                    return;
+                    return new Response('Skipping update as it already exists', {
+                        status: 200,
+                    });
                 }
 
                 if (!existingAverage) {
@@ -117,13 +121,17 @@ export async function GET(
                 if (existingBest) {
                     if (existingBest.lastUpdated > entry.submitTime) {
                         console.log("skipping update as it already exists")
-                        return
+                        return new Response('Skipping update as it already exists', {
+                            status: 200,
+                        });
                     }
                 }
                 const BscoutingDataPull = await prisma.$queryRaw(getBests(entry.teamNumber, getCurrentEvent())) as any
                 const BscoutingDataAvg: ScoutingDataBest = BscoutingDataPull[0];
                 if (!BscoutingDataAvg) {
-                    return;
+                    return new Response('Skipping update as it already exists', {
+                        status: 200,
+                    });
                 }
 
                 if (!existingBest) {
