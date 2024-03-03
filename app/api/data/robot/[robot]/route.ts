@@ -17,7 +17,6 @@ async function getAll(teamNumber: string) {
     }
 
     const responseBody = JSON.stringify(scoutingData);
-    console.log(responseBody)
     const headers = {
         'Content-Type': 'application/json',
     };
@@ -55,6 +54,32 @@ async function getAvg(teamNumber: string) {
     });
 }
 
+async function getBest(teamNumber: string) {
+    const scoutingData = await prisma.bests.findFirst({
+        where: {
+            teamNumber,
+            venue: getCurrentEvent()
+        }
+    })
+
+    if (!scoutingData) {
+        return new Response('Scouting data not found for the specified robot', {
+            status: 404,
+        });
+    }
+
+    const responseBody = JSON.stringify(scoutingData)
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': responseBody.length.toString(),
+    };
+
+    return new Response(responseBody, {
+        status: 200,
+        headers: headers,
+    });
+}
 
 export async function GET(
     request: NextRequest,
@@ -67,14 +92,12 @@ export async function GET(
 
     const teamNumber = params.robot
 
-    /*
     if (!session) {
         return new Response('You must be logged in. Session Invalid.', {
             status: 401,
         });
     }
 
-    */
     if (request.method !== "GET") return new Response("Oops, Invalid Method.", {
         status: 400,
     });
@@ -82,6 +105,8 @@ export async function GET(
     try {
         if (type === 'avg') {
             return await getAvg(teamNumber);
+        } else if (type == 'best') {
+            return await getBest(teamNumber);
         } else {
             return await getAll(teamNumber);
         }

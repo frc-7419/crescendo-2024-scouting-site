@@ -3,10 +3,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Input, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
 import {LoadStatusContext} from './LoadStatusContext';
-import {getAverages, getRobotAverages, getRobotData} from "@/components/fetches/apicalls";
+import {getAverages, getRobotAverages, getRobotBest, getRobotData} from "@/components/fetches/apicalls";
 import TeamData from "@/types/TeamData";
 import {getCurrentEvent} from "@/components/getCurrentEvent";
-import {AvgModal} from "@/types/scoutingform";
+import {AvgModal, BestModal} from "@/types/scoutingform";
 
 export default function BasicData() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -20,6 +20,7 @@ export default function BasicData() {
     const [errored, setErrored] = useState(false);
     const [allAverages, setAllAverages] = useState<AvgModal[]>([]);
     const [averagesLoaded, setAveragesLoaded] = useState(false)
+    const [teamBest, setTeamBest] = useState<BestModal>()
     const getTeamInfo = async () => {
         if (teamNumber) {
             setValue(0);
@@ -29,8 +30,10 @@ export default function BasicData() {
             setTeamAverages(undefined);
             try {
                 setTeamData(await getRobotData(teamNumber))
-                setValue(50)
+                setValue(25)
                 setTeamAverages(await getRobotAverages(teamNumber))
+                setValue(50)
+                setTeamBest(await getRobotBest(teamNumber))
                 setValue(100)
                 setLoading(false);
             } catch (error) {
@@ -77,15 +80,18 @@ export default function BasicData() {
                         <TableHeader>
                             <TableColumn key="rank">#</TableColumn>
                             <TableColumn key="team">Team</TableColumn>
+                            <TableColumn key="intake">Intake</TableColumn>
                             <TableColumn key="avgampauton">Avg Auton Amp</TableColumn>
                             <TableColumn key="avgspeakerauton">Avg Auton Speaker</TableColumn>
                             <TableColumn key="avgampteleop">Avg Teleop Amp</TableColumn>
                             <TableColumn key="avgspeakerteleop">Avg Teleop Speaker</TableColumn>
+                            <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
                             <TableColumn key="avgtimesamped">Avg Times Amped</TableColumn>
                             <TableColumn key="avgtrap">Avg Trap</TableColumn>
-                            <TableColumn key="avgdefense">Avg Misc Defense</TableColumn>
-                            <TableColumn key="avgreliability">Avg Misc Reliablity</TableColumn>
-                            <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
+                            <TableColumn key="avgdefense">Avg Defense</TableColumn>
+                            <TableColumn key="avgreliability">Avg Reliablity</TableColumn>
+                            <TableColumn key="hang">Usually Hangs</TableColumn>
+                            <TableColumn key="pickup">Main Pickup</TableColumn>
                         </TableHeader>
                         <TableBody
                             items={allAverages}
@@ -101,6 +107,11 @@ export default function BasicData() {
                                     <TableCell>
                                         {
                                             item.teamNumber
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.intake
                                         }
                                     </TableCell>
                                     <TableCell>
@@ -125,6 +136,12 @@ export default function BasicData() {
                                     </TableCell>
                                     <TableCell>
                                         {
+                                            (135 / (item.avgampteleop + item.avgspeakerteleop)).toFixed(1)
+                                        }
+                                        sec
+                                    </TableCell>
+                                    <TableCell>
+                                        {
                                             item.avgtimesamped
                                         }
                                     </TableCell>
@@ -145,7 +162,12 @@ export default function BasicData() {
                                     </TableCell>
                                     <TableCell>
                                         {
-                                            135 / (item.avgampteleop + item.avgspeakerteleop)
+                                            String(item.hang)
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.pickup
                                         }
                                     </TableCell>
                                 </TableRow>
@@ -177,26 +199,115 @@ export default function BasicData() {
             ) : teamData ? (
                 <>
                     <div>
+                        <p className={'p-2 text-lg'}>Best:</p>
+                        <Table
+                            key={teamBest?.id}
+                        >
+                            <TableHeader>
+                                <TableColumn key="intake">Intake</TableColumn>
+                                <TableColumn key="avgampauton">Auton Amp</TableColumn>
+                                <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
+                                <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
+                                <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
+                                <TableColumn key="avgcycletime">Cycle Time</TableColumn>
+                                <TableColumn key="avgtrap">Trap</TableColumn>
+                                <TableColumn key="avgdefense">Defense</TableColumn>
+                                <TableColumn key="avgreliability">Reliablity</TableColumn>
+                                <TableColumn key="hang">Usually Hangs</TableColumn>
+                                <TableColumn key="pickup">Usual Pickup</TableColumn>
+                            </TableHeader>
+
+                            <TableBody>
+                                <TableRow key={teamBest?.id}>
+                                    <TableCell>
+                                        {
+                                            teamBest?.intake
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            teamBest?.ampauton
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            teamBest?.speakerauton
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            teamBest?.ampteleop
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            teamBest?.speakerteleop
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            (135 / ((teamBest?.ampteleop ?? 0) + (teamBest?.speakerteleop ?? 0))).toFixed(1)
+                                        }
+                                        sec
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            teamBest?.trap
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            teamBest?.defense
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            teamBest?.reliability
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            String(teamBest?.hang)
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            teamBest?.pickup
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+
+                        </Table>
+                    </div>
+
+                    <div>
                         <p className={'p-2 text-lg'}>Averages:</p>
                         <Table
                             key={teamAverages?.id}
                         >
                             <TableHeader>
+                                <TableColumn key="intake">Intake</TableColumn>
                                 <TableColumn key="avgampauton">Auton Amp</TableColumn>
                                 <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
                                 <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
                                 <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
+                                <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
                                 <TableColumn key="avgtimesamped">Times Amped</TableColumn>
                                 <TableColumn key="avgtrap">Trap</TableColumn>
                                 <TableColumn key="avgdefense">Misc Defense</TableColumn>
                                 <TableColumn key="avgreliability">Misc Reliablity</TableColumn>
-                                {/*
-                                <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
-                                */}
+                                <TableColumn key="hang">Usually Hangs</TableColumn>
+                                <TableColumn key="pickup">Pickup</TableColumn>
                             </TableHeader>
 
                             <TableBody>
                                 <TableRow key={teamAverages?.id}>
+                                    <TableCell>
+                                        {
+                                            teamAverages?.intake
+                                        }
+                                    </TableCell>
                                     <TableCell>
                                         {
                                             teamAverages?.avgampauton
@@ -219,6 +330,12 @@ export default function BasicData() {
                                     </TableCell>
                                     <TableCell>
                                         {
+                                            (135 / ((teamAverages?.avgampteleop ?? 0) + (teamAverages?.avgspeakerteleop ?? 0))).toFixed(1)
+                                        }
+                                        sec
+                                    </TableCell>
+                                    <TableCell>
+                                        {
                                             teamAverages?.avgtimesamped
                                         }
                                     </TableCell>
@@ -237,13 +354,16 @@ export default function BasicData() {
                                             teamAverages?.avgreliability
                                         }
                                     </TableCell>
-                                    {/*
                                     <TableCell>
                                         {
-                                            135 / ((teamAverages?.avgampteleop ?? 0) + (teamAverages?.avgspeakerteleop ?? 0))
+                                            String(teamAverages?.hang)
                                         }
                                     </TableCell>
-                                    */}
+                                    <TableCell>
+                                        {
+                                            teamAverages?.pickup
+                                        }
+                                    </TableCell>
                                 </TableRow>
                             </TableBody>
 
@@ -356,8 +476,9 @@ export default function BasicData() {
                                     </TableCell>
                                     <TableCell>
                                         {
-                                            135 / (item.teleop.amp + item.teleop.speaker)
+                                            (135 / (item.teleop.amp + item.teleop.speaker)).toFixed(1)
                                         }
+                                        sec
                                     </TableCell>
                                 </TableRow>
                             )}
