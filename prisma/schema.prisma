@@ -42,6 +42,7 @@ model Robot {
   scoutingData ScoutingData[]
   winloss      Float          @default(1.0)
   Averages     Averages[]
+  Bests        Bests[]
 }
 
 model ScoutingData {
@@ -132,10 +133,11 @@ model Session {
 }
 
 model Averages {
-  id               Int      @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
   teamNumber       String
   venue            String
-  robot            Robot    @relation(fields: [teamNumber], references: [teamNumber])
+  robot            Robot          @relation(fields: [teamNumber], references: [teamNumber])
+  intake           IntakePosition @default(UTB)
   avgampauton      Float
   avgspeakerauton  Float
   avgampteleop     Float
@@ -144,7 +146,27 @@ model Averages {
   avgtrap          Float
   avgdefense       Float
   avgreliability   Float
-  lastUpdated      DateTime @default(now())
+  hang             Boolean        @default(false)
+  pickup           PickupFrom     @default(BOTH)
+  lastUpdated      DateTime       @default(now())
+}
+
+model Bests {
+  id            Int            @id @default(autoincrement())
+  teamNumber    String
+  venue         String
+  robot         Robot          @relation(fields: [teamNumber], references: [teamNumber])
+  intake        IntakePosition @default(UTB)
+  ampauton      Float
+  speakerauton  Float
+  ampteleop     Float
+  speakerteleop Float
+  trap          Float
+  defense       Float
+  reliability   Float
+  hang          Boolean        @default(false)
+  pickup        PickupFrom     @default(BOTH)
+  lastUpdated   DateTime       @default(now())
 }
 
 model ScheduleDisputes {

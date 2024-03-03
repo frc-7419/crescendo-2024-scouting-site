@@ -2,11 +2,11 @@ import {FieldValues} from 'react-hook-form';
 
 type Alliance = 'RED' | 'BLUE';
 
-type FinalStatus = 'PARKED' | 'ONSTAGE' | 'ONSTAGE_SPOTLIT';
+export type FinalStatus = 'PARKED' | 'ONSTAGE' | 'ONSTAGE_SPOTLIT';
 
-type PickupFrom = 'FLOOR' | 'SOURCE' | 'BOTH' | 'NOT_ATTEMPTED';
+export type PickupFrom = 'FLOOR' | 'SOURCE' | 'BOTH' | 'NOT_ATTEMPTED';
 
-type IntakePosition = 'OTB' | 'UTB';
+export type IntakePosition = 'OTB' | 'UTB';
 
 type Auton = {
     id?: number;
@@ -89,6 +89,22 @@ export interface ScoutingDataAvg {
     avgtrap: number;
     avgdefense: number;
     avgreliability: number;
+    intake: IntakePosition;
+    hang: boolean;
+    pickup: PickupFrom;
+}
+
+export interface ScoutingDataBest {
+    ampauton: number;
+    speakerauton: number;
+    ampteleop: number;
+    speakerteleop: number;
+    trap: number;
+    defense: number;
+    reliability: number;
+    intake: IntakePosition;
+    hang: boolean;
+    pickup: PickupFrom;
 }
 
 export interface AvgModal {
@@ -104,4 +120,24 @@ export interface AvgModal {
     avgtrap: number;
     avgdefense: number;
     avgreliability: number;
+    intake: IntakePosition;
+    hang: boolean;
+    pickup: PickupFrom;
+}
+
+export interface BestModal {
+    id: string;
+    ranking: number;
+    teamNumber: string;
+    venue: string;
+    ampauton: number;
+    speakerauton: number;
+    ampteleop: number;
+    speakerteleop: number;
+    trap: number;
+    defense: number;
+    reliability: number;
+    intake: IntakePosition;
+    hang: boolean;
+    pickup: PickupFrom;
 }

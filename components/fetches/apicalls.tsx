@@ -113,6 +113,17 @@ export async function getRobotAverages(robotNumber: string) {
     return (data)
 }
 
+export async function getRobotBest(robotNumber: string) {
+    const res = await axios.get(`/api/data/robot/${robotNumber}?type=best`, {
+        cache: {
+            ttl: 60
+        }
+    })
+    const data = await res.data;
+    console.debug(data)
+    return (data)
+}
+
 export async function getAverages(venue: string) {
     const res = await axios.get(`/api/data/averages?venue=${venue}`, {
         cache: {
