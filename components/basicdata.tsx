@@ -484,6 +484,88 @@ export default function BasicData() {
                             )}
                         </TableBody>
                     </Table>
+
+                    <p className={'p-2 text-lg'}>Auto Comments:</p>
+                    <Table>
+                        <TableHeader>
+                            <TableColumn key="matchNumber">Match Number</TableColumn>
+                            <TableColumn key="comments">Comments</TableColumn>
+                        </TableHeader>
+
+                        <TableBody
+                            items={teamData.scoutingData}
+                            loadingContent={<Spinner label="Loading..."/>}
+                        >
+                            {(item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>
+                                        {
+                                            item.matchNumber
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.auton.comments
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                    <p className={'p-2 text-lg'}>Teleop Comments:</p>
+                    <Table>
+                        <TableHeader>
+                            <TableColumn key="matchNumber">Match Number</TableColumn>
+                            <TableColumn key="comments">Comments</TableColumn>
+                        </TableHeader>
+
+                        <TableBody
+                            items={teamData.scoutingData}
+                            loadingContent={<Spinner label="Loading..."/>}
+                        >
+                            {(item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>
+                                        {
+                                            item.matchNumber
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.teleop.comments
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                    <p className={'p-2 text-lg'}>Misc Comments:</p>
+                    <Table>
+                        <TableHeader>
+                            <TableColumn key="matchNumber">Match Number</TableColumn>
+                            <TableColumn key="comments">Comments</TableColumn>
+                        </TableHeader>
+
+                        <TableBody
+                            items={teamData.scoutingData}
+                            loadingContent={<Spinner label="Loading..."/>}
+                        >
+                            {(item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>
+                                        {
+                                            item.matchNumber
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.misc.comments
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
                 </>
             ) : (
                 <p>No data available. Please enter a valid team number.</p>
