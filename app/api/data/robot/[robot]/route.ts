@@ -17,7 +17,6 @@ async function getAll(teamNumber: string) {
     }
 
     const responseBody = JSON.stringify(scoutingData);
-    console.log(responseBody)
     const headers = {
         'Content-Type': 'application/json',
     };
