@@ -3,7 +3,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Input, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
 import {LoadStatusContext} from './LoadStatusContext';
-import {getAverages, getRobotAverages, getRobotBest, getRobotData} from "@/components/fetches/apicalls";
+import {getAverages, getRobotAverages, getRobotBest, getRobotData, getUsers} from "@/components/fetches/apicalls";
 import TeamData from "@/types/TeamData";
 import {getCurrentEvent} from "@/components/getCurrentEvent";
 import {AvgModal, BestModal} from "@/types/scoutingform";
@@ -21,6 +21,36 @@ export default function BasicData() {
     const [allAverages, setAllAverages] = useState<AvgModal[]>([]);
     const [averagesLoaded, setAveragesLoaded] = useState(false)
     const [teamBest, setTeamBest] = useState<BestModal>()
+    const [usersRequested, setUsersRequested] = useState<boolean>(false);
+    const [usersLoading, setUsersLoading] = useState<boolean>(true);
+    const [users, setUsers] = useState<{ name: string; uuid: string; email: string }[]>([]);
+
+    const getUser = (uuid: string) => {
+        return users.find((user) => user.uuid === uuid);
+    };
+
+    const fetchUsers = async () => {
+        setValue(0)
+        if (users.length > 0) return;
+        if (usersRequested) return;
+        setUsersRequested(true);
+        try {
+            const fetchedUsers = await getUsers()
+            setUsers(fetchedUsers)
+            setUsersLoading(false)
+            setValue(100)
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            setValue(500)
+        }
+        setUsersRequested(false);
+    };
+
+    useEffect(() => {
+        fetchUsers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const getTeamInfo = async () => {
         if (teamNumber) {
             setValue(0);
@@ -196,7 +226,7 @@ export default function BasicData() {
                 <p>Loading...</p>
             ) : errored ? (
                 <p>No data available. Please enter a valid team number.</p>
-            ) : teamData ? (
+            ) : teamData && !usersLoading ? (
                 <>
                     <div>
                         <p className={'p-2 text-lg'}>Best:</p>
@@ -383,6 +413,7 @@ export default function BasicData() {
                             <TableColumn key="teleopDefensive">Teleop Defensive</TableColumn>
                             <TableColumn key="teleopAmp">Teleop Amp</TableColumn>
                             <TableColumn key="teleopSpeaker">Teleop Speaker</TableColumn>
+                            <TableColumn key="miscReliability">Avg Cycle Time</TableColumn>
                             <TableColumn key="teleopTimesAmped">Teleop Times Amped</TableColumn>
                             <TableColumn key="teleopPickupFrom">Teleop Pickup From</TableColumn>
                             <TableColumn key="teleopIsHanging">Teleop Is Hanging</TableColumn>
@@ -390,7 +421,7 @@ export default function BasicData() {
                             <TableColumn key="teleopSpotLight">Teleop Spotlit</TableColumn>
                             <TableColumn key="miscDefense">Misc Defense</TableColumn>
                             <TableColumn key="miscReliability">Misc Reliability</TableColumn>
-                            <TableColumn key="miscReliability">Avg Cycle Time</TableColumn>
+                            <TableColumn key="scouter">Scouter</TableColumn>
                         </TableHeader>
 
                         <TableBody
@@ -441,6 +472,12 @@ export default function BasicData() {
                                     </TableCell>
                                     <TableCell>
                                         {
+                                            (135 / (item.teleop.amp + item.teleop.speaker)).toFixed(1)
+                                        }
+                                        sec
+                                    </TableCell>
+                                    <TableCell>
+                                        {
                                             item.teleop.timesAmped
                                         }
                                     </TableCell>
@@ -476,9 +513,8 @@ export default function BasicData() {
                                     </TableCell>
                                     <TableCell>
                                         {
-                                            (135 / (item.teleop.amp + item.teleop.speaker)).toFixed(1)
+                                            getUser(item.scouterId)?.name
                                         }
-                                        sec
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -490,6 +526,7 @@ export default function BasicData() {
                         <TableHeader>
                             <TableColumn key="matchNumber">Match Number</TableColumn>
                             <TableColumn key="comments">Comments</TableColumn>
+                            <TableColumn key="scouter">Scouter</TableColumn>
                         </TableHeader>
 
                         <TableBody
@@ -508,6 +545,11 @@ export default function BasicData() {
                                             item.auton.comments
                                         }
                                     </TableCell>
+                                    <TableCell>
+                                        {
+                                            getUser(item.scouterId)?.name
+                                        }
+                                    </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
@@ -517,6 +559,7 @@ export default function BasicData() {
                         <TableHeader>
                             <TableColumn key="matchNumber">Match Number</TableColumn>
                             <TableColumn key="comments">Comments</TableColumn>
+                            <TableColumn key="scouter">Scouter</TableColumn>
                         </TableHeader>
 
                         <TableBody
@@ -535,6 +578,11 @@ export default function BasicData() {
                                             item.teleop.comments
                                         }
                                     </TableCell>
+                                    <TableCell>
+                                        {
+                                            getUser(item.scouterId)?.name
+                                        }
+                                    </TableCell>
                                 </TableRow>
                             )}
                         </TableBody>
@@ -544,6 +592,7 @@ export default function BasicData() {
                         <TableHeader>
                             <TableColumn key="matchNumber">Match Number</TableColumn>
                             <TableColumn key="comments">Comments</TableColumn>
+                            <TableColumn key="scouter">Scouter</TableColumn>
                         </TableHeader>
 
                         <TableBody
@@ -560,6 +609,11 @@ export default function BasicData() {
                                     <TableCell>
                                         {
                                             item.misc.comments
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            getUser(item.scouterId)?.name
                                         }
                                     </TableCell>
                                 </TableRow>
