@@ -108,6 +108,10 @@ export async function GET(
                 } else {
                     console.log("skipping update as it already exists")
                 }
+            }
+        }
+        for (const entry of updatedDates) {
+            if (entry !== null) {
                 const existingBest = await prisma.bests.findFirst({
                     where: {
                         teamNumber: entry.teamNumber,
