@@ -4,16 +4,16 @@ import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
 
 async function getAll(venue: string) {
-    const averages = await prisma.averages.findMany({
+    const bests = await prisma.bests.findMany({
         where: {venue},
     })
 
-    const sortedAverages = averages.sort((a, b) => {
-        const sumA = a.avgampauton + a.avgspeakerauton + a.avgampteleop + a.avgspeakerteleop;
-        const sumB = b.avgampauton + b.avgspeakerauton + b.avgampteleop + b.avgspeakerteleop;
+    const sortedbests = bests.sort((a, b) => {
+        const sumA = a.ampauton + a.speakerauton + a.ampteleop + a.speakerteleop;
+        const sumB = b.ampauton + b.speakerauton + b.ampteleop + b.speakerteleop;
         return sumB - sumA;
     });
-    const data = sortedAverages.map((item, index) => ({
+    const data = sortedbests.map((item, index) => ({
         ...item,
         ranking: index + 1
     }));

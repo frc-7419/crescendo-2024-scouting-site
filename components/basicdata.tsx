@@ -3,7 +3,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Input, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
 import {LoadStatusContext} from './LoadStatusContext';
-import {getAverages, getRobotAverages, getRobotBest, getRobotData, getUsers} from "@/components/fetches/apicalls";
+import {
+    getAverages,
+    getBests,
+    getRobotAverages,
+    getRobotBest,
+    getRobotData,
+    getUsers
+} from "@/components/fetches/apicalls";
 import TeamData from "@/types/TeamData";
 import {getCurrentEvent} from "@/components/getCurrentEvent";
 import {AvgModal, BestModal} from "@/types/scoutingform";
@@ -20,6 +27,8 @@ export default function BasicData() {
     const [errored, setErrored] = useState(false);
     const [allAverages, setAllAverages] = useState<AvgModal[]>([]);
     const [averagesLoaded, setAveragesLoaded] = useState(false)
+    const [allBest, setAllBest] = useState<BestModal[]>([]);
+    const [bestsLoaded, setBestsLoaded] = useState(false)
     const [teamBest, setTeamBest] = useState<BestModal>()
     const [usersRequested, setUsersRequested] = useState<boolean>(false);
     const [usersLoading, setUsersLoading] = useState<boolean>(true);
@@ -89,17 +98,32 @@ export default function BasicData() {
         }
     }
 
+    const fetchAllBest= async () => {
+        if (bestsLoaded) return;
+        try {
+            const bests = await getBests(getCurrentEvent())
+            setAllBest(bests);
+            setBestsLoaded(true)
+            setValue(100);
+        } catch (error) {
+            console.error(error);
+            setErrored(true);
+            setValue(500);
+        }
+    }
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTeamNumber(event.target.value.replace(/\D/g, ''));
     };
 
     useEffect(() => {
         fetchAllAverages()
+        fetchAllBest()
     }, []);
 
     return (
         <>
-            <p className={'p-2 text-lg'}>Leaderboard by Overall Performance:</p>
+            <p className={'p-2 text-lg'}>Overall Performance:</p>
             <div className={'max-h-96 mb-4'}>
                 {allAverages.length != 0 && (
                     <Table
@@ -188,6 +212,108 @@ export default function BasicData() {
                                     <TableCell>
                                         {
                                             item.avgreliability
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            String(item.hang)
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.pickup
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            )}
+
+                        </TableBody>
+                    </Table>
+                )}
+            </div>
+            <p className={'p-2 text-lg'}>Best Situation:</p>
+            <div className={'max-h-96 mb-4'}>
+                {allBest.length != 0 && (
+                    <Table
+                        key={"allBest"}
+                        isHeaderSticky
+                        className={'max-h-96'}
+                    >
+                        <TableHeader>
+                            <TableColumn key="rank">#</TableColumn>
+                            <TableColumn key="team">Team</TableColumn>
+                            <TableColumn key="intake">Intake</TableColumn>
+                            <TableColumn key="avgampauton">Auton Amp</TableColumn>
+                            <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
+                            <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
+                            <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
+                            <TableColumn key="avgcycletime">Cycle Time</TableColumn>
+                            <TableColumn key="avgtrap">Trap</TableColumn>
+                            <TableColumn key="avgdefense">Defense</TableColumn>
+                            <TableColumn key="avgreliability">Reliablity</TableColumn>
+                            <TableColumn key="hang">Hang</TableColumn>
+                            <TableColumn key="pickup">Pickup</TableColumn>
+                        </TableHeader>
+                        <TableBody
+                            items={allBest}
+                            loadingContent={<Spinner label="Loading..."/>}
+                        >
+                            {(item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>
+                                        #{
+                                        item.ranking
+                                    }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.teamNumber
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.intake
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.ampauton
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.speakerauton
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.ampteleop
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.speakerteleop
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            (135 / (item.ampteleop + item.speakerteleop)).toFixed(1)
+                                        }
+                                        sec
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.trap
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.defense
+                                        }
+                                    </TableCell>
+                                    <TableCell>
+                                        {
+                                            item.reliability
                                         }
                                     </TableCell>
                                     <TableCell>
