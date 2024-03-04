@@ -59,7 +59,7 @@ export function getBests(teamNumber: string, venue: string) {
         LEFT JOIN "Auton" a ON sd."autonId" = a.id
         WHERE sd."teamNumber" = ${teamNumber} AND sd.venue = ${venue}
         GROUP BY a.amp, a.speaker
-        ORDER BY CONCAT(a.amp, a.speaker) DESC
+        ORDER BY a.amp + a.speaker DESC
     LIMIT 1
 	) AS ampAuton,
     (
@@ -68,7 +68,7 @@ export function getBests(teamNumber: string, venue: string) {
         LEFT JOIN "Auton" a ON sd."autonId" = a.id
         WHERE sd."teamNumber" = ${teamNumber} AND sd.venue = ${venue}
         GROUP BY a.amp, a.speaker
-        ORDER BY CONCAT(a.amp, a.speaker) DESC
+        ORDER BY a.amp + a.speaker DESC
         LIMIT 1
 	) AS speakerAuton,
     (
@@ -77,7 +77,7 @@ export function getBests(teamNumber: string, venue: string) {
         LEFT JOIN "Teleop" t ON sd."teleopId" = t.id
         WHERE sd."teamNumber" = ${teamNumber} AND sd.venue = ${venue}
         GROUP BY t.amp, t.speaker
-        ORDER BY CONCAT(t.amp, t.speaker) DESC
+        ORDER BY t.amp + t.speaker DESC
         LIMIT 1
     ) AS ampTeleop,
     (
@@ -86,7 +86,7 @@ export function getBests(teamNumber: string, venue: string) {
         LEFT JOIN "Teleop" t ON sd."teleopId" = t.id
         WHERE sd."teamNumber" = ${teamNumber} AND sd.venue = ${venue}
         GROUP BY t.amp, t.speaker
-        ORDER BY CONCAT(t.amp, t.speaker) DESC
+        ORDER BY t.amp + t.speaker DESC
         LIMIT 1
     ) AS speakerTeleop,
     MAX(t."timesAmped") AS timesAmped,
@@ -121,7 +121,7 @@ export function getBests(teamNumber: string, venue: string) {
         LIMIT 1
     ) AS pickup
     FROM
-        "ScoutingData" sd 
+        "ScoutingData" sd
     LEFT JOIN "Auton" a  ON sd."autonId"  = a.id
     LEFT JOIN "Teleop" t  ON sd."teleopId"  = t.id
     LEFT JOIN "Misc" m  ON sd."miscId"  = m.id
