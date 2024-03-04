@@ -134,3 +134,14 @@ export async function getAverages(venue: string) {
     console.debug(data)
     return (data)
 }
+
+export async function getBests(venue: string) {
+    const res = await axios.get(`/api/data/bests?venue=${venue}`, {
+        cache: {
+            ttl: 30
+        }
+    })
+    const data = await res.data;
+    console.debug(data)
+    return (data)
+}
