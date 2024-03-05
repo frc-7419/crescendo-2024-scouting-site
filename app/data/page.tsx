@@ -1,18 +1,35 @@
 'use client';
 
-import React from 'react';
-import DashboardLayout from "@/components/layouts/DashboardLayout";
-import DashCard from "@/components/templates/dash-card";
-import BasicData from "@/components/basicdata";
+import {Spinner} from "@nextui-org/react";
+import {useSession} from "next-auth/react";
+import {useRouter} from 'next/navigation';
+import {useEffect} from "react";
 
-const Page = () => {
+const UserValidation = () => {
+    const {data: session} = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (session?.user?.role) {
+            console.debug(session?.user?.role);
+
+            if (session?.user?.role === "ADMIN" || session?.user?.role === "SITEADMIN") {
+                router.push("/data/basic");
+            } else {
+                router.push("/dashboard/user");
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [session]);
+
     return (
-        <DashboardLayout>
-            <div id='dash' className="overflow-scroll pt-6 pr-6 pl-6 flex flex-col">
-                <DashCard title="Basic Data" content={<BasicData/>}/>
+        <div className="flex items-center justify-center min-h-screen bg-slate-900 gap-4">
+            <div className="text-xl ">
+                Verifying User
             </div>
-        </DashboardLayout>
+            <Spinner color="default"/>
+        </div>
     );
 };
 
-export default Page;
+export default UserValidation;

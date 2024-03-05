@@ -4,7 +4,16 @@ import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation'
-import {faCalendarDays, faDatabase, faGauge, faHandPaper, faPerson, faPoll} from '@fortawesome/free-solid-svg-icons';
+import {
+    faArrowLeft,
+    faArrowTrendUp,
+    faCalendarDays,
+    faDatabase,
+    faGauge,
+    faHandPaper,
+    faPerson,
+    faPoll,
+} from '@fortawesome/free-solid-svg-icons';
 import {useSession} from 'next-auth/react';
 
 function SideBar() {
@@ -34,6 +43,29 @@ function SideBar() {
         );
     });
     MenuItem.displayName = 'MenuItem';
+
+    if (pathname.startsWith('/data')) {
+        return (
+            <div id='sidebar' className='flex flex-col dark:bg-slate-900 bg-slate-100 p-6'>
+                <p className='text-2xl text-left'>7419</p>
+                <div className="flex flex-col mt-8">
+                    <Link href={"/dashboard"} className={'text-sm'}>
+                        <FontAwesomeIcon icon={faArrowLeft}/>
+                    </Link>
+                    <MenuItem
+                        name="Basic Data"
+                        route="/data/basic"
+                        icon={<FontAwesomeIcon icon={faDatabase}/>}
+                    />
+                    <MenuItem
+                        name="Leaderboard"
+                        route="/data/leaderboard"
+                        icon={<FontAwesomeIcon icon={faArrowTrendUp}/>}
+                    />
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div id='sidebar' className='flex flex-col dark:bg-slate-900 bg-slate-100 p-6'>

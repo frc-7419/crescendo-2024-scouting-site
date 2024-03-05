@@ -7,17 +7,7 @@ async function getAll(venue: string) {
     const averages = await prisma.averages.findMany({
         where: {venue},
     })
-
-    const sortedAverages = averages.sort((a, b) => {
-        const sumA = a.avgampauton + a.avgspeakerauton + a.avgampteleop + a.avgspeakerteleop;
-        const sumB = b.avgampauton + b.avgspeakerauton + b.avgampteleop + b.avgspeakerteleop;
-        return sumB - sumA;
-    });
-    const data = sortedAverages.map((item, index) => ({
-        ...item,
-        ranking: index + 1
-    }));
-    const responseBody = JSON.stringify(data);
+    const responseBody = JSON.stringify(averages);
     const headers = {
         'Content-Type': 'application/json',
         'Content-Length': responseBody.length.toString(),

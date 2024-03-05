@@ -16,6 +16,7 @@ import Loading from '@/components/loading';
 import {setupCache} from "axios-cache-interceptor";
 import {getEvent, getMatches, getShifts} from "@/components/fetches/apicalls";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
+import enforceAdmin from "@/components/util/enforceadmin";
 
 const Dashboard = () => {
     const instance = Axios.create();
@@ -51,11 +52,7 @@ const Dashboard = () => {
     }, [currentTime]);
 
     useEffect(() => {
-        if (session?.user?.role) {
-            if (!(session?.user?.role === "ADMIN" || session?.user?.role === "SITEADMIN")) {
-                router.push("/dashboard/user")
-            }
-        }
+        enforceAdmin(session, router);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
