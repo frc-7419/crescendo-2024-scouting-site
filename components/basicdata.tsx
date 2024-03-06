@@ -26,6 +26,7 @@ import {
 import TeamData from "@/types/TeamData";
 import {AvgModal, BestModal} from "@/types/scoutingform";
 import {Team} from "@/types/Team";
+import {Area, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
 export default function BasicData() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -98,6 +99,7 @@ export default function BasicData() {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTeamNumber(event.target.value.replace(/\D/g, ''));
     };
+
 
     return (
         <>
@@ -320,7 +322,54 @@ export default function BasicData() {
 
                                     </Table>
                                 </div>
-
+                                <p className={'p-2 text-lg'}>Charts:</p>
+                                <div className={''}>
+                                    <ResponsiveContainer width="100%" height={300}>
+                                        <ComposedChart
+                                            width={500}
+                                            height={300}
+                                            data={teamData.scoutingData.map(entry => ({
+                                                ...entry,
+                                                'points': entry.auton.amp + entry.auton.speaker + entry.teleop.amp + entry.teleop.speaker,
+                                                'auton.total': entry.auton.amp + entry.auton.speaker,
+                                                'teleop.total': entry.teleop.amp + entry.teleop.speaker
+                                            }))}
+                                            margin={{
+                                                top: 5,
+                                                right: 30,
+                                                left: 20,
+                                                bottom: 5,
+                                            }}
+                                        >
+                                            <defs>
+                                                <linearGradient id="colorPoints" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#ffc658" stopOpacity={0.8}/>
+                                                    <stop offset="95%" stopColor="#ffc658" stopOpacity={0}/>
+                                                </linearGradient>
+                                                <linearGradient id="colorAuto" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+                                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                                                </linearGradient>
+                                                <linearGradient id="colorTeleop" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+                                                    <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3"/>
+                                            <XAxis dataKey="matchId"/>
+                                            <YAxis/>
+                                            <Tooltip/>
+                                            <Legend/>
+                                            <Area type="monotone" dataKey="points" stackId="1" stroke="#ffc658"
+                                                  fillOpacity={1} fill="url(#colorPoints)" name="Total Points"/>
+                                            <Line type="monotone" dataKey="auton.total" stroke="#8884d8"
+                                                  fill="url(#colorAuto)"
+                                                  name="Auton Points"/>
+                                            <Line type="monotone" dataKey="teleop.total" stroke="#82ca9d"
+                                                  name="Teleop Points"/>
+                                        </ComposedChart>
+                                    </ResponsiveContainer>
+                                </div>
                                 <p className={'p-2 text-lg'}>Data:</p>
                                 <Table
                                     key={teamData.id}
