@@ -3,6 +3,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation'
 import {
+    faArrowLeft,
+    faArrowTrendUp,
     faCalendarDays,
     faDatabase,
     faGauge,
@@ -52,6 +54,32 @@ export default function Dropdown() {
             </button>
             {
                 menuOpen ? (
+                    pathname.startsWith('/data')) ? (
+                    <div id='dropdown' className='flex flex-col dark:bg-slate-900 bg-slate-100 p-6 absolute'>
+                        <div className="flex justify-between">
+                            <p className='text-2xl text-left'>7419</p>
+                            <button onClick={() => setMenuOpen(false)}>
+                                <FontAwesomeIcon icon={faX} size="xl" fixedWidth
+                                                 className='transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300'/>
+                            </button>
+                        </div>
+                        <div className="flex flex-col mt-8">
+                            <Link href={"/dashboard"} className={'text-sm'}>
+                                <FontAwesomeIcon icon={faArrowLeft}/>
+                            </Link>
+                            <MenuItem
+                                name="Basic Data"
+                                route="/data/basic"
+                                icon={<FontAwesomeIcon icon={faDatabase}/>}
+                            />
+                            <MenuItem
+                                name="Leaderboard"
+                                route="/data/leaderboard"
+                                icon={<FontAwesomeIcon icon={faArrowTrendUp}/>}
+                            />
+                        </div>
+                    </div>
+                ) : (
                     <div id='dropdown' className='flex flex-col dark:bg-slate-900 bg-slate-100 p-6 absolute'>
                         <div className="flex justify-between">
                             <p className='text-2xl text-left'>7419</p>

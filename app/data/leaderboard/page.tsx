@@ -17,7 +17,7 @@ const Page = () => {
     }, [session]);
     return (
         <DashboardLayout>
-            <div id='dash' className="overflow-scroll pt-6 pr-6 pl-6 flex flex-col">
+            <div id='dash' className="overflow-scroll pt-6 flex flex-col">
                 <Leaderboard/>
             </div>
         </DashboardLayout>

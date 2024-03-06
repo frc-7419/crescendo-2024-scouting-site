@@ -18,6 +18,8 @@ import {LoadStatusContext} from './LoadStatusContext';
 import {getAverages, getBests} from "@/components/fetches/apicalls";
 import {getCurrentEvent} from "@/components/getCurrentEvent";
 import {AvgModal, BestModal} from "@/types/scoutingform";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
 
 export default function Leaderboard() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -33,6 +35,8 @@ export default function Leaderboard() {
     const [sortedAverages, setSortedAverages] = useState<AvgModal[]>([]);
     const [sortedBest, setSortedBest] = useState<BestModal[]>([]);
     const [sortBy, setSortBy] = useState("")
+    const [desc, setDesc] = useState(true)
+
     const sortCatg = [
         {label: "Overall", value: "overall"},
         {label: "Amp Auton", value: "ampauton"},
@@ -43,6 +47,10 @@ export default function Leaderboard() {
         {label: "Defense", value: "defense"},
         {label: "Reliability", value: "reliablilty"},
     ]
+
+    const toggleDesc = () => {
+        setDesc(!desc);
+    }
     const sortAverages = () => {
         let sa: AvgModal[];
         switch (sortBy) {
@@ -87,6 +95,7 @@ export default function Leaderboard() {
             ...item,
             ranking: index + 1
         }));
+        if (!desc) data.reverse();
         setSortedAverages(data);
     }
 
@@ -134,6 +143,7 @@ export default function Leaderboard() {
             ...item,
             ranking: index + 1
         }));
+        if (!desc) data.reverse();
         setSortedBest(data);
     }
 
@@ -148,7 +158,7 @@ export default function Leaderboard() {
     useEffect(() => {
         sortAverages()
         sortBests()
-    }, [sortBy]);
+    }, [sortBy, desc]);
     const fetchAllAverages = async () => {
         if (averagesLoaded) return;
         try {
@@ -207,8 +217,8 @@ export default function Leaderboard() {
                 <>
                     {(selectedTab == "avg") ? (
                         <>
-                            <div className="mt-4 flex justify-between pb-2 align-middle">
-                                <p className={'p-2 text-lg'}>Average Situation</p>
+                            <div className="mt-4 flex pb-2 align-middle">
+                                <p className={'p-2 text-lg grow'}>Average Situation</p>
                                 <Select
                                     label="Sort By"
                                     variant="bordered"
@@ -222,6 +232,9 @@ export default function Leaderboard() {
                                         </SelectItem>
                                     ))}
                                 </Select>
+                                <button onClick={toggleDesc} className={'p-6'}>
+                                    <FontAwesomeIcon className={'text-xl'} icon={desc ? faSortDown : faSortUp}/>
+                                </button>
                             </div>
                             <div className={'max-h-96 mb-4'}>
                                 {sortedAverages.length != 0 && (
@@ -333,8 +346,8 @@ export default function Leaderboard() {
                         </>
                     ) : (
                         <>
-                            <div className="mt-4 flex justify-between pb-2 align-middle">
-                                <p className={'p-2 text-lg'}>Best Situation</p>
+                            <div className="mt-4 flex pb-2 align-middle">
+                                <p className={'p-2 text-lg grow'}>Best Situation</p>
                                 <Select
                                     label="Sort By"
                                     variant="bordered"
@@ -348,9 +361,12 @@ export default function Leaderboard() {
                                         </SelectItem>
                                     ))}
                                 </Select>
+                                <button onClick={toggleDesc} className={'p-6'}>
+                                    <FontAwesomeIcon className={'text-xl'} icon={desc ? faSortDown : faSortUp}/>
+                                </button>
                             </div>
                             <div className={'max-h-96 mb-4'}>
-                                {allBest.length != 0 && (
+                                {sortedBest.length != 0 && (
                                     <Table
                                         key={"allBest"}
                                         isHeaderSticky
@@ -372,7 +388,7 @@ export default function Leaderboard() {
                                             <TableColumn key="pickup">Pickup</TableColumn>
                                         </TableHeader>
                                         <TableBody
-                                            items={allBest}
+                                            items={sortedBest}
                                             loadingContent={<Spinner label="Loading..."/>}
                                         >
                                             {(item) => (
