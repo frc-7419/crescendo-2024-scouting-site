@@ -66,7 +66,6 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
     }, [matches, shifts]);
 
 
-
     const PopButton = ({icon, text}: { icon: JSX.Element, text: string }) => {
         return (
             <div className='flex justify-between items-center gap-4'>

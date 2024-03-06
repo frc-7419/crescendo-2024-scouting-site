@@ -1,19 +1,32 @@
 'use client';
 
 import React, {useContext, useEffect, useState} from 'react';
-import {Input, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
+import {
+    Card,
+    CardBody,
+    Divider,
+    Input,
+    Link,
+    Spinner,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow
+} from '@nextui-org/react';
 import {LoadStatusContext} from './LoadStatusContext';
 import {
-    getAverages,
-    getBests,
+    getBasicTeamBlueAllianceData,
     getRobotAverages,
     getRobotBest,
     getRobotData,
     getUsers
 } from "@/components/fetches/apicalls";
 import TeamData from "@/types/TeamData";
-import {getCurrentEvent} from "@/components/getCurrentEvent";
 import {AvgModal, BestModal} from "@/types/scoutingform";
+import {Team} from "@/types/Team";
+import {Area, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
 export default function BasicData() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -25,15 +38,11 @@ export default function BasicData() {
     const [teamAverages, setTeamAverages] = useState<AvgModal>();
     const [loading, setLoading] = useState(false);
     const [errored, setErrored] = useState(false);
-    const [allAverages, setAllAverages] = useState<AvgModal[]>([]);
-    const [averagesLoaded, setAveragesLoaded] = useState(false)
-    const [allBest, setAllBest] = useState<BestModal[]>([]);
-    const [bestsLoaded, setBestsLoaded] = useState(false)
     const [teamBest, setTeamBest] = useState<BestModal>()
     const [usersRequested, setUsersRequested] = useState<boolean>(false);
     const [usersLoading, setUsersLoading] = useState<boolean>(true);
     const [users, setUsers] = useState<{ name: string; uuid: string; email: string }[]>([]);
-
+    const [teamInfo, setTeamInfo] = useState<Team>();
     const getUser = (uuid: string) => {
         return users.find((user) => user.uuid === uuid);
     };
@@ -67,12 +76,15 @@ export default function BasicData() {
             setLoading(true);
             setTeamData(undefined);
             setTeamAverages(undefined);
+            setTeamInfo(undefined)
             try {
                 setTeamData(await getRobotData(teamNumber))
                 setValue(25)
                 setTeamAverages(await getRobotAverages(teamNumber))
                 setValue(50)
                 setTeamBest(await getRobotBest(teamNumber))
+                setValue(75)
+                setTeamInfo(await getBasicTeamBlueAllianceData(teamNumber))
                 setValue(100)
                 setLoading(false);
             } catch (error) {
@@ -84,255 +96,13 @@ export default function BasicData() {
         }
     }
 
-    const fetchAllAverages = async () => {
-        if (averagesLoaded) return;
-        try {
-            const averages = await getAverages(getCurrentEvent())
-            setAllAverages(averages);
-            setAveragesLoaded(true)
-            setValue(100);
-        } catch (error) {
-            console.error(error);
-            setErrored(true);
-            setValue(500);
-        }
-    }
-
-    const fetchAllBest= async () => {
-        if (bestsLoaded) return;
-        try {
-            const bests = await getBests(getCurrentEvent())
-            setAllBest(bests);
-            setBestsLoaded(true)
-            setValue(100);
-        } catch (error) {
-            console.error(error);
-            setErrored(true);
-            setValue(500);
-        }
-    }
-
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTeamNumber(event.target.value.replace(/\D/g, ''));
     };
 
-    useEffect(() => {
-        fetchAllAverages()
-        fetchAllBest()
-    }, []);
 
     return (
         <>
-            <p className={'p-2 text-lg'}>Overall Performance:</p>
-            <div className={'max-h-96 mb-4'}>
-                {allAverages.length != 0 && (
-                    <Table
-                        key={"allAverages"}
-                        isHeaderSticky
-                        className={'max-h-96'}
-                    >
-                        <TableHeader>
-                            <TableColumn key="rank">#</TableColumn>
-                            <TableColumn key="team">Team</TableColumn>
-                            <TableColumn key="intake">Intake</TableColumn>
-                            <TableColumn key="avgampauton">Avg Auton Amp</TableColumn>
-                            <TableColumn key="avgspeakerauton">Avg Auton Speaker</TableColumn>
-                            <TableColumn key="avgampteleop">Avg Teleop Amp</TableColumn>
-                            <TableColumn key="avgspeakerteleop">Avg Teleop Speaker</TableColumn>
-                            <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
-                            <TableColumn key="avgtimesamped">Avg Times Amped</TableColumn>
-                            <TableColumn key="avgtrap">Avg Trap</TableColumn>
-                            <TableColumn key="avgdefense">Avg Defense</TableColumn>
-                            <TableColumn key="avgreliability">Avg Reliablity</TableColumn>
-                            <TableColumn key="hang">Usually Hangs</TableColumn>
-                            <TableColumn key="pickup">Main Pickup</TableColumn>
-                        </TableHeader>
-                        <TableBody
-                            items={allAverages}
-                            loadingContent={<Spinner label="Loading..."/>}
-                        >
-                            {(item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        #{
-                                        item.ranking
-                                    }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teamNumber
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.intake
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.avgampauton
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.avgspeakerauton
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.avgampteleop
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.avgspeakerteleop
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            (135 / (item.avgampteleop + item.avgspeakerteleop)).toFixed(1)
-                                        }
-                                        sec
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.avgtimesamped
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.avgtrap
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.avgdefense
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.avgreliability
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            String(item.hang)
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.pickup
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                            )}
-
-                        </TableBody>
-                    </Table>
-                )}
-            </div>
-            <p className={'p-2 text-lg'}>Best Situation:</p>
-            <div className={'max-h-96 mb-4'}>
-                {allBest.length != 0 && (
-                    <Table
-                        key={"allBest"}
-                        isHeaderSticky
-                        className={'max-h-96'}
-                    >
-                        <TableHeader>
-                            <TableColumn key="rank">#</TableColumn>
-                            <TableColumn key="team">Team</TableColumn>
-                            <TableColumn key="intake">Intake</TableColumn>
-                            <TableColumn key="avgampauton">Auton Amp</TableColumn>
-                            <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
-                            <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
-                            <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
-                            <TableColumn key="avgcycletime">Cycle Time</TableColumn>
-                            <TableColumn key="avgtrap">Trap</TableColumn>
-                            <TableColumn key="avgdefense">Defense</TableColumn>
-                            <TableColumn key="avgreliability">Reliablity</TableColumn>
-                            <TableColumn key="hang">Hang</TableColumn>
-                            <TableColumn key="pickup">Pickup</TableColumn>
-                        </TableHeader>
-                        <TableBody
-                            items={allBest}
-                            loadingContent={<Spinner label="Loading..."/>}
-                        >
-                            {(item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        #{
-                                        item.ranking
-                                    }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teamNumber
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.intake
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.ampauton
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.speakerauton
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.ampteleop
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.speakerteleop
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            (135 / (item.ampteleop + item.speakerteleop)).toFixed(1)
-                                        }
-                                        sec
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.trap
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.defense
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.reliability
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            String(item.hang)
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.pickup
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                            )}
-
-                        </TableBody>
-                    </Table>
-                )}
-            </div>
             <div className='flex'>
                 <Input
                     fullWidth
@@ -352,400 +122,477 @@ export default function BasicData() {
                 <p>Loading...</p>
             ) : errored ? (
                 <p>No data available. Please enter a valid team number.</p>
-            ) : teamData && !usersLoading ? (
+            ) : teamData && !usersLoading && teamInfo ? (
                 <>
-                    <div>
-                        <p className={'p-2 text-lg'}>Best:</p>
-                        <Table
-                            key={teamBest?.id}
-                        >
-                            <TableHeader>
-                                <TableColumn key="intake">Intake</TableColumn>
-                                <TableColumn key="avgampauton">Auton Amp</TableColumn>
-                                <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
-                                <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
-                                <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
-                                <TableColumn key="avgcycletime">Cycle Time</TableColumn>
-                                <TableColumn key="avgtrap">Trap</TableColumn>
-                                <TableColumn key="avgdefense">Defense</TableColumn>
-                                <TableColumn key="avgreliability">Reliablity</TableColumn>
-                                <TableColumn key="hang">Usually Hangs</TableColumn>
-                                <TableColumn key="pickup">Usual Pickup</TableColumn>
-                            </TableHeader>
-
-                            <TableBody>
-                                <TableRow key={teamBest?.id}>
-                                    <TableCell>
-                                        {
-                                            teamBest?.intake
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamBest?.ampauton
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamBest?.speakerauton
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamBest?.ampteleop
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamBest?.speakerteleop
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            (135 / ((teamBest?.ampteleop ?? 0) + (teamBest?.speakerteleop ?? 0))).toFixed(1)
-                                        }
-                                        sec
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamBest?.trap
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamBest?.defense
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamBest?.reliability
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            String(teamBest?.hang)
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamBest?.pickup
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-
-                        </Table>
-                    </div>
-
-                    <div>
-                        <p className={'p-2 text-lg'}>Averages:</p>
-                        <Table
-                            key={teamAverages?.id}
-                        >
-                            <TableHeader>
-                                <TableColumn key="intake">Intake</TableColumn>
-                                <TableColumn key="avgampauton">Auton Amp</TableColumn>
-                                <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
-                                <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
-                                <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
-                                <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
-                                <TableColumn key="avgtimesamped">Times Amped</TableColumn>
-                                <TableColumn key="avgtrap">Trap</TableColumn>
-                                <TableColumn key="avgdefense">Misc Defense</TableColumn>
-                                <TableColumn key="avgreliability">Misc Reliablity</TableColumn>
-                                <TableColumn key="hang">Usually Hangs</TableColumn>
-                                <TableColumn key="pickup">Pickup</TableColumn>
-                            </TableHeader>
-
-                            <TableBody>
-                                <TableRow key={teamAverages?.id}>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.intake
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.avgampauton
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.avgspeakerauton
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.avgampteleop
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.avgspeakerteleop
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            (135 / ((teamAverages?.avgampteleop ?? 0) + (teamAverages?.avgspeakerteleop ?? 0))).toFixed(1)
-                                        }
-                                        sec
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.avgtimesamped
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.avgtrap
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.avgdefense
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.avgreliability
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            String(teamAverages?.hang)
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            teamAverages?.pickup
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-
-                        </Table>
-                    </div>
-
-                    <p className={'p-2 text-lg'}>Data:</p>
-                    <Table
-                        key={teamData.id}
+                    <Card
+                        isBlurred
+                        className='mt-4'
                     >
-                        <TableHeader>
-                            <TableColumn key="matchNumber">Match Number</TableColumn>
-                            <TableColumn key="autonPreload">Auton Preload</TableColumn>
-                            <TableColumn key="autonLeftCommunity">Auton Left Community</TableColumn>
-                            <TableColumn key="autonSpeaker">Auton Speaker</TableColumn>
-                            <TableColumn key="autonAmp">Auton Amp</TableColumn>
-                            <TableColumn key="teleopDefensive">Teleop Defensive</TableColumn>
-                            <TableColumn key="teleopAmp">Teleop Amp</TableColumn>
-                            <TableColumn key="teleopSpeaker">Teleop Speaker</TableColumn>
-                            <TableColumn key="miscReliability">Avg Cycle Time</TableColumn>
-                            <TableColumn key="teleopTimesAmped">Teleop Times Amped</TableColumn>
-                            <TableColumn key="teleopPickupFrom">Teleop Pickup From</TableColumn>
-                            <TableColumn key="teleopIsHanging">Teleop Is Hanging</TableColumn>
-                            <TableColumn key="teleopTrap">Teleop Trap</TableColumn>
-                            <TableColumn key="teleopSpotLight">Teleop Spotlit</TableColumn>
-                            <TableColumn key="miscDefense">Misc Defense</TableColumn>
-                            <TableColumn key="miscReliability">Misc Reliability</TableColumn>
-                            <TableColumn key="scouter">Scouter</TableColumn>
-                        </TableHeader>
+                        <CardBody>
+                            <div className="">
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex justify-between align-middle">
+                                        <div className='flex flex-col'>
+                                            <p className="font-bold text-2xl">{teamInfo.team_number}: {teamInfo.nickname}</p>
+                                            <p className='text-small font-medium'>{teamInfo.name}</p>
+                                        </div>
+                                        <Link
+                                            href={`https://www.google.com/maps/search/?api=1&query=${teamInfo.city},${teamInfo.state_prov} ${teamInfo.school_name}`}
+                                            className="text-medium font-medium">{teamInfo.city}, {teamInfo.state_prov}</Link>
+                                    </div>
+                                    <div className="flex h-5 items-center space-x-2">
+                                        <p>Since {teamInfo.rookie_year}</p>
+                                        {teamInfo.website && (
+                                            <>
+                                                <Divider orientation="vertical"/>
+                                                <p>Website: <Link href={teamInfo.website}>{teamInfo.website}</Link></p>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                                <Divider className="my-4"/>
+                                <div>
+                                    <p className={'p-2 text-lg'}>Best:</p>
+                                    <Table
+                                        key={teamBest?.id}
+                                    >
+                                        <TableHeader>
+                                            <TableColumn key="intake">Intake</TableColumn>
+                                            <TableColumn key="avgampauton">Auton Amp</TableColumn>
+                                            <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
+                                            <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
+                                            <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
+                                            <TableColumn key="avgcycletime">Cycle Time</TableColumn>
+                                            <TableColumn key="avgtrap">Trap</TableColumn>
+                                            <TableColumn key="avgdefense">Defense</TableColumn>
+                                            <TableColumn key="avgreliability">Reliablity</TableColumn>
+                                            <TableColumn key="hang">Usually Hangs</TableColumn>
+                                            <TableColumn key="pickup">Usual Pickup</TableColumn>
+                                        </TableHeader>
 
-                        <TableBody
-                            items={teamData.scoutingData}
-                            loadingContent={<Spinner label="Loading..."/>}
-                        >
-                            {(item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        {
-                                            item.matchNumber
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            String(item.auton.preload)
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            String(item.auton.leftCommunity)
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.auton.speaker
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.auton.amp
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            String(item.teleop.defensive)
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teleop.amp
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teleop.speaker
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            (135 / (item.teleop.amp + item.teleop.speaker)).toFixed(1)
-                                        }
-                                        sec
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teleop.timesAmped
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teleop.pickupFrom
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            String(item.teleop.isHanging)
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teleop.trap
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teleop.finalStatus
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.misc.defense
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.misc.reliability
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            getUser(item.scouterId)?.name
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                                        <TableBody>
+                                            <TableRow key={teamBest?.id}>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.intake
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.ampauton
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.speakerauton
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.ampteleop
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.speakerteleop
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        (135 / ((teamBest?.ampteleop ?? 0) + (teamBest?.speakerteleop ?? 0))).toFixed(1)
+                                                    }
+                                                    sec
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.trap
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.defense
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.reliability
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        String(teamBest?.hang)
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamBest?.pickup
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
 
-                    <p className={'p-2 text-lg'}>Auto Comments:</p>
-                    <Table>
-                        <TableHeader>
-                            <TableColumn key="matchNumber">Match Number</TableColumn>
-                            <TableColumn key="comments">Comments</TableColumn>
-                            <TableColumn key="scouter">Scouter</TableColumn>
-                        </TableHeader>
+                                    </Table>
+                                </div>
 
-                        <TableBody
-                            items={teamData.scoutingData}
-                            loadingContent={<Spinner label="Loading..."/>}
-                        >
-                            {(item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        {
-                                            item.matchNumber
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.auton.comments
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            getUser(item.scouterId)?.name
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                    <p className={'p-2 text-lg'}>Teleop Comments:</p>
-                    <Table>
-                        <TableHeader>
-                            <TableColumn key="matchNumber">Match Number</TableColumn>
-                            <TableColumn key="comments">Comments</TableColumn>
-                            <TableColumn key="scouter">Scouter</TableColumn>
-                        </TableHeader>
+                                <div>
+                                    <p className={'p-2 text-lg'}>Averages:</p>
+                                    <Table
+                                        key={teamAverages?.id}
+                                    >
+                                        <TableHeader>
+                                            <TableColumn key="intake">Intake</TableColumn>
+                                            <TableColumn key="avgampauton">Auton Amp</TableColumn>
+                                            <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
+                                            <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
+                                            <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
+                                            <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
+                                            <TableColumn key="avgtimesamped">Times Amped</TableColumn>
+                                            <TableColumn key="avgtrap">Trap</TableColumn>
+                                            <TableColumn key="avgdefense">Misc Defense</TableColumn>
+                                            <TableColumn key="avgreliability">Misc Reliablity</TableColumn>
+                                            <TableColumn key="hang">Usually Hangs</TableColumn>
+                                            <TableColumn key="pickup">Pickup</TableColumn>
+                                        </TableHeader>
 
-                        <TableBody
-                            items={teamData.scoutingData}
-                            loadingContent={<Spinner label="Loading..."/>}
-                        >
-                            {(item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        {
-                                            item.matchNumber
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.teleop.comments
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            getUser(item.scouterId)?.name
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                    <p className={'p-2 text-lg'}>Misc Comments:</p>
-                    <Table>
-                        <TableHeader>
-                            <TableColumn key="matchNumber">Match Number</TableColumn>
-                            <TableColumn key="comments">Comments</TableColumn>
-                            <TableColumn key="scouter">Scouter</TableColumn>
-                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow key={teamAverages?.id}>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.intake
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.avgampauton
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.avgspeakerauton
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.avgampteleop
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.avgspeakerteleop
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        (135 / ((teamAverages?.avgampteleop ?? 0) + (teamAverages?.avgspeakerteleop ?? 0))).toFixed(1)
+                                                    }
+                                                    sec
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.avgtimesamped
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.avgtrap
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.avgdefense
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.avgreliability
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        String(teamAverages?.hang)
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        teamAverages?.pickup
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
 
-                        <TableBody
-                            items={teamData.scoutingData}
-                            loadingContent={<Spinner label="Loading..."/>}
-                        >
-                            {(item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        {
-                                            item.matchNumber
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            item.misc.comments
-                                        }
-                                    </TableCell>
-                                    <TableCell>
-                                        {
-                                            getUser(item.scouterId)?.name
-                                        }
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                                    </Table>
+                                </div>
+                                <p className={'p-2 text-lg'}>Charts:</p>
+                                <div className={''}>
+                                    <ResponsiveContainer width="100%" height={300}>
+                                        <ComposedChart
+                                            width={500}
+                                            height={300}
+                                            data={teamData.scoutingData.map(entry => ({
+                                                ...entry,
+                                                'points': entry.auton.amp + entry.auton.speaker + entry.teleop.amp + entry.teleop.speaker,
+                                                'auton.total': entry.auton.amp + entry.auton.speaker,
+                                                'teleop.total': entry.teleop.amp + entry.teleop.speaker
+                                            }))}
+                                            margin={{
+                                                top: 5,
+                                                right: 30,
+                                                left: 20,
+                                                bottom: 5,
+                                            }}
+                                        >
+                                            <defs>
+                                                <linearGradient id="colorPoints" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#ffc658" stopOpacity={0.8}/>
+                                                    <stop offset="95%" stopColor="#ffc658" stopOpacity={0}/>
+                                                </linearGradient>
+                                                <linearGradient id="colorAuto" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
+                                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                                                </linearGradient>
+                                                <linearGradient id="colorTeleop" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
+                                                    <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3"/>
+                                            <XAxis dataKey="matchId"/>
+                                            <YAxis/>
+                                            <Tooltip/>
+                                            <Legend/>
+                                            <Area type="monotone" dataKey="points" stackId="1" stroke="#ffc658"
+                                                  fillOpacity={1} fill="url(#colorPoints)" name="Total Points"/>
+                                            <Line type="monotone" dataKey="auton.total" stroke="#8884d8"
+                                                  fill="url(#colorAuto)"
+                                                  name="Auton Points"/>
+                                            <Line type="monotone" dataKey="teleop.total" stroke="#82ca9d"
+                                                  name="Teleop Points"/>
+                                        </ComposedChart>
+                                    </ResponsiveContainer>
+                                </div>
+                                <p className={'p-2 text-lg'}>Data:</p>
+                                <Table
+                                    key={teamData.id}
+                                >
+                                    <TableHeader>
+                                        <TableColumn key="matchNumber">Match Number</TableColumn>
+                                        <TableColumn key="autonPreload">Auton Preload</TableColumn>
+                                        <TableColumn key="autonLeftCommunity">Auton Left Community</TableColumn>
+                                        <TableColumn key="autonSpeaker">Auton Speaker</TableColumn>
+                                        <TableColumn key="autonAmp">Auton Amp</TableColumn>
+                                        <TableColumn key="teleopDefensive">Teleop Defensive</TableColumn>
+                                        <TableColumn key="teleopAmp">Teleop Amp</TableColumn>
+                                        <TableColumn key="teleopSpeaker">Teleop Speaker</TableColumn>
+                                        <TableColumn key="miscReliability">Avg Cycle Time</TableColumn>
+                                        <TableColumn key="teleopTimesAmped">Teleop Times Amped</TableColumn>
+                                        <TableColumn key="teleopPickupFrom">Teleop Pickup From</TableColumn>
+                                        <TableColumn key="teleopIsHanging">Teleop Is Hanging</TableColumn>
+                                        <TableColumn key="teleopTrap">Teleop Trap</TableColumn>
+                                        <TableColumn key="teleopSpotLight">Teleop Spotlit</TableColumn>
+                                        <TableColumn key="miscDefense">Misc Defense</TableColumn>
+                                        <TableColumn key="miscReliability">Misc Reliability</TableColumn>
+                                        <TableColumn key="scouter">Scouter</TableColumn>
+                                    </TableHeader>
+
+                                    <TableBody
+                                        items={teamData.scoutingData}
+                                        loadingContent={<Spinner label="Loading..."/>}
+                                    >
+                                        {(item) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell>
+                                                    {
+                                                        item.matchNumber
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        String(item.auton.preload)
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        String(item.auton.leftCommunity)
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.auton.speaker
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.auton.amp
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        String(item.teleop.defensive)
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.teleop.amp
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.teleop.speaker
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        (135 / (item.teleop.amp + item.teleop.speaker)).toFixed(1)
+                                                    }
+                                                    sec
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.teleop.timesAmped
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.teleop.pickupFrom
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        String(item.teleop.isHanging)
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.teleop.trap
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.teleop.finalStatus
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.misc.defense
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.misc.reliability
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        getUser(item.scouterId)?.name
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+
+                                <p className={'p-2 text-lg'}>Auto Comments:</p>
+                                <Table>
+                                    <TableHeader>
+                                        <TableColumn key="matchNumber">Match Number</TableColumn>
+                                        <TableColumn key="comments">Comments</TableColumn>
+                                        <TableColumn key="scouter">Scouter</TableColumn>
+                                    </TableHeader>
+
+                                    <TableBody
+                                        items={teamData.scoutingData}
+                                        loadingContent={<Spinner label="Loading..."/>}
+                                    >
+                                        {(item) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell>
+                                                    {
+                                                        item.matchNumber
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.auton.comments
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        getUser(item.scouterId)?.name
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                                <p className={'p-2 text-lg'}>Teleop Comments:</p>
+                                <Table>
+                                    <TableHeader>
+                                        <TableColumn key="matchNumber">Match Number</TableColumn>
+                                        <TableColumn key="comments">Comments</TableColumn>
+                                        <TableColumn key="scouter">Scouter</TableColumn>
+                                    </TableHeader>
+
+                                    <TableBody
+                                        items={teamData.scoutingData}
+                                        loadingContent={<Spinner label="Loading..."/>}
+                                    >
+                                        {(item) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell>
+                                                    {
+                                                        item.matchNumber
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.teleop.comments
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        getUser(item.scouterId)?.name
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                                <p className={'p-2 text-lg'}>Misc Comments:</p>
+                                <Table>
+                                    <TableHeader>
+                                        <TableColumn key="matchNumber">Match Number</TableColumn>
+                                        <TableColumn key="comments">Comments</TableColumn>
+                                        <TableColumn key="scouter">Scouter</TableColumn>
+                                    </TableHeader>
+
+                                    <TableBody
+                                        items={teamData.scoutingData}
+                                        loadingContent={<Spinner label="Loading..."/>}
+                                    >
+                                        {(item) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell>
+                                                    {
+                                                        item.matchNumber
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        item.misc.comments
+                                                    }
+                                                </TableCell>
+                                                <TableCell>
+                                                    {
+                                                        getUser(item.scouterId)?.name
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        </CardBody>
+                    </Card>
                 </>
             ) : (
                 <p>No data available. Please enter a valid team number.</p>
