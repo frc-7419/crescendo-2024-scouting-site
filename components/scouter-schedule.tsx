@@ -267,6 +267,7 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 placement="top-center"
+                isDismissable={false}
             >
                 <ModalContent>
                     {(onClose) => (

@@ -46,7 +46,8 @@ export async function GET(
                     where: {
                         teamNumber: entry.teamNumber,
                         venue: venue
-                    }
+                    },
+                    select: {lastUpdated: true, id: true}
                 });
 
                 if (existingAverage) {
@@ -116,7 +117,8 @@ export async function GET(
                     where: {
                         teamNumber: entry.teamNumber,
                         venue: venue
-                    }
+                    },
+                    select: {lastUpdated: true, id: true}
                 });
 
                 if (existingBest) {

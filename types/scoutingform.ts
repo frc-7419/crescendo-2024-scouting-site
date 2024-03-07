@@ -55,6 +55,7 @@ export interface ScoutingData {
     teleopId?: number;
     miscId?: number;
     scouterId: string;
+    continuousAverage: number;
 }
 
 export interface ReturnedFormData extends FieldValues {

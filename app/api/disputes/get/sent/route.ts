@@ -24,7 +24,10 @@ export async function GET(
             },
             include: {
                 scouter: true
-            }
+            },
+            cacheStrategy: {
+                ttl: 30,
+            },
         });
 
         const responseBody = JSON.stringify(dispute);

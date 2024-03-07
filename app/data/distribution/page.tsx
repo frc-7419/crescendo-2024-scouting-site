@@ -1,11 +1,12 @@
 'use client';
 
 import React, {useEffect} from 'react';
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
-import Leaderboard from "@/components/leaderboard";
-import TickerLayout from "@/components/layouts/TickerLayout";
+import DashCard from "@/components/templates/dash-card";
+import Distribution from "@/components/distribution";
 
 const Page = () => {
     const router = useRouter();
@@ -16,11 +17,11 @@ const Page = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
     return (
-        <TickerLayout>
+        <DashboardLayout>
             <div id='dash' className="overflow-scroll pt-6 flex flex-col">
-                <Leaderboard/>
+                <DashCard title={"Distribution Chart"} content={<Distribution/>}/>
             </div>
-        </TickerLayout>
+        </DashboardLayout>
     );
 };
 

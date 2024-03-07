@@ -11,6 +11,7 @@ import {
     faDatabase,
     faGauge,
     faHandPaper,
+    faPeopleGroup,
     faPerson,
     faPoll,
 } from '@fortawesome/free-solid-svg-icons';
@@ -61,6 +62,11 @@ function SideBar() {
                         name="Leaderboard"
                         route="/data/leaderboard"
                         icon={<FontAwesomeIcon icon={faArrowTrendUp}/>}
+                    />
+                    <MenuItem
+                        name="Distribution"
+                        route="/data/distribution"
+                        icon={<FontAwesomeIcon icon={faPeopleGroup}/>}
                     />
                 </div>
             </div>

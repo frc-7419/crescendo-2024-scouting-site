@@ -6,6 +6,9 @@ import prisma from "@/lib/prisma";
 async function getAll(venue: string) {
     const bests = await prisma.bests.findMany({
         where: {venue},
+        cacheStrategy: {
+            ttl: 60,
+        },
     })
 
     const sortedbests = bests.sort((a, b) => {

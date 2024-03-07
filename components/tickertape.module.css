@@ -1,0 +1,13 @@
+.scrollContainer {
+    animation: scrollAnimation 30s linear infinite;
+    overflow-x: visible;
+}
+
+@keyframes scrollAnimation {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-3808px);
+    }
+}

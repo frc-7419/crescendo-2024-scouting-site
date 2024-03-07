@@ -72,6 +72,7 @@ export default function Teamlookupcomponent() {
                             getTeamInfo();
                         }
                     }}
+                    className={'border-0'}
                     placeholder="Enter team number"
                 />
                 <Select

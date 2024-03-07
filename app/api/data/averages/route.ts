@@ -6,6 +6,9 @@ import prisma from "@/lib/prisma";
 async function getAll(venue: string) {
     const averages = await prisma.averages.findMany({
         where: {venue},
+        cacheStrategy: {
+            ttl: 60,
+        },
     })
     const responseBody = JSON.stringify(averages);
     const headers = {

@@ -26,7 +26,7 @@ import {
 import TeamData from "@/types/TeamData";
 import {AvgModal, BestModal} from "@/types/scoutingform";
 import {Team} from "@/types/Team";
-import {Area, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import {AreaChart, Tracker} from "@tremor/react";
 
 export default function BasicData() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -47,6 +47,18 @@ export default function BasicData() {
         return users.find((user) => user.uuid === uuid);
     };
 
+    const calculateContinuousAverage = (teamData: TeamData) => {
+        let total = 0;
+        teamData.scoutingData.forEach((entry, index) => {
+            total += entry.auton.amp + entry.auton.speaker + entry.teleop.amp + entry.teleop.speaker;
+            const count = index + 1;
+            teamData.scoutingData[index] = {
+                ...teamData.scoutingData[index],
+                continuousAverage: Number((total / count).toFixed(2))
+            }
+        });
+        return teamData;
+    }
     const fetchUsers = async () => {
         setValue(0)
         if (users.length > 0) return;
@@ -78,7 +90,7 @@ export default function BasicData() {
             setTeamAverages(undefined);
             setTeamInfo(undefined)
             try {
-                setTeamData(await getRobotData(teamNumber))
+                setTeamData(calculateContinuousAverage(await getRobotData(teamNumber)))
                 setValue(25)
                 setTeamAverages(await getRobotAverages(teamNumber))
                 setValue(50)
@@ -319,57 +331,49 @@ export default function BasicData() {
                                                 </TableCell>
                                             </TableRow>
                                         </TableBody>
-
                                     </Table>
                                 </div>
-                                <p className={'p-2 text-lg'}>Charts:</p>
-                                <div className={''}>
-                                    <ResponsiveContainer width="100%" height={300}>
-                                        <ComposedChart
-                                            width={500}
-                                            height={300}
-                                            data={teamData.scoutingData.map(entry => ({
-                                                ...entry,
-                                                'points': entry.auton.amp + entry.auton.speaker + entry.teleop.amp + entry.teleop.speaker,
-                                                'auton.total': entry.auton.amp + entry.auton.speaker,
-                                                'teleop.total': entry.teleop.amp + entry.teleop.speaker
-                                            }))}
-                                            margin={{
-                                                top: 5,
-                                                right: 30,
-                                                left: 20,
-                                                bottom: 5,
-                                            }}
-                                        >
-                                            <defs>
-                                                <linearGradient id="colorPoints" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#ffc658" stopOpacity={0.8}/>
-                                                    <stop offset="95%" stopColor="#ffc658" stopOpacity={0}/>
-                                                </linearGradient>
-                                                <linearGradient id="colorAuto" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                                                </linearGradient>
-                                                <linearGradient id="colorTeleop" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
-                                                    <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
-                                                </linearGradient>
-                                            </defs>
-                                            <CartesianGrid strokeDasharray="3 3"/>
-                                            <XAxis dataKey="matchId"/>
-                                            <YAxis/>
-                                            <Tooltip/>
-                                            <Legend/>
-                                            <Area type="monotone" dataKey="points" stackId="1" stroke="#ffc658"
-                                                  fillOpacity={1} fill="url(#colorPoints)" name="Total Points"/>
-                                            <Line type="monotone" dataKey="auton.total" stroke="#8884d8"
-                                                  fill="url(#colorAuto)"
-                                                  name="Auton Points"/>
-                                            <Line type="monotone" dataKey="teleop.total" stroke="#82ca9d"
-                                                  name="Teleop Points"/>
-                                        </ComposedChart>
-                                    </ResponsiveContainer>
-                                </div>
+                                <p className={'p-2 text-lg'}>Per Match:</p>
+                                <AreaChart
+                                    className="h-96"
+                                    data={teamData.scoutingData.map(entry => ({
+                                        'Points': entry.auton.amp + entry.auton.speaker + entry.teleop.amp + entry.teleop.speaker,
+                                        'Total Auton': entry.auton.amp + entry.auton.speaker,
+                                        'Total Teleop': entry.teleop.amp + entry.teleop.speaker,
+                                        'Match': "Qual " + entry.matchNumber
+                                    }))}
+                                    categories={['Points', 'Total Auton', 'Total Teleop']}
+                                    index={'Match'}
+                                    yAxisWidth={60}
+                                    colors={['yellow', 'green', 'blue']}
+                                />
+                                <p className={'p-2 text-lg'}>Continuous Average:</p>
+                                <AreaChart
+                                    className="h-96"
+                                    data={teamData.scoutingData.map(entry => ({
+                                        'Continuous Average': entry.continuousAverage,
+                                        'Match': "Qual " + entry.matchNumber
+                                    }))}
+                                    categories={['Continuous Average']}
+                                    index={'Match'}
+                                    yAxisWidth={60}
+                                    colors={['rose']}
+                                />
+                                <p className={'p-2 text-lg'}>Hang:</p>
+                                <Tracker className={"px-2"} data={teamData.scoutingData.map(entry => ({
+                                    "color": entry.teleop.isHanging ? "green" : "red",
+                                    "tooltip": "Qual " + entry.matchNumber
+                                }))}/>
+                                <p className={'p-2 text-lg'}>Reliability:</p>
+                                <Tracker className={"px-2"} data={teamData.scoutingData.map(entry => ({
+                                    "color": entry.misc.reliability >= 4 ? "green" : entry.misc.reliability >= 2 ? "yellow" : "red",
+                                    "tooltip": "Qual " + entry.matchNumber
+                                }))}/>
+                                <p className={'p-2 text-lg'}>Defense:</p>
+                                <Tracker className={"px-2"} data={teamData.scoutingData.map(entry => ({
+                                    "color": entry.teleop.defensive ? "green" : "red",
+                                    "tooltip": "Qual " + entry.matchNumber
+                                }))}/>
                                 <p className={'p-2 text-lg'}>Data:</p>
                                 <Table
                                     key={teamData.id}
