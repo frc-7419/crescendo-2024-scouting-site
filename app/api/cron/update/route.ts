@@ -1,8 +1,55 @@
 import type {NextRequest} from "next/server";
 import {getCurrentEvent} from "@/components/getCurrentEvent";
-import prisma from "@/lib/prisma";
 import {getAverages, getBests} from "@/components/fetches/sqlStatements";
 import {IntakePosition, PickupFrom, ScoutingDataAvg, ScoutingDataBest} from "@/types/scoutingform";
+import {PrismaClient} from "@/generated/cronclient";
+
+const prisma = new PrismaClient()
+
+async function getUpdatedDates(teamNumbers: string[], venue: string) {
+    const promises = teamNumbers.map(async (teamNumber) => {
+        return prisma.scoutingData.findFirst({
+            where: {
+                teamNumber,
+                venue
+            },
+            orderBy: {
+                submitTime: 'desc'
+            },
+            select: {
+                submitTime: true,
+                teamNumber: true
+            }
+        });
+    });
+
+    const results = await Promise.all(promises);
+    return results.filter(entry => entry !== null);
+}
+
+async function getExistingAverages(teamNumbers: string[], venue: string) {
+    return prisma.averages.findMany({
+        where: {
+            teamNumber: {
+                in: teamNumbers,
+            },
+            venue,
+        },
+        select: {lastUpdated: true, id: true, teamNumber: true}
+    });
+}
+
+async function getExistingBests(teamNumbers: string[], venue: string) {
+    return prisma.bests.findMany({
+        where: {
+            teamNumber: {
+                in: teamNumbers,
+            },
+            venue,
+        },
+        select: {lastUpdated: true, id: true, teamNumber: true}
+    });
+}
 
 export async function GET(
     request: NextRequest,
@@ -23,37 +70,17 @@ export async function GET(
 
         const teamNumbers = robots.map(robot => robot.teamNumber);
         const venue = getCurrentEvent()
-        const updatedDates = (await Promise.all(teamNumbers.map(async (teamNumber) => {
-            return prisma.scoutingData.findFirst({
-                where: {
-                    teamNumber,
-                    venue
-                },
-                orderBy: {
-                    submitTime: 'desc'
-                },
-                select: {
-                    submitTime: true,
-                    teamNumber: true
-                }
-            });
-        }))).filter(entry => entry !== null);
-        console.log(updatedDates)
+        const updatedDates = (await getUpdatedDates(teamNumbers, venue));
 
+        const existingAverages = await getExistingAverages(teamNumbers, venue);
+        const existingBests = await getExistingBests(teamNumbers, venue);
         for (const entry of updatedDates) {
             if (entry !== null) {
-                const existingAverage = await prisma.averages.findFirst({
-                    where: {
-                        teamNumber: entry.teamNumber,
-                        venue: venue
-                    },
-                    select: {lastUpdated: true, id: true}
-                });
+                const existingAverage = existingAverages.find((average) => average.teamNumber === entry.teamNumber)
 
                 if (existingAverage) {
                     if (existingAverage.lastUpdated > entry.submitTime) {
-                        console.log(existingAverage.lastUpdated, entry.submitTime)
-                        console.log("skipping update as it already exists")
+                        console.log("Skipping: ", entry.teamNumber)
                         continue
                     }
                 }
@@ -107,23 +134,17 @@ export async function GET(
                         }
                     });
                 } else {
-                    console.log("skipping update as it already exists")
+                    console.log("Skipping: ", entry.teamNumber)
                 }
             }
         }
         for (const entry of updatedDates) {
             if (entry !== null) {
-                const existingBest = await prisma.bests.findFirst({
-                    where: {
-                        teamNumber: entry.teamNumber,
-                        venue: venue
-                    },
-                    select: {lastUpdated: true, id: true}
-                });
+                const existingBest = existingBests.find((best) => best.teamNumber === entry.teamNumber)
 
                 if (existingBest) {
                     if (existingBest.lastUpdated > entry.submitTime) {
-                        console.log("skipping update as it already exists")
+                        console.log("Skipping: ", entry.teamNumber)
                         continue
                     }
                 }
@@ -178,17 +199,15 @@ export async function GET(
                 }
             }
         }
+        prisma.$disconnect()
         return new Response('Success', {
             status: 200,
         });
     } catch (error) {
+        prisma.$disconnect()
         console.error(error);
         return new Response(String(error), {
             status: 500,
         });
     }
-
-    return new Response('Success', {
-        status: 200,
-    });
 }
