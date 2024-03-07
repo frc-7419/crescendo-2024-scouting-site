@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/cronclient"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DIRECT_URL")
+}
+
+model User {
+  id           String             @id @default(uuid())
+  email        String             @unique
+  name         String
+  password     String?
+  role         Role               @default(USER)
+  ScoutingData ScoutingData[]
+  Scouter      Scouter[]
+  ScouterOrig  ScheduleDisputes[] @relation(name: "ScouterOrig")
+  ToScouter    ScheduleDisputes[] @relation(name: "ToScouter")
+}
+
+enum Role {
+  USER
+  ADMIN
+  SITEADMIN
+}
+
+model Robot {
+  id           Int            @id @default(autoincrement())
+  teamNumber   String         @unique
+  scoutingData ScoutingData[]
+  winloss      Float          @default(1.0)
+  Averages     Averages[]
+  Bests        Bests[]
+}
+
+model ScoutingData {
+  id          Int      @id @default(autoincrement())
+  matchNumber Int
+  matchID     String
+  teamNumber  String
+  venue       String
+  submitTime  DateTime
+  auton       Auton    @relation(fields: [autonId], references: [id])
+  teleop      Teleop   @relation(fields: [teleopId], references: [id])
+  misc        Misc     @relation(fields: [miscId], references: [id])
+  autonId     Int      @unique
+  teleopId    Int      @unique
+  miscId      Int      @unique
+  robot       Robot    @relation(fields: [teamNumber], references: [teamNumber])
+  scouter     User     @relation(fields: [scouterId], references: [id])
+  scouterId   String
+}
+
+model Auton {
+  id            Int           @id @default(autoincrement())
+  preload       Boolean
+  leftCommunity Boolean
+  speaker       Int
+  amp           Int
+  comments      String
+  ScoutingData  ScoutingData?
+}
+
+model Teleop {
+  id              Int            @id @default(autoincrement())
+  defensive       Boolean
+  intake          IntakePosition
+  amp             Int
+  speaker         Int
+  timesAmped      Int
+  pickupFrom      PickupFrom
+  isRobotDisabled Boolean
+  disabledAt      Int?
+  isHanging       Boolean
+  trap            Int
+  spotLight       Boolean
+  comments        String
+  ScoutingData    ScoutingData?
+  finalStatus     FinalStatus // !isHanging: PARKED isHanging: ONSTAGE (isHanging && spotLight): ONSTAGE_SPOTLIT (for clientside optimization and accessibility)
+}
+
+model Misc {
+  id           Int           @id @default(autoincrement())
+  defense      Int // 0: Did Not Play Defense 1: Poor 2: Fair 3: Good 4: Excellent
+  reliability  Int // 1-5 (1 Dropped Many Notes, Unstable Cycle Times, 5: No Drops, Consistent Cycle Times)
+  comments     String
+  ScoutingData ScoutingData?
+}
+
+model ScoutingSchedule {
+  id          Int       @id @default(autoincrement())
+  matchNumber Int
+  matchID     String    @unique
+  venue       String
+  scouters    Scouter[]
+}
+
+model Scouter {
+  id                 Int               @id @default(autoincrement())
+  scouter            User              @relation(fields: [scouterId], references: [id])
+  scouterId          String
+  role               TeamRole
+  ScoutingSchedule   ScoutingSchedule? @relation(fields: [scoutingScheduleId], references: [id])
+  scoutingScheduleId Int?
+}
+
+enum TeamRole {
+  BLUEONE
+  BLUETWO
+  BLUETHREE
+  REDONE
+  REDTWO
+  REDTHREE
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}
+
+model Averages {
+  id               Int            @id @default(autoincrement())
+  teamNumber       String
+  venue            String
+  robot            Robot          @relation(fields: [teamNumber], references: [teamNumber])
+  intake           IntakePosition @default(UTB)
+  avgampauton      Float
+  avgspeakerauton  Float
+  avgampteleop     Float
+  avgspeakerteleop Float
+  avgtimesamped    Float
+  avgtrap          Float
+  avgdefense       Float
+  avgreliability   Float
+  hang             Boolean        @default(false)
+  pickup           PickupFrom     @default(BOTH)
+  lastUpdated      DateTime       @default(now())
+}
+
+model Bests {
+  id            Int            @id @default(autoincrement())
+  teamNumber    String
+  venue         String
+  robot         Robot          @relation(fields: [teamNumber], references: [teamNumber])
+  intake        IntakePosition @default(UTB)
+  ampauton      Float
+  speakerauton  Float
+  ampteleop     Float
+  speakerteleop Float
+  trap          Float
+  defense       Float
+  reliability   Float
+  hang          Boolean        @default(false)
+  pickup        PickupFrom     @default(BOTH)
+  lastUpdated   DateTime       @default(now())
+}
+
+model ScheduleDisputes {
+  id          Int    @id @default(autoincrement())
+  matchID     String
+  reason      String
+  scouter     User   @relation(name: "ScouterOrig", fields: [scouterId], references: [id])
+  scouterId   String
+  toScouter   User   @relation(name: "ToScouter", fields: [toScouterId], references: [id])
+  toScouterId String
+}
+
+enum Alliance {
+  RED
+  BLUE
+}
+
+enum FinalStatus {
+  PARKED
+  ONSTAGE
+  ONSTAGE_SPOTLIT
+}
+
+enum PickupFrom {
+  FLOOR
+  SOURCE
+  BOTH
+  NOT_ATTEMPTED
+}
+
+enum IntakePosition {
+  OTB
+  UTB
+}
