@@ -2,6 +2,8 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 import {
+    Card,
+    CardBody,
     Select,
     SelectItem,
     Spinner,
@@ -35,7 +37,7 @@ export default function Leaderboard() {
     const [errored, setErrored] = useState(false)
     const [sortedAverages, setSortedAverages] = useState<AvgModal[]>([]);
     const [sortedBest, setSortedBest] = useState<BestModal[]>([]);
-    const [sortBy, setSortBy] = useState("")
+    const [sortBy, setSortBy] = useState("overall")
     const [desc, setDesc] = useState(true)
 
     const avgSortByMap = {
@@ -240,275 +242,280 @@ export default function Leaderboard() {
                 </div>
             ) : (
                 errored ? (
-                <div className={"p-2"}>
-                    <p>There was an error loading the leaderboard</p>
-                </div>
-            ) : (
-                <>
-                    {(selectedTab == "avg") ? (
-                        <>
-                            <div className="mt-4 flex pb-2 align-middle">
-                                <p className={'p-2 text-lg grow'}>Average Situation</p>
-                                <Select
-                                    label="Sort By"
-                                    variant="bordered"
-                                    placeholder="Overall"
-                                    className="max-w-xs"
-                                    onChange={handleSelectionChange}
-                                >
-                                    {sortCatg.map((item) => (
-                                        <SelectItem key={item.value} value={item.value}>
-                                            {item.label}
-                                        </SelectItem>
-                                    ))}
-                                </Select>
-                                <button onClick={toggleDesc} className={'p-6'}>
-                                    <FontAwesomeIcon className={'text-xl'} icon={desc ? faSortDown : faSortUp}/>
-                                </button>
-                            </div>
-                            <div className={'max-h-96 mb-4'}>
-                                {sortedAverages.length != 0 && (
-                                    <Table
-                                        key={"allAverages"}
-                                        isHeaderSticky
-                                        className={'max-h-96'}
-                                    >
-                                        <TableHeader>
-                                            <TableColumn key="rank">#</TableColumn>
-                                            <TableColumn key="team">Team</TableColumn>
-                                            <TableColumn key="intake">Intake</TableColumn>
-                                            <TableColumn key="avgampauton">Avg Auton Amp</TableColumn>
-                                            <TableColumn key="avgspeakerauton">Avg Auton Speaker</TableColumn>
-                                            <TableColumn key="avgampteleop">Avg Teleop Amp</TableColumn>
-                                            <TableColumn key="avgspeakerteleop">Avg Teleop Speaker</TableColumn>
-                                            <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
-                                            <TableColumn key="avgtimesamped">Avg Times Amped</TableColumn>
-                                            <TableColumn key="avgtrap">Avg Trap</TableColumn>
-                                            <TableColumn key="avgdefense">Avg Defense</TableColumn>
-                                            <TableColumn key="avgreliability">Avg Reliablity</TableColumn>
-                                            <TableColumn key="hang">Usually Hangs</TableColumn>
-                                            <TableColumn key="pickup">Main Pickup</TableColumn>
-                                        </TableHeader>
-                                        <TableBody
-                                            items={sortedAverages}
-                                            loadingContent={<Spinner label="Loading..."/>}
+                    <div className={"p-2"}>
+                        <p>There was an error loading the leaderboard</p>
+                    </div>
+                ) : (
+                    <Card
+                        isBlurred
+                        className='mt-4'
+                    >
+                        <CardBody>
+                            {(selectedTab == "avg") ? (
+                                <>
+                                    <div className="mt-4 flex pb-2 align-middle">
+                                        <p className={'p-2 text-lg grow'}>Average Situation</p>
+                                        <Select
+                                            label="Sort By"
+                                            variant="bordered"
+                                            placeholder="Overall"
+                                            className="max-w-xs"
+                                            onChange={handleSelectionChange}
                                         >
-                                            {(item) => (
-                                                <TableRow key={item.id}>
-                                                    <TableCell>
-                                                        #{
-                                                        item.ranking
-                                                    }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.teamNumber
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.intake
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.avgampauton
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.avgspeakerauton
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.avgampteleop
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.avgspeakerteleop
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            (135 / (item.avgampteleop + item.avgspeakerteleop)).toFixed(1)
-                                                        }
-                                                        sec
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.avgtimesamped
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.avgtrap
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.avgdefense
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.avgreliability
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            String(item.hang)
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.pickup
-                                                        }
-                                                    </TableCell>
-                                                </TableRow>
-                                            )}
+                                            {sortCatg.map((item) => (
+                                                <SelectItem key={item.value} value={item.value}>
+                                                    {item.label}
+                                                </SelectItem>
+                                            ))}
+                                        </Select>
+                                        <button onClick={toggleDesc} className={'p-6'}>
+                                            <FontAwesomeIcon className={'text-xl'} icon={desc ? faSortDown : faSortUp}/>
+                                        </button>
+                                    </div>
+                                    <div className={'max-h-96 mb-4'}>
+                                        {sortedAverages.length != 0 && (
+                                            <Table
+                                                key={"allAverages"}
+                                                isHeaderSticky
+                                                className={'max-h-96'}
+                                            >
+                                                <TableHeader>
+                                                    <TableColumn key="rank">#</TableColumn>
+                                                    <TableColumn key="team">Team</TableColumn>
+                                                    <TableColumn key="intake">Intake</TableColumn>
+                                                    <TableColumn key="avgampauton">Avg Auton Amp</TableColumn>
+                                                    <TableColumn key="avgspeakerauton">Avg Auton Speaker</TableColumn>
+                                                    <TableColumn key="avgampteleop">Avg Teleop Amp</TableColumn>
+                                                    <TableColumn key="avgspeakerteleop">Avg Teleop Speaker</TableColumn>
+                                                    <TableColumn key="avgcycletime">Avg Cycle Time</TableColumn>
+                                                    <TableColumn key="avgtimesamped">Avg Times Amped</TableColumn>
+                                                    <TableColumn key="avgtrap">Avg Trap</TableColumn>
+                                                    <TableColumn key="avgdefense">Avg Defense</TableColumn>
+                                                    <TableColumn key="avgreliability">Avg Reliablity</TableColumn>
+                                                    <TableColumn key="hang">Usually Hangs</TableColumn>
+                                                    <TableColumn key="pickup">Main Pickup</TableColumn>
+                                                </TableHeader>
+                                                <TableBody
+                                                    items={sortedAverages}
+                                                    loadingContent={<Spinner label="Loading..."/>}
+                                                >
+                                                    {(item) => (
+                                                        <TableRow key={item.id}>
+                                                            <TableCell>
+                                                                #{
+                                                                item.ranking
+                                                            }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.teamNumber
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.intake
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.avgampauton
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.avgspeakerauton
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.avgampteleop
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.avgspeakerteleop
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    (135 / (item.avgampteleop + item.avgspeakerteleop)).toFixed(1)
+                                                                }
+                                                                sec
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.avgtimesamped
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.avgtrap
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.avgdefense
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.avgreliability
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    String(item.hang)
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.pickup
+                                                                }
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )}
 
-                                        </TableBody>
-                                    </Table>
-                                )}
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div className="mt-4 flex pb-2 align-middle">
-                                <p className={'p-2 text-lg grow'}>Best Situation</p>
-                                <Select
-                                    label="Sort By"
-                                    variant="bordered"
-                                    placeholder="Overall"
-                                    className="max-w-xs"
-                                    onChange={handleSelectionChange}
-                                >
-                                    {sortCatg.map((item) => (
-                                        <SelectItem key={item.value} value={item.value}>
-                                            {item.label}
-                                        </SelectItem>
-                                    ))}
-                                </Select>
-                                <button onClick={toggleDesc} className={'p-6'}>
-                                    <FontAwesomeIcon className={'text-xl'} icon={desc ? faSortDown : faSortUp}/>
-                                </button>
-                            </div>
-                            <div className={'max-h-96 mb-4'}>
-                                {sortedBest.length != 0 && (
-                                    <Table
-                                        key={"allBest"}
-                                        isHeaderSticky
-                                        className={'max-h-96'}
-                                    >
-                                        <TableHeader>
-                                            <TableColumn key="rank">#</TableColumn>
-                                            <TableColumn key="team">Team</TableColumn>
-                                            <TableColumn key="intake">Intake</TableColumn>
-                                            <TableColumn key="avgampauton">Auton Amp</TableColumn>
-                                            <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
-                                            <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
-                                            <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
-                                            <TableColumn key="avgcycletime">Cycle Time</TableColumn>
-                                            <TableColumn key="avgtrap">Trap</TableColumn>
-                                            <TableColumn key="avgdefense">Defense</TableColumn>
-                                            <TableColumn key="avgreliability">Reliablity</TableColumn>
-                                            <TableColumn key="hang">Hang</TableColumn>
-                                            <TableColumn key="pickup">Pickup</TableColumn>
-                                        </TableHeader>
-                                        <TableBody
-                                            items={sortedBest}
-                                            loadingContent={<Spinner label="Loading..."/>}
+                                                </TableBody>
+                                            </Table>
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="mt-4 flex pb-2 align-middle">
+                                        <p className={'p-2 text-lg grow'}>Best Situation</p>
+                                        <Select
+                                            label="Sort By"
+                                            variant="bordered"
+                                            placeholder="Overall"
+                                            className="max-w-xs"
+                                            onChange={handleSelectionChange}
                                         >
-                                            {(item) => (
-                                                <TableRow key={item.id}>
-                                                    <TableCell>
-                                                        #{
-                                                        item.ranking
-                                                    }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.teamNumber
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.intake
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.ampauton
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.speakerauton
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.ampteleop
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.speakerteleop
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            (135 / (item.ampteleop + item.speakerteleop)).toFixed(1)
-                                                        }
-                                                        sec
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.trap
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.defense
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.reliability
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            String(item.hang)
-                                                        }
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {
-                                                            item.pickup
-                                                        }
-                                                    </TableCell>
-                                                </TableRow>
-                                            )}
+                                            {sortCatg.map((item) => (
+                                                <SelectItem key={item.value} value={item.value}>
+                                                    {item.label}
+                                                </SelectItem>
+                                            ))}
+                                        </Select>
+                                        <button onClick={toggleDesc} className={'p-6'}>
+                                            <FontAwesomeIcon className={'text-xl'} icon={desc ? faSortDown : faSortUp}/>
+                                        </button>
+                                    </div>
+                                    <div className={'max-h-96 mb-4'}>
+                                        {sortedBest.length != 0 && (
+                                            <Table
+                                                key={"allBest"}
+                                                isHeaderSticky
+                                                className={'max-h-96'}
+                                            >
+                                                <TableHeader>
+                                                    <TableColumn key="rank">#</TableColumn>
+                                                    <TableColumn key="team">Team</TableColumn>
+                                                    <TableColumn key="intake">Intake</TableColumn>
+                                                    <TableColumn key="avgampauton">Auton Amp</TableColumn>
+                                                    <TableColumn key="avgspeakerauton">Auton Speaker</TableColumn>
+                                                    <TableColumn key="avgampteleop">Teleop Amp</TableColumn>
+                                                    <TableColumn key="avgspeakerteleop">Teleop Speaker</TableColumn>
+                                                    <TableColumn key="avgcycletime">Cycle Time</TableColumn>
+                                                    <TableColumn key="avgtrap">Trap</TableColumn>
+                                                    <TableColumn key="avgdefense">Defense</TableColumn>
+                                                    <TableColumn key="avgreliability">Reliablity</TableColumn>
+                                                    <TableColumn key="hang">Hang</TableColumn>
+                                                    <TableColumn key="pickup">Pickup</TableColumn>
+                                                </TableHeader>
+                                                <TableBody
+                                                    items={sortedBest}
+                                                    loadingContent={<Spinner label="Loading..."/>}
+                                                >
+                                                    {(item) => (
+                                                        <TableRow key={item.id}>
+                                                            <TableCell>
+                                                                #{
+                                                                item.ranking
+                                                            }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.teamNumber
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.intake
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.ampauton
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.speakerauton
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.ampteleop
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.speakerteleop
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    (135 / (item.ampteleop + item.speakerteleop)).toFixed(1)
+                                                                }
+                                                                sec
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.trap
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.defense
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.reliability
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    String(item.hang)
+                                                                }
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {
+                                                                    item.pickup
+                                                                }
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )}
 
-                                        </TableBody>
-                                    </Table>
-                                )}
-                            </div>
-                        </>
-                    )}
-                    <BarChart
-                        data={selectedTab === "avg" ? sortedAverages : sortedBest}
-                        index="teamNumber"
-                        categories={
-                            [selectedTab === "avg" ? (avgSortByMap as {
-                                [key: string]: string
-                            })[sortBy] : (bestSortByMap as { [key: string]: string })[sortBy]]
-                        }
-                        yAxisWidth={48}
-                    />
-                </>
+                                                </TableBody>
+                                            </Table>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                            <BarChart
+                                data={selectedTab === "avg" ? sortedAverages : sortedBest}
+                                index="teamNumber"
+                                categories={
+                                    [selectedTab === "avg" ? (avgSortByMap as {
+                                        [key: string]: string
+                                    })[sortBy] : (bestSortByMap as { [key: string]: string })[sortBy]]
+                                }
+                                yAxisWidth={48}
+                            />
+                        </CardBody>
+                    </Card>
                 ))}
         </div>
     )

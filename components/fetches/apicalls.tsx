@@ -157,3 +157,14 @@ export async function getBests(venue: string) {
     console.debug(data)
     return (data)
 }
+
+export async function getTopTeamsCont(venue: string) {
+    const res = await axios.get(`/api/data/topTeams?venue=${venue}`, {
+        cache: {
+            ttl: 60
+        }
+    })
+    const data = await res.data;
+    console.debug(data)
+    return (data)
+}
