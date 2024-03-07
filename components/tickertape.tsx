@@ -37,7 +37,7 @@ export default function Tickertape() {
                         <div className={'flex flex-col w-20'}>
                             <p className={'text-sm'}>#{index + 1} {teamId}</p>
                             <span
-                                className={`rounded px-1 text-sm font-medium text-white ${topTeams[teamId as any]?.[topTeams[teamId as any]?.length - 1].percentChange < 0 ? 'bg-red-500' : 'bg-emerald-500'}`}>
+                                className={`rounded w-14 px-1 text-sm font-medium text-white ${topTeams[teamId as any]?.[topTeams[teamId as any]?.length - 1].percentChange < 0 ? 'bg-red-500' : 'bg-emerald-500'}`}>
                                 {topTeams[teamId as any]?.[topTeams[teamId as any]?.length - 1].percentChange}%
                             </span>
                         </div>

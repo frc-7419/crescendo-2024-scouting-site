@@ -23,6 +23,10 @@ export const authOptions: AuthOptions = {
                     where: {
                         email: email,
                     },
+                    cacheStrategy: {
+                        ttl: 360,
+                        swr: 120,
+                    },
                 });
 
                 if (user == null || user.password == null)

@@ -8,6 +8,10 @@ async function getAll(teamNumber: string) {
     const scoutingData = await prisma.robot.findUnique({
         where: {teamNumber},
         include: {scoutingData: {include: {auton: true, teleop: true, misc: true}}},
+        cacheStrategy: {
+            ttl: 60,
+        },
+
     });
 
     if (!scoutingData) {

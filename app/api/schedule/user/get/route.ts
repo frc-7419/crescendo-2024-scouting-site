@@ -26,6 +26,10 @@ export async function GET(
             include: {
                 ScoutingSchedule: true,
             },
+            cacheStrategy: {
+                ttl: 60,
+                swr: 30,
+            },
         });
 
         const responseBody = JSON.stringify(schedules);

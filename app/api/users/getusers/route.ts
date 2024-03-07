@@ -24,6 +24,10 @@ export async function GET(
                 name: true,
                 email: true,
             },
+            cacheStrategy: {
+                ttl: 350,
+                swr: 60,
+            },
         });
 
         const responseBody = JSON.stringify(users);

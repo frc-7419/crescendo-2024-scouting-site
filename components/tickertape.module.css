@@ -1,5 +1,5 @@
 .scrollContainer {
-    animation: scrollAnimation 40s linear infinite;
+    animation: scrollAnimation 30s linear infinite;
     overflow-x: visible;
 }
 
@@ -8,6 +8,6 @@
         transform: translateX(100%);
     }
     to {
-        transform: translateX(-250%);
+        transform: translateX(-3808px);
     }
 }

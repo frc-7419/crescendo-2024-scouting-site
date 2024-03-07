@@ -76,6 +76,9 @@ export async function GET(
             include: {
                 ScoutingSchedule: true,
             },
+            cacheStrategy: {
+                ttl: 60,
+            },
         });
 
         if (!form) {

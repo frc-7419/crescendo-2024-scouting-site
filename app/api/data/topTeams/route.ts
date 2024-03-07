@@ -25,7 +25,10 @@ const calculateContinuousAverage = (teamData: TeamData) => {
 async function getTop(venue: string) {
     const bests = await prisma.bests.findMany({
         where: {venue},
-        select: {teamNumber: true, ampauton: true, speakerauton: true, ampteleop: true, speakerteleop: true}
+        select: {teamNumber: true, ampauton: true, speakerauton: true, ampteleop: true, speakerteleop: true},
+        cacheStrategy: {
+            ttl: 60,
+        },
     });
 
     const sortedbests = bests.sort((a, b) => {
@@ -58,7 +61,10 @@ async function getTop(venue: string) {
                     matchNumber: true,
                 },
             },
-        }
+        },
+        cacheStrategy: {
+            ttl: 60,
+        },
     });
 
     const reorderedScoutingData = teamNumbers.map(teamNumber => {

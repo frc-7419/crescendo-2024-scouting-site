@@ -34,6 +34,9 @@ export async function GET(
             include: {
                 scouters: true,
             },
+            cacheStrategy: {
+                ttl: 60,
+            },
         });
 
         const output: {

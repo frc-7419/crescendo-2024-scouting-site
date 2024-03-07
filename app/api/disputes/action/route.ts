@@ -15,7 +15,10 @@ async function acceptDispute(id: number) {
     const dispute = await prisma.scheduleDisputes.findUnique({
         where: {
             id: id,
-        }
+        },
+        cacheStrategy: {
+            ttl: 30,
+        },
     });
 
     if (!dispute) {
@@ -28,7 +31,10 @@ async function acceptDispute(id: number) {
         },
         include: {
             scouters: true,
-        }
+        },
+        cacheStrategy: {
+            ttl: 30,
+        },
     });
 
     if (!match) {
