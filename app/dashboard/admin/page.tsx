@@ -64,6 +64,7 @@ const Dashboard = () => {
         try {
             router.prefetch('/scouting');
             router.prefetch('/schedule');
+            router.prefetch('/data');
         } catch (error) {
             console.error(error);
         }
