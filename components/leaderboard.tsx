@@ -20,6 +20,7 @@ import {getCurrentEvent} from "@/components/getCurrentEvent";
 import {AvgModal, BestModal} from "@/types/scoutingform";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
+import {BarChart} from "@tremor/react";
 
 export default function Leaderboard() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -37,6 +38,28 @@ export default function Leaderboard() {
     const [sortBy, setSortBy] = useState("")
     const [desc, setDesc] = useState(true)
 
+    const avgSortByMap = {
+        "overall": "overall",
+        "ampauton": "avgampauton",
+        "speakerauton": "avgspeakerauton",
+        "ampteleop": "avgampteleop",
+        "speakerteleop": "avgspeakerteleop",
+        "trap": "avgtrap",
+        "defense": "avgdefense",
+        "reliability": "avgreliability",
+    };
+
+    const bestSortByMap = {
+        "overall": "overall",
+        "ampauton": "ampauton",
+        "speakerauton": "speakerauton",
+        "ampteleop": "ampteleop",
+        "speakerteleop": "speakerteleop",
+        "trap": "trap",
+        "defense": "defense",
+        "reliability": "reliability",
+    };
+
     const sortCatg = [
         {label: "Overall", value: "overall"},
         {label: "Amp Auton", value: "ampauton"},
@@ -45,7 +68,7 @@ export default function Leaderboard() {
         {label: "Speaker Teleop", value: "speakerteleop"},
         {label: "Trap", value: "trap"},
         {label: "Defense", value: "defense"},
-        {label: "Reliability", value: "reliablilty"},
+        {label: "Reliability", value: "reliability"},
     ]
 
     const toggleDesc = () => {
@@ -78,7 +101,7 @@ export default function Leaderboard() {
                 sa = allAverages.sort((a, b) => b.avgdefense - a.avgdefense);
                 break;
             }
-            case "reliablilty": {
+            case "reliability": {
                 sa = allAverages.sort((a, b) => b.avgreliability - a.avgreliability);
                 break;
             }
@@ -93,7 +116,8 @@ export default function Leaderboard() {
         }
         const data = sa.map((item, index) => ({
             ...item,
-            ranking: index + 1
+            ranking: index + 1,
+            overall: item.avgampauton + item.avgspeakerauton + item.avgampteleop + item.avgspeakerteleop
         }));
         if (!desc) data.reverse();
         setSortedAverages(data);
@@ -126,7 +150,7 @@ export default function Leaderboard() {
                 sb = allBest.sort((a, b) => b.defense - a.defense);
                 break;
             }
-            case "reliablilty": {
+            case "reliability": {
                 sb = allBest.sort((a, b) => b.reliability - a.reliability);
                 break;
             }
@@ -141,7 +165,8 @@ export default function Leaderboard() {
         }
         const data = sb.map((item, index) => ({
             ...item,
-            ranking: index + 1
+            ranking: index + 1,
+            overall: item.ampauton + item.speakerauton + item.ampteleop + item.speakerteleop
         }));
         if (!desc) data.reverse();
         setSortedBest(data);
@@ -209,7 +234,12 @@ export default function Leaderboard() {
                     <Tab key="best" title="Best"/>
                 </Tabs>
             </div>
-            {errored ? (
+            {!averagesLoaded && !bestsLoaded ? (
+                <div className={"p-2"}>
+                    <p>Loading</p>
+                </div>
+            ) : (
+                errored ? (
                 <div className={"p-2"}>
                     <p>There was an error loading the leaderboard</p>
                 </div>
@@ -468,8 +498,18 @@ export default function Leaderboard() {
                             </div>
                         </>
                     )}
+                    <BarChart
+                        data={selectedTab === "avg" ? sortedAverages : sortedBest}
+                        index="teamNumber"
+                        categories={
+                            [selectedTab === "avg" ? (avgSortByMap as {
+                                [key: string]: string
+                            })[sortBy] : (bestSortByMap as { [key: string]: string })[sortBy]]
+                        }
+                        yAxisWidth={48}
+                    />
                 </>
-            )}
+                ))}
         </div>
     )
 }
