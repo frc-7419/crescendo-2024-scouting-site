@@ -1,7 +1,7 @@
 import React from "react";
-import SideBar from "@/components/side-bar";
-import NavBar from "@/components/nav-bar";
-import Tickertape from "@/components/tickertape";
+import SideBar from "@/components/menus/side-bar";
+import NavBar from "@/components/menus/nav-bar";
+import Tickertape from "@/components/tickertape/tickertape";
 
 export default function TickerLayout({
                                          children,

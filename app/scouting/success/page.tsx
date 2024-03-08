@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {LoadStatusContext} from '@/components/LoadStatusContext';
+import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
 import SuccessAnim from '@/resources/Success.json';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 

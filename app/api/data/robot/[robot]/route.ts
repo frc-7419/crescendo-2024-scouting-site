@@ -2,7 +2,7 @@ import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/components/util/auth-options"
 import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
-import {getCurrentEvent} from "@/components/getCurrentEvent";
+import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 
 async function getAll(teamNumber: string) {
     const scoutingData = await prisma.robot.findUnique({

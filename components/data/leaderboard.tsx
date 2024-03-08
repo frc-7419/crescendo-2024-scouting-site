@@ -16,9 +16,9 @@ import {
     TableRow,
     Tabs
 } from '@nextui-org/react';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import {getAverages, getBests} from "@/components/fetches/apicalls";
-import {getCurrentEvent} from "@/components/getCurrentEvent";
+import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {AvgModal, BestModal} from "@/types/scoutingform";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";

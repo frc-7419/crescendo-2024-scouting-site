@@ -6,7 +6,7 @@ import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
 import DashCard from "@/components/templates/dash-card";
-import Distribution from "@/components/distribution";
+import Distribution from "@/components/data/distribution";
 
 const Page = () => {
     const router = useRouter();

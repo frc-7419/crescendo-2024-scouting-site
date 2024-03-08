@@ -5,7 +5,7 @@ import {Event} from '@/types/Event';
 import {Team} from '@/types/Team';
 import '@/app/globals.css';
 import {Accordion, AccordionItem, Card, CardBody, Divider, Input, Link, Select, SelectItem} from '@nextui-org/react';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import {getTeamBlueAllianceData} from "@/components/fetches/apicalls";
 
 export default function Teamlookupcomponent() {

@@ -21,7 +21,7 @@ import {TeamRole} from '@prisma/client';
 import axios from 'axios';
 import React, {createRef, FormEvent, Key, useContext, useEffect, useState} from 'react';
 import toast from 'react-hot-toast';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import crypto from "crypto";
 
 const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {

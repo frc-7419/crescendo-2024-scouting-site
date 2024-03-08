@@ -3,13 +3,13 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
-import ScouterSchedule from '@/components/scouter-schedule';
-import {LoadStatusContext} from '@/components/LoadStatusContext';
-import {getCurrentEvent} from '@/components/getCurrentEvent';
+import ScouterSchedule from '@/components/schedules/scouter-schedule';
+import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
+import {getCurrentEvent} from '@/components/util/getCurrentEvent';
 import {getMatches, getShifts} from "@/components/fetches/apicalls";
 import toast from "react-hot-toast";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import ManualScouting from "@/components/manual-scouting";
+import ManualScouting from "@/components/scouting/manual-scouting";
 
 const Dashboard = () => {
     const {data: session} = useSession();

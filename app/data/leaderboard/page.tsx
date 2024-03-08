@@ -4,7 +4,7 @@ import React, {useEffect} from 'react';
 import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
-import Leaderboard from "@/components/leaderboard";
+import Leaderboard from "@/components/data/leaderboard";
 import TickerLayout from "@/components/layouts/TickerLayout";
 
 const Page = () => {

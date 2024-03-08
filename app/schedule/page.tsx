@@ -2,11 +2,11 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 import DashCard from '@/components/templates/dash-card';
-import MatchSchedule from '@/components/schedule';
+import MatchSchedule from '@/components/schedules/schedule';
 import Axios from 'axios';
-import {LoadStatusContext} from '@/components/LoadStatusContext';
-import {getCurrentEvent} from '@/components/getCurrentEvent';
-import Loading from '@/components/loading';
+import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
+import {getCurrentEvent} from '@/components/util/getCurrentEvent';
+import Loading from '@/components/loading/loading';
 import {setupCache} from "axios-cache-interceptor";
 import {getMatches} from "@/components/fetches/apicalls";
 import DashboardLayout from "@/components/layouts/DashboardLayout";

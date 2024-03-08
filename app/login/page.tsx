@@ -1,7 +1,7 @@
 'use client';
 
-import LoginForm from "@/components/login-form";
-import ThemeToggle from "@/components/theme-toggle";
+import LoginForm from "@/components/login/login-form";
+import ThemeToggle from "@/components/menus/theme-toggle";
 
 export default function Login() {
     return (

@@ -8,12 +8,13 @@ import {
     faArrowLeft,
     faArrowTrendUp,
     faCalendarDays,
+    faChessBoard,
     faDatabase,
     faGauge,
     faHandPaper,
     faPeopleGroup,
     faPerson,
-    faPoll,
+    faPoll
 } from '@fortawesome/free-solid-svg-icons';
 import {useSession} from 'next-auth/react';
 
@@ -67,6 +68,11 @@ function SideBar() {
                         name="Distribution"
                         route="/data/distribution"
                         icon={<FontAwesomeIcon icon={faPeopleGroup}/>}
+                    />
+                    <MenuItem
+                        name="Match"
+                        route="/data/match"
+                        icon={<FontAwesomeIcon icon={faChessBoard}/>}
                     />
                 </div>
             </div>

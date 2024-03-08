@@ -1,5 +1,5 @@
 import React from 'react';
-import Teamlookupcomponent from '@/components/teamlookupcomponent';
+import Teamlookupcomponent from '@/components/data/teamlookupcomponent';
 import DashCard from '@/components/templates/dash-card';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 

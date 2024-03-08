@@ -14,7 +14,7 @@ import {
     TableRow
 } from '@nextui-org/react';
 import React, {useContext, useEffect, useState} from 'react';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import crypto from "crypto"
 import {getSchedule, getUsers} from "@/components/fetches/apicalls";
 

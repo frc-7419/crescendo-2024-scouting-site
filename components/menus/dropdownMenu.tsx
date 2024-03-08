@@ -6,6 +6,7 @@ import {
     faArrowLeft,
     faArrowTrendUp,
     faCalendarDays,
+    faChessBoard,
     faDatabase,
     faGauge,
     faHandPaper,
@@ -76,6 +77,11 @@ export default function Dropdown() {
                                 name="Leaderboard"
                                 route="/data/leaderboard"
                                 icon={<FontAwesomeIcon icon={faArrowTrendUp}/>}
+                            />
+                            <MenuItem
+                                name="Match"
+                                route="/data/match"
+                                icon={<FontAwesomeIcon icon={faChessBoard}/>}
                             />
                         </div>
                     </div>
