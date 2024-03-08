@@ -5,7 +5,6 @@ import {
     Card,
     CardBody,
     Divider,
-    Input,
     Link,
     Spinner,
     Table,
@@ -27,13 +26,13 @@ import TeamData from "@/types/TeamData";
 import {AvgModal, BestModal} from "@/types/scoutingform";
 import {Team} from "@/types/Team";
 import {AreaChart, Tracker} from "@tremor/react";
+import {Match} from "@/types/match";
 
-export default function BasicData() {
+const Justthedata = ({teamNumber}: { teamNumber: string }) => {
     const {value, setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
-    const [teamNumber, setTeamNumber] = useState('');
     const [teamData, setTeamData] = useState<TeamData>();
     const [teamAverages, setTeamAverages] = useState<AvgModal>();
     const [loading, setLoading] = useState(false);
@@ -108,28 +107,12 @@ export default function BasicData() {
         }
     }
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTeamNumber(event.target.value.replace(/\D/g, ''));
-    };
-
+    useEffect(() => {
+        getTeamInfo()
+    }, []);
 
     return (
         <>
-            <div className='flex'>
-                <Input
-                    fullWidth
-                    autoComplete='off'
-                    type="text"
-                    value={teamNumber}
-                    onChange={handleInputChange}
-                    onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                            getTeamInfo();
-                        }
-                    }}
-                    placeholder="Enter team number"
-                />
-            </div>
             {loading ? (
                 <p>Loading...</p>
             ) : errored ? (
@@ -604,3 +587,5 @@ export default function BasicData() {
         </>
     );
 }
+
+export default Justthedata;

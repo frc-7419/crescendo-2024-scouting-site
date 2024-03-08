@@ -3,10 +3,10 @@
 import React, {useEffect, useState} from 'react';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import DashCard from "@/components/templates/dash-card";
-import Datalookup from "@/components/data/datalookup";
 import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
+import MatchData from "@/components/data/matchdata";
 
 const Page = () => {
     const router = useRouter();
@@ -39,7 +39,7 @@ const Page = () => {
                 </div>
             ) : null}
             <div id='dash' className="overflow-scroll pt-6 flex flex-col">
-                <DashCard title="Basic Data" content={<Datalookup/>}/>
+                <DashCard title="Match" content={<MatchData/>}/>
             </div>
         </DashboardLayout>
     );

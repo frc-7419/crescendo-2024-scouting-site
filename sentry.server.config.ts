@@ -3,6 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
+import prisma from "@/lib/prisma";
 
 Sentry.init({
     dsn: "https://e87f1663b6987c18bea8ab24fdb68bd5@o4506817294368768.ingest.us.sentry.io/4506817295941632",
@@ -12,4 +13,5 @@ Sentry.init({
 
     // Setting this option to true will print useful information to the console while you're setting up Sentry.
     debug: false,
+    integrations: [new Sentry.Integrations.Prisma({client: prisma})],
 });

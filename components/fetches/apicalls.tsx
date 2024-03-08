@@ -19,6 +19,17 @@ export async function getMatches(eventKey: string) {
     return response.data;
 }
 
+export async function getMatch(matchId: string) {
+    const response = await axios.get(`/api/bluealliance/getMatch/${matchId}`, {
+        cache: {
+            ttl: 120
+        }
+    });
+    console.debug("is response cached: ", response.cached)
+    console.debug(response.data);
+    return response.data;
+}
+
 export async function getShifts() {
     const response = await axios.get(`/api/schedule/user/get`, {
         cache: {
@@ -86,6 +97,7 @@ export async function getRobotData(robotNumber: string) {
         }
     })
     const data = await res.data;
+    console.debug("is cached? " + res.cached)
     console.debug(data)
     return (data)
 }
