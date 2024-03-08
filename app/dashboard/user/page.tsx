@@ -3,15 +3,15 @@
 import React, {useEffect, useState} from 'react';
 import {useSession} from 'next-auth/react';
 import DashCard from '@/components/templates/dash-card';
-import CurrentGame from '@/components/currentgame';
-import ScouterSchedule from '@/components/scouter-schedule';
+import CurrentGame from '@/components/schedules/currentgame';
+import ScouterSchedule from '@/components/schedules/scouter-schedule';
 import Axios from 'axios';
-import {getCurrentEvent} from '@/components/getCurrentEvent';
+import {getCurrentEvent} from '@/components/util/getCurrentEvent';
 import {Event} from '@/types/Event';
-import Loading from '@/components/loading';
+import Loading from '@/components/loading/loading';
 import {setupCache} from "axios-cache-interceptor";
 import {getEvent, getMatches, getShifts} from "@/components/fetches/apicalls";
-import {LoadStatusContext} from "@/components/LoadStatusContext";
+import {LoadStatusContext} from "@/components/loading/LoadStatusContext";
 import {useRouter} from "next/navigation";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 

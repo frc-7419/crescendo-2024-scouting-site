@@ -1,13 +1,13 @@
 'use client';
 
 import React, {useContext, useEffect, useState} from 'react';
-import ScoutingForm from '@/components/scoutingform';
+import ScoutingForm from '@/components/scouting/scoutingform';
 import {Spinner} from '@nextui-org/react';
 import {ScoutingFormData} from '@/types/form';
-import {LoadStatusContext} from '@/components/LoadStatusContext';
-import ProxyProvider from '@/components/unsavedprovider';
+import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
+import ProxyProvider from '@/components/util/unsavedprovider';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
-import {getCurrentEvent} from "@/components/getCurrentEvent";
+import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {useSession} from 'next-auth/react';
 import {useRouter, useSearchParams} from "next/navigation";
 import toast from "react-hot-toast";

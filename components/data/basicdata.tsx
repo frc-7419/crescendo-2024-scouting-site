@@ -15,7 +15,7 @@ import {
     TableHeader,
     TableRow
 } from '@nextui-org/react';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import {
     getBasicTeamBlueAllianceData,
     getRobotAverages,

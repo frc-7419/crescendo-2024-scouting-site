@@ -1,12 +1,12 @@
 'use client';
 
 import React, {useContext, useEffect, useState} from 'react';
-import ScoutingForm from '@/components/scoutingform';
+import ScoutingForm from '@/components/scouting/scoutingform';
 import {Spinner} from '@nextui-org/react';
 import {ScoutingFormData} from '@/types/form';
 import Axios from 'axios';
-import {LoadStatusContext} from '@/components/LoadStatusContext';
-import ProxyProvider from '@/components/unsavedprovider';
+import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
+import ProxyProvider from '@/components/util/unsavedprovider';
 import {setupCache} from "axios-cache-interceptor";
 import {getFormData} from "@/components/fetches/apicalls";
 import DashboardLayout from '@/components/layouts/DashboardLayout';

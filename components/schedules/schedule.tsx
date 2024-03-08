@@ -3,7 +3,7 @@
 import {Match} from '@/types/match';
 import {Chip, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
 import React, {useEffect, useState} from 'react';
-import {getCurrentEvent} from '@/components/getCurrentEvent';
+import {getCurrentEvent} from '@/components/util/getCurrentEvent';
 
 
 const MatchSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {

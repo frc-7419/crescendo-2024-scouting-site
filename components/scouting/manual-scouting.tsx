@@ -5,7 +5,7 @@ import {Event} from '@/types/Event';
 import {Team} from '@/types/Team';
 import '@/app/globals.css';
 import {Input} from '@nextui-org/react';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import {useRouter} from "next/navigation";
 
 export default function ManualScouting() {

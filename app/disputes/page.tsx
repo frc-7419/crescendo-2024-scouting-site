@@ -3,10 +3,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import DashCard from '@/components/templates/dash-card';
 import axios from 'axios';
-import {LoadStatusContext} from '@/components/LoadStatusContext';
-import Loading from '@/components/loading';
-import ManageDisputes from "@/components/manage-disputes";
-import AcceptDisputes from "@/components/accept-disputes";
+import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
+import Loading from '@/components/loading/loading';
+import ManageDisputes from "@/components/scouting/manage-disputes";
+import AcceptDisputes from "@/components/scouting/accept-disputes";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const Dashboard = () => {

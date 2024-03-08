@@ -4,10 +4,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useSession} from 'next-auth/react';
 import {Match} from '@/types/match';
 import {useRouter} from 'next/navigation';
-import SetScouterSchedule from '@/components/set-scouter-schedule';
-import {LoadStatusContext} from '@/components/LoadStatusContext';
-import {getCurrentEvent} from '@/components/getCurrentEvent';
-import Loading from '@/components/loading';
+import SetScouterSchedule from '@/components/schedules/set-scouter-schedule';
+import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
+import {getCurrentEvent} from '@/components/util/getCurrentEvent';
+import Loading from '@/components/loading/loading';
 import {getMatches} from "@/components/fetches/apicalls";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 

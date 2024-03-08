@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import DashCard from "@/components/templates/dash-card";
-import BasicData from "@/components/basicdata";
+import BasicData from "@/components/data/basicdata";
 import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";

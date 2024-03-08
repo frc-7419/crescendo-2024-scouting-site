@@ -1,9 +1,9 @@
 'use client';
 
 import React, {useContext, useEffect, useState} from 'react';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import {getAverages, getBests} from "@/components/fetches/apicalls";
-import {getCurrentEvent} from "@/components/getCurrentEvent";
+import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {AvgModal, BestModal} from "@/types/scoutingform";
 import {ScatterChart} from "@tremor/react";
 import {Card, CardBody} from '@nextui-org/react';

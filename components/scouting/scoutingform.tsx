@@ -14,7 +14,7 @@ import {
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Controller, FieldValues, SubmitHandler, useForm} from 'react-hook-form';
 import {ReturnedFormData, ScoutingData} from '@/types/scoutingform';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import toast from 'react-hot-toast';
 import SuccessAnim from '@/resources/Success.json';
 import {useRouter} from 'next/navigation';

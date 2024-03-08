@@ -7,7 +7,7 @@ import {useRouter} from 'next/navigation';
 import {signIn, useSession} from "next-auth/react";
 import {useTheme} from "next-themes";
 import {toast} from 'react-hot-toast';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import Image from 'next/image';
 
 export default function LoginForm() {

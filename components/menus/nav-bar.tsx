@@ -7,7 +7,7 @@ import {Avatar, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger} f
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCog, faDoorOpen, faMailForward} from '@fortawesome/free-solid-svg-icons';
 import Dropdown from './dropdownMenu';
-import Notifications from "@/components/notifications";
+import Notifications from "@/components/util/notifications";
 import {useRouter} from "next/navigation";
 import crypto from "crypto"
 

@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBell} from '@fortawesome/free-solid-svg-icons';
 import {Badge, Popover, PopoverContent, PopoverTrigger} from "@nextui-org/react";
 import axios from "axios";
-import {LoadStatusContext} from "@/components/LoadStatusContext";
+import {LoadStatusContext} from "@/components/loading/LoadStatusContext";
 import {Dispute} from "@/types/dispute";
 
 export default function Notifications() {

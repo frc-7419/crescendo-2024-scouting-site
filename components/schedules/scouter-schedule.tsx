@@ -30,9 +30,9 @@ import {
 } from '@nextui-org/react';
 import Link from 'next/link';
 import React, {Key, useContext, useEffect, useState} from 'react';
-import {getCurrentEvent} from '@/components/getCurrentEvent';
+import {getCurrentEvent} from '@/components/util/getCurrentEvent';
 import axios from 'axios';
-import {LoadStatusContext} from './LoadStatusContext';
+import {LoadStatusContext} from '../loading/LoadStatusContext';
 import toast from 'react-hot-toast';
 
 
