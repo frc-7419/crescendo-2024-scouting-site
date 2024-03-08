@@ -2,9 +2,11 @@ import type {NextRequest} from "next/server";
 import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {getAverages, getBests} from "@/components/fetches/sqlStatements";
 import {IntakePosition, PickupFrom, ScoutingDataAvg, ScoutingDataBest} from "@/types/scoutingform";
-import {PrismaClient} from ".prisma/cronclient";
+import {PrismaClient} from "@prisma/client";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+    datasourceUrl: process.env.DIRECT_URL
+});
 
 async function getUpdatedDates(teamNumbers: string[], venue: string) {
     const promises = teamNumbers.map(async (teamNumber) => {
