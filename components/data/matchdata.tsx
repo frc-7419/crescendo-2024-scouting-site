@@ -44,7 +44,6 @@ export default function MatchData() {
             setLoading(true);
             const matchID = `${eventName}_qm${matchNumber}`;
             const data = await getMatch(matchID)
-            console.log(data);
             setMatch(data);
             setValue(100);
             setErrored(false);
