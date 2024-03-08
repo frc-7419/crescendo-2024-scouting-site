@@ -2,7 +2,7 @@ import type {NextRequest} from "next/server";
 import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {getAverages, getBests} from "@/components/fetches/sqlStatements";
 import {IntakePosition, PickupFrom, ScoutingDataAvg, ScoutingDataBest} from "@/types/scoutingform";
-import {PrismaClient} from "@/generated/cronclient";
+import {PrismaClient} from ".prisma/cronclient";
 
 const prisma = new PrismaClient()
 
