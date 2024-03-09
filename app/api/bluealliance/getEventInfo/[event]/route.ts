@@ -1,5 +1,6 @@
 import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/components/util/auth-options";
+import env from "@/config/env";
 
 export async function GET(
     request: Request,
@@ -21,7 +22,7 @@ export async function GET(
     try {
         const response = await fetch(`https://www.thebluealliance.com/api/v3/event/${event}`, {
             headers: new Headers({
-                'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
+                'X-TBA-Auth-Key': env.BLUEALLIANCE_API_KEY || ''
             }),
             next: {revalidate: 3600}
         });

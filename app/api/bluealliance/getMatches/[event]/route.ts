@@ -1,6 +1,7 @@
 import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/components/util/auth-options";
 import {Match} from "@/types/match";
+import env from "@/config/env";
 
 
 export async function GET(
@@ -23,7 +24,7 @@ export async function GET(
     try {
         const response = await fetch(`https://www.thebluealliance.com/api/v3/event/${event}/matches/simple`, {
             headers: new Headers({
-                'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
+                'X-TBA-Auth-Key': env.BLUEALLIANCE_API_KEY || ''
             }),
             next: {revalidate: 30}
         });

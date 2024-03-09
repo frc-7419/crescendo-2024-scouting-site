@@ -49,7 +49,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
     const abbreviate_name = (name: string) => {
         const words = name.split(' ');
         let first_name = words[0];
-        let last_name = '';
+        let last_name: string;
         last_name = words[words.length - 1];
 
         if (first_name.length > 6) {
