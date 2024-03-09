@@ -8,6 +8,7 @@ import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import toast from "react-hot-toast";
 import {useRouter} from "next/navigation";
+import Loadinganim from "@/components/loading/loadinganim";
 
 
 const ManageDisputes = ({disputes, loading}: {
@@ -42,7 +43,7 @@ const ManageDisputes = ({disputes, loading}: {
         <>
             <div className='max-w-full'>
                 {loading ? (
-                    <p>Loading...</p>
+                    <Loadinganim/>
                 ) : (
                     <>
                         {disputes.length === 0 ? (

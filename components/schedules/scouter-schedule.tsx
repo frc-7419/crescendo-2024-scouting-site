@@ -34,6 +34,7 @@ import {getCurrentEvent} from '@/components/util/getCurrentEvent';
 import axios from 'axios';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
 import toast from 'react-hot-toast';
+import Loadinganim from "@/components/loading/loadinganim";
 
 
 const ScouterSchedule = ({matches, loading, time, shifts}: {
@@ -181,7 +182,7 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
         <>
             <div className='max-w-full'>
                 {loading ? (
-                    <p>Loading...</p>
+                    <Loadinganim/>
                 ) : (
                     <>
                         {filteredMatches.length === 0 ? (

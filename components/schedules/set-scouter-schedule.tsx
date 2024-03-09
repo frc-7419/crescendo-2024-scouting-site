@@ -23,6 +23,7 @@ import React, {createRef, FormEvent, Key, useContext, useEffect, useState} from 
 import toast from 'react-hot-toast';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
 import crypto from "crypto";
+import Loadinganim from "@/components/loading/loadinganim";
 
 const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -463,7 +464,7 @@ const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loadin
                         </div>
                     </form>
                     {loading ? (
-                        <p>Loading...</p>
+                        <Loadinganim/>
                     ) : (
                         <>
                             {playerMatches.length === 0 ? (

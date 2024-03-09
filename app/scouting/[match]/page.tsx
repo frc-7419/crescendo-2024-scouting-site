@@ -10,6 +10,7 @@ import ProxyProvider from '@/components/util/unsavedprovider';
 import {setupCache} from "axios-cache-interceptor";
 import {getFormData} from "@/components/fetches/apicalls";
 import DashboardLayout from '@/components/layouts/DashboardLayout';
+import Loadinganim from "@/components/loading/loadinganim";
 
 const Scouting = ({params}: { params: { match: string } }) => {
     const instance = Axios.create();
@@ -54,7 +55,7 @@ const Scouting = ({params}: { params: { match: string } }) => {
                         <span className="text-3xl">Qual {form.matchNumber} - Team {form.team}</span>}
                 </div>
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                    {loading && <div>Loading...</div>}
+                    {loading && <Loadinganim/>}
                     {!loading && errored && <div>Error occurred while loading form.</div>}
                     {!loading && !errored && <ScoutingForm formData={form}/>}
                 </div>

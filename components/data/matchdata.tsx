@@ -9,6 +9,7 @@ import {Team} from "@/types/Team";
 import {getMatch} from "@/components/fetches/apicalls";
 import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import Justthedata from "@/components/data/justthedata";
+import Loadinganim from "@/components/loading/loadinganim";
 
 const eventName = getCurrentEvent();
 
@@ -87,7 +88,7 @@ export default function MatchData() {
                 />
             </div>
             {loading ? (
-                <p>Loading...</p>
+                <Loadinganim/>
             ) : errored ? (
                 <p>No data available. Please enter a valid match number.</p>
             ) : match ? (

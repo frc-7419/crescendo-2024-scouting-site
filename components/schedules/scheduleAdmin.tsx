@@ -17,6 +17,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
 import crypto from "crypto"
 import {getSchedule, getUsers} from "@/components/fetches/apicalls";
+import Loadinganim from "@/components/loading/loadinganim";
 
 
 const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
@@ -178,7 +179,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
     return (
         <div className='max-w-full'>
             {loading ? (
-                <p>Loading...</p>
+                <Loadinganim/>
             ) : (
                 <>
                     {playerMatches.length === 0 ? (

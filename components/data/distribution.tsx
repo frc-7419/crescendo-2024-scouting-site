@@ -7,6 +7,7 @@ import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {AvgModal, BestModal} from "@/types/scoutingform";
 import {ScatterChart} from "@tremor/react";
 import {Card, CardBody} from '@nextui-org/react';
+import Loadinganim from "@/components/loading/loadinganim";
 
 export default function Distribution() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -56,7 +57,7 @@ export default function Distribution() {
     return (
         !averagesLoaded && !bestsLoaded ? (
             <div className={"p-2"}>
-                <p>Loading...</p>
+                <Loadinganim/>
             </div>
         ) : (
             errored ? (

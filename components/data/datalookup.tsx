@@ -27,6 +27,7 @@ import TeamData from "@/types/TeamData";
 import {AvgModal, BestModal} from "@/types/scoutingform";
 import {Team} from "@/types/Team";
 import {AreaChart, Tracker} from "@tremor/react";
+import Dataloading from "@/components/loading/dataloading";
 
 export default function Datalookup() {
     const {value, setValue} = useContext(LoadStatusContext) as {
@@ -131,7 +132,7 @@ export default function Datalookup() {
                 />
             </div>
             {loading ? (
-                <p>Loading...</p>
+                <Dataloading/>
             ) : errored ? (
                 <p>No data available. Please enter a valid team number.</p>
             ) : teamData && !usersLoading && teamInfo ? (
