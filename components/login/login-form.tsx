@@ -13,7 +13,7 @@ import Image from 'next/image';
 export default function LoginForm() {
     const router = useRouter();
 
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };

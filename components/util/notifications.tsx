@@ -7,7 +7,7 @@ import {LoadStatusContext} from "@/components/loading/LoadStatusContext";
 import {Dispute} from "@/types/dispute";
 
 export default function Notifications() {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };

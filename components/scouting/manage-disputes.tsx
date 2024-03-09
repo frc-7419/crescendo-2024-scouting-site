@@ -8,6 +8,7 @@ import {faTrashCan} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import toast from "react-hot-toast";
 import {useRouter} from "next/navigation";
+import Loadinganim from "@/components/loading/loadinganim";
 
 
 const ManageDisputes = ({disputes, loading}: {
@@ -28,7 +29,7 @@ const ManageDisputes = ({disputes, loading}: {
     const deleteEntry = async (id: number) => {
         try {
             toast.loading('Deleting Dispute. Please wait... Do not spam button.');
-            const response = await axios.post('/api/disputes/action?action=delete', {
+            await axios.post('/api/disputes/action?action=delete', {
                 id
             });
             toast.success('Dispute Deleted');
@@ -42,7 +43,7 @@ const ManageDisputes = ({disputes, loading}: {
         <>
             <div className='max-w-full'>
                 {loading ? (
-                    <p>Loading...</p>
+                    <Loadinganim/>
                 ) : (
                     <>
                         {disputes.length === 0 ? (

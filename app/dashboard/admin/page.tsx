@@ -8,21 +8,16 @@ import {Tab, Tabs} from '@nextui-org/react';
 import {useRouter} from 'next/navigation';
 import ScouterSchedule from '@/components/schedules/scouter-schedule';
 import AdminMatchSchedule from '@/components/schedules/scheduleAdmin';
-import Axios from 'axios';
 import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
 import {getCurrentEvent} from '@/components/util/getCurrentEvent';
 import {Event} from '@/types/Event';
 import Loading from '@/components/loading/loading';
-import {setupCache} from "axios-cache-interceptor";
 import {getEvent, getMatches, getShifts} from "@/components/fetches/apicalls";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import enforceAdmin from "@/components/util/enforceadmin";
 
 const Dashboard = () => {
-    const instance = Axios.create();
-    const axios = setupCache(instance);
-
-    const {value, setValue} = React.useContext(LoadStatusContext) as {
+    const {setValue} = React.useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
@@ -90,15 +85,9 @@ const Dashboard = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventKey]);
 
-    useEffect(() => {
-        console.debug("load", value)
-    }, [value]);
-
-
     if (loading) {
         return <Loading/>
     }
-
 
     return (
         <DashboardLayout>

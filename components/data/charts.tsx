@@ -3,8 +3,6 @@
 import React from 'react';
 
 const Charts = () => {
-    const colors = ['#8884d8', '#82ca9d', '#ffc658'];
-
     const data = [
         {
             teamNumber: 1234,
@@ -40,12 +38,6 @@ const Charts = () => {
             rank: 3
         },
     ]
-
-    const teleopData = data.map((team) => ({
-        name: team.teamNumber,
-        teleopPoints: team.teleopPoints.map((point) => point),
-    }));
-
 
     return (
         <>

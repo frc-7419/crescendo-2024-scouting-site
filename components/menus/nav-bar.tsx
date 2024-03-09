@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect, useState} from 'react';
+import React, {ReactElement, useEffect, useState} from 'react';
 import ThemeToggle from './theme-toggle';
 import {signOut, useSession} from 'next-auth/react';
 import {Avatar, Listbox, ListboxItem, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
@@ -12,7 +12,7 @@ import {useRouter} from "next/navigation";
 import crypto from "crypto"
 
 export default function NavBar() {
-    const {data: session, status} = useSession();
+    const {data: session} = useSession();
     const [currentTime, setCurrentTime] = useState('');
 
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
@@ -45,7 +45,7 @@ export default function NavBar() {
         }
     }, [currentTime]);
 
-    const PopButton = ({icon, text}: { icon: JSX.Element, text: string }) => {
+    const PopButton = ({icon, text}: { icon: ReactElement, text: string }) => {
         return (
             <div className='flex justify-between items-center'>
                 <div className="flex-1 text-right text-l">

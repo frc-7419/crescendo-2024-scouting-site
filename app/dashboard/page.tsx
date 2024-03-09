@@ -1,9 +1,9 @@
 'use client';
 
-import {Spinner} from "@nextui-org/react";
 import {useSession} from "next-auth/react";
 import {useRouter} from 'next/navigation';
-import {useEffect} from "react";
+import React, {useEffect} from "react";
+import Loadinganim from "@/components/loading/loadinganim";
 
 const UserValidation = () => {
     const {data: session} = useSession();
@@ -23,11 +23,13 @@ const UserValidation = () => {
     }, [session]);
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-900 gap-4">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 gap-4">
+            <div className="w-40">
+                <Loadinganim/>
+            </div>
             <div className="text-xl ">
                 Verifying User
             </div>
-            <Spinner color="default"/>
         </div>
     );
 };

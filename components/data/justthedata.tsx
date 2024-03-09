@@ -27,9 +27,10 @@ import {AvgModal, BestModal} from "@/types/scoutingform";
 import {Team} from "@/types/Team";
 import {AreaChart, Tracker} from "@tremor/react";
 import {Match} from "@/types/match";
+import Loadinganim from "@/components/loading/loadinganim";
 
 const Justthedata = ({teamNumber}: { teamNumber: string }) => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
@@ -114,7 +115,7 @@ const Justthedata = ({teamNumber}: { teamNumber: string }) => {
     return (
         <>
             {loading ? (
-                <p>Loading...</p>
+                <Loadinganim/>
             ) : errored ? (
                 <p>No data available. Please enter a valid team number.</p>
             ) : teamData && !usersLoading && teamInfo ? (

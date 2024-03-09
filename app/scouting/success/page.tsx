@@ -6,7 +6,7 @@ import SuccessAnim from '@/resources/Success.json';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const Page = () => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };

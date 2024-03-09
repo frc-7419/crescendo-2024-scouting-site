@@ -17,10 +17,11 @@ import React, {useContext, useEffect, useState} from 'react';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
 import crypto from "crypto"
 import {getSchedule, getUsers} from "@/components/fetches/apicalls";
+import Loadinganim from "@/components/loading/loadinganim";
 
 
-const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+const AdminMatchSchedule = ({matches, loading}: { matches: Match[], loading: any, time: Date }) => {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
@@ -28,10 +29,8 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
     const [tableKey, setTableKey] = useState<string>('table');
 
     const [usersLoading, setUsersLoading] = useState<boolean>(true);
-    const roles = ['BLUEONE', 'BLUETWO', 'BLUETHREE', 'REDONE', 'REDTWO', 'REDTHREE'];
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
     const [arrayInitliazed, setArrayInitialized] = useState<boolean>(false);
-    const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
     const [requested, setRequested] = useState<boolean>(false);
     const [usersRequested, setUsersRequested] = useState<boolean>(false);
 
@@ -48,7 +47,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
     const abbreviate_name = (name: string) => {
         const words = name.split(' ');
         let first_name = words[0];
-        let last_name = '';
+        let last_name: string;
         last_name = words[words.length - 1];
 
         if (first_name.length > 6) {
@@ -98,7 +97,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
             if (match.key === matchId) {
                 match.alliances.blue.scoutersIDs = [];
                 match.alliances.red.scoutersIDs = [];
-                scouters.forEach((scouter: Scouter, index) => {
+                scouters.forEach((scouter: Scouter) => {
                     console.debug(scouter)
                     if (scouter.role.includes('BLUE')) {
                         match.alliances.blue.scoutersIDs.push(scouter.scouterId);
@@ -150,7 +149,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
 
     useEffect(() => {
         try {
-            loadData().then(r => setValue(100));
+            loadData().then(() => setValue(100));
         } catch {
             setValue(500)
         }
@@ -178,7 +177,7 @@ const AdminMatchSchedule = ({matches, loading, time}: { matches: Match[], loadin
     return (
         <div className='max-w-full'>
             {loading ? (
-                <p>Loading...</p>
+                <Loadinganim/>
             ) : (
                 <>
                     {playerMatches.length === 0 ? (

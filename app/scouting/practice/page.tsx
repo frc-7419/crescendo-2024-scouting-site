@@ -11,16 +11,17 @@ import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {useSession} from 'next-auth/react';
 import {useRouter, useSearchParams} from "next/navigation";
 import toast from "react-hot-toast";
+import Loadinganim from "@/components/loading/loadinganim";
 
 const Scouting = () => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
     const [loading, setLoading] = useState(true);
     const [form, setForm] = useState({} as ScoutingFormData)
-    const [errored, setErrored] = useState(false);
-    const {data: session, status} = useSession();
+    const [errored] = useState(false);
+    const {data: session} = useSession();
     const searchParams = useSearchParams()
 
     const robot = searchParams.get('robot')
@@ -70,7 +71,7 @@ const Scouting = () => {
                         <span className="text-3xl">Qual {form.matchNumber} - Team {form.team}</span>}
                 </div>
                 <div id='cards' className="mt-4 overflow-y-auto flex-1">
-                    {loading && <div>Loading...</div>}
+                    {loading && <Loadinganim/>}
                     {!loading && errored && <div>Error occurred while loading form.</div>}
                     {!loading && !errored && <ScoutingForm formData={form}/>}
                 </div>

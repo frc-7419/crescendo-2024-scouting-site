@@ -41,7 +41,6 @@ const CurrentGame = ({eventName, loading, matches, time, shifts}: {
 }) => {
     const {match, isLoading, error} = useCurrentMatch(loading ? [] : matches, time);
     const [nextUserShift, setUserNextShift] = useState<Scouter>();
-    const [shiftNumber, setShiftNumber] = useState<number>(0);
 
     console.debug(error)
 
@@ -80,11 +79,6 @@ const CurrentGame = ({eventName, loading, matches, time, shifts}: {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [time]);
 
-    useEffect(() => {
-        if (nextUserShift) {
-            setShiftNumber(nextUserShift.ScoutingSchedule?.matchNumber as number)
-        }
-    }, [nextUserShift]);
     if (loading || isLoading) {
         return (
             <div

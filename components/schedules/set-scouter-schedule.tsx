@@ -23,9 +23,10 @@ import React, {createRef, FormEvent, Key, useContext, useEffect, useState} from 
 import toast from 'react-hot-toast';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
 import crypto from "crypto";
+import Loadinganim from "@/components/loading/loadinganim";
 
-const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+const SetScouterSchedule = ({matches, loading}: { matches: Match[], loading: any, time: Date }) => {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
@@ -76,7 +77,7 @@ const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loadin
     const abbreviate_name = (name: string) => {
         const words = name.split(' ');
         let first_name = words[0];
-        let last_name = '';
+        let last_name: string;
         last_name = words[words.length - 1];
 
         if (first_name.length > 6) {
@@ -165,7 +166,7 @@ const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loadin
             if (match.key === matchId) {
                 match.alliances.blue.scoutersIDs = [];
                 match.alliances.red.scoutersIDs = [];
-                scouters.forEach((scouter: Scouter, index) => {
+                scouters.forEach((scouter: Scouter) => {
                     console.debug(scouter)
                     if (scouter.role.includes('BLUE')) {
                         match.alliances.blue.scoutersIDs.push(scouter.scouterId);
@@ -463,7 +464,7 @@ const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loadin
                         </div>
                     </form>
                     {loading ? (
-                        <p>Loading...</p>
+                        <Loadinganim/>
                     ) : (
                         <>
                             {playerMatches.length === 0 ? (

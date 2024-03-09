@@ -3,9 +3,10 @@ import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {getAverages, getBests} from "@/components/fetches/sqlStatements";
 import {IntakePosition, PickupFrom, ScoutingDataAvg, ScoutingDataBest} from "@/types/scoutingform";
 import {PrismaClient} from "@prisma/client";
+import env from "@/config/env";
 
 const prisma = new PrismaClient({
-    datasourceUrl: process.env.DIRECT_URL
+    datasourceUrl: env.DIRECT_URL
 });
 
 async function getUpdatedDates(teamNumbers: string[], venue: string) {
@@ -57,7 +58,7 @@ export async function GET(
     request: NextRequest,
 ) {
     const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (authHeader !== `Bearer ${env.CRON_SECRET}`) {
         return new Response('NOT AUTHORIZED', {
             status: 401,
         });
@@ -82,7 +83,7 @@ export async function GET(
 
                 if (existingAverage) {
                     if (existingAverage.lastUpdated > entry.submitTime) {
-                        console.log("Skipping: ", entry.teamNumber)
+                        console.log("Skipping: ", entry.teamNumber);
                         continue
                     }
                 }

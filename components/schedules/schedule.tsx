@@ -3,12 +3,10 @@
 import {Match} from '@/types/match';
 import {Chip, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
 import React, {useEffect, useState} from 'react';
-import {getCurrentEvent} from '@/components/util/getCurrentEvent';
+import Loadinganim from "@/components/loading/loadinganim";
 
 
 const MatchSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
-    const eventKey = getCurrentEvent();
-
     const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
 
     useEffect(() => {
@@ -20,7 +18,7 @@ const MatchSchedule = ({matches, loading, time}: { matches: Match[], loading: an
     return (
         <div className='max-w-full'>
             {loading ? (
-                <p>Loading...</p>
+                <Loadinganim/>
             ) : (
                 <>
                     {filteredMatches.length === 0 ? (

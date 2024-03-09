@@ -3,10 +3,10 @@
 import React, {useEffect, useState} from 'react';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import DashCard from "@/components/templates/dash-card";
-import Datalookup from "@/components/data/datalookup";
 import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
+import Datalookup from "@/components/data/datalookup";
 
 const Page = () => {
     const router = useRouter();

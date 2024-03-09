@@ -7,9 +7,10 @@ import '@/app/globals.css';
 import {Accordion, AccordionItem, Card, CardBody, Divider, Input, Link, Select, SelectItem} from '@nextui-org/react';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
 import {getTeamBlueAllianceData} from "@/components/fetches/apicalls";
+import Loadinganim from "@/components/loading/loadinganim";
 
 export default function Teamlookupcomponent() {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
@@ -90,7 +91,7 @@ export default function Teamlookupcomponent() {
                 </Select>
             </div>
             {loading ? (
-                <p>Loading...</p>
+                <Loadinganim/>
             ) : errored ? (
                 <p>No data available. Please enter a valid team number.</p>
             ) : teamInfo ? (

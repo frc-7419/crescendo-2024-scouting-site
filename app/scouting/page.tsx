@@ -13,8 +13,7 @@ import ManualScouting from "@/components/scouting/manual-scouting";
 
 const Dashboard = () => {
     const {data: session} = useSession();
-    const firstName = session?.user?.name?.split(" ")[0];
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
@@ -26,13 +25,13 @@ const Dashboard = () => {
     const [currentTime, setCurrentTime] = useState(new Date(1678554428 * 1000));
     const [shifts, setShifts] = useState([]);
 
-    const setTime = (time: number) => {
+    const setTime = () => {
         setCurrentTime(new Date());
     }
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setTime(0);
+            setTime();
         }, 1000);
 
         return () => clearInterval(interval);

@@ -4,6 +4,7 @@ import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
 import {Match} from "@/types/match";
 import {Scouter} from "@/types/schedule";
+import env from "@/config/env";
 
 const getScoutedTeam = (match: Match, shift: Scouter) => {
     let team;
@@ -97,7 +98,7 @@ export async function GET(
 
         const response = await fetch(`https://www.thebluealliance.com/api/v3/match/${matchId}/simple`, {
             headers: new Headers({
-                'X-TBA-Auth-Key': process.env.BLUEALLIANCE_API_KEY || ''
+                'X-TBA-Auth-Key': env.BLUEALLIANCE_API_KEY || ''
             }),
         });
 

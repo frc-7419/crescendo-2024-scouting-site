@@ -21,10 +21,6 @@ import {useSession} from 'next-auth/react';
 export default function Dropdown() {
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    }
-
     const pathname = usePathname();
     const {data: session} = useSession();
 
