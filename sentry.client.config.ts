@@ -7,7 +7,7 @@ import env from "@/config/env";
 
 Sentry.init({
     dsn: env.SENTRY_PUBLIC,
-    beforeSend(event, hint) {
+    beforeSend(event) {
         if (event.exception && event.event_id) {
             Sentry.showReportDialog({eventId: event.event_id});
         }

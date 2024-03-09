@@ -30,7 +30,7 @@ import {AreaChart, Tracker} from "@tremor/react";
 import Dataloading from "@/components/loading/dataloading";
 
 export default function Datalookup() {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };

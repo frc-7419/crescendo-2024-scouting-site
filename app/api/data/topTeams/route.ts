@@ -1,5 +1,3 @@
-import {getServerSession} from "next-auth/next";
-import {authOptions} from "@/components/util/auth-options"
 import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
 import TeamData from "@/types/TeamData";
@@ -95,8 +93,6 @@ async function getTop(venue: string) {
 export async function GET(
     request: NextRequest,
 ) {
-    const session = await getServerSession(authOptions);
-
     const searchParams = request.nextUrl.searchParams
     const venue = searchParams.get('venue') as string;
 

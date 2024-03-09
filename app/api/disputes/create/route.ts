@@ -23,7 +23,7 @@ export async function POST(
         const matchId = json.matchId;
         const disputeUser = json.disputeUser;
 
-        const dispute = await prisma.scheduleDisputes.create({
+        await prisma.scheduleDisputes.create({
             data: {
                 matchID: matchId,
                 reason: reason,

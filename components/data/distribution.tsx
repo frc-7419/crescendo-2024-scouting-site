@@ -10,7 +10,7 @@ import {Card, CardBody} from '@nextui-org/react';
 import Loadinganim from "@/components/loading/loadinganim";
 
 export default function Distribution() {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
@@ -18,7 +18,6 @@ export default function Distribution() {
     const [averagesLoaded, setAveragesLoaded] = useState(false)
     const [allBest, setAllBest] = useState<BestModal[]>([]);
     const [bestsLoaded, setBestsLoaded] = useState(false)
-    const [selectedTab, setSelectedTab] = useState("avg")
     const [errored, setErrored] = useState(false)
 
     const fetchAllAverages = async () => {

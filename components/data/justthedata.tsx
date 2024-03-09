@@ -30,7 +30,7 @@ import {Match} from "@/types/match";
 import Loadinganim from "@/components/loading/loadinganim";
 
 const Justthedata = ({teamNumber}: { teamNumber: string }) => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };

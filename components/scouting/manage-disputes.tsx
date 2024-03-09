@@ -29,7 +29,7 @@ const ManageDisputes = ({disputes, loading}: {
     const deleteEntry = async (id: number) => {
         try {
             toast.loading('Deleting Dispute. Please wait... Do not spam button.');
-            const response = await axios.post('/api/disputes/action?action=delete', {
+            await axios.post('/api/disputes/action?action=delete', {
                 id
             });
             toast.success('Dispute Deleted');

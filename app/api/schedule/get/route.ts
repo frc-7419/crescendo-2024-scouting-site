@@ -54,7 +54,7 @@ export async function GET(
 
         output.venue = venue;
         for (const schedule of schedules) {
-            const {id, matchNumber, matchID, scouters} = schedule;
+            const {matchNumber, matchID, scouters} = schedule;
             const sortedScouters = scouters.sort((a, b) => {
                 const roleOrder = {
                     "BLUEONE": 1,

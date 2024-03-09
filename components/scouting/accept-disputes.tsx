@@ -28,7 +28,7 @@ const AcceptDisputes = ({disputes, loading}: {
     const acceptEntry = async (id: number) => {
         try {
             toast.loading('Accepting Dispute. Please wait... Do not spam button.');
-            const response = await axios.post('/api/disputes/action?action=accept', {
+            await axios.post('/api/disputes/action?action=accept', {
                 id
             });
             toast.success('Dispute Accepted');
@@ -41,7 +41,7 @@ const AcceptDisputes = ({disputes, loading}: {
     const deleteEntry = async (id: number) => {
         try {
             toast.loading('Deleting Dispute. Please wait... Do not spam button.');
-            const response = await axios.post('/api/disputes/action?action=delete', {
+            await axios.post('/api/disputes/action?action=delete', {
                 id
             });
             toast.success('Dispute Deleted');

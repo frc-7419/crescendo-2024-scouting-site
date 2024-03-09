@@ -25,8 +25,8 @@ import {LoadStatusContext} from '../loading/LoadStatusContext';
 import crypto from "crypto";
 import Loadinganim from "@/components/loading/loadinganim";
 
-const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loading: any, time: Date }) => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+const SetScouterSchedule = ({matches, loading}: { matches: Match[], loading: any, time: Date }) => {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
@@ -166,7 +166,7 @@ const SetScouterSchedule = ({matches, loading, time}: { matches: Match[], loadin
             if (match.key === matchId) {
                 match.alliances.blue.scoutersIDs = [];
                 match.alliances.red.scoutersIDs = [];
-                scouters.forEach((scouter: Scouter, index) => {
+                scouters.forEach((scouter: Scouter) => {
                     console.debug(scouter)
                     if (scouter.role.includes('BLUE')) {
                         match.alliances.blue.scoutersIDs.push(scouter.scouterId);

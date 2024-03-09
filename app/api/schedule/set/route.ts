@@ -49,7 +49,6 @@ export async function POST(
 
 
         if (json.entries) {
-            let fullRequest = {};
             const matches = Object.values(json.entries);
 
             for (const match of matches) {

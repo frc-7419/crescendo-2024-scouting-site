@@ -4,24 +4,20 @@ import React, {useContext, useEffect, useState} from 'react';
 import ScoutingForm from '@/components/scouting/scoutingform';
 import {Spinner} from '@nextui-org/react';
 import {ScoutingFormData} from '@/types/form';
-import Axios from 'axios';
 import {LoadStatusContext} from '@/components/loading/LoadStatusContext';
 import ProxyProvider from '@/components/util/unsavedprovider';
-import {setupCache} from "axios-cache-interceptor";
 import {getFormData} from "@/components/fetches/apicalls";
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import Loadinganim from "@/components/loading/loadinganim";
 
 const Scouting = ({params}: { params: { match: string } }) => {
-    const instance = Axios.create();
-    const axios = setupCache(instance);
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
     const [loading, setLoading] = useState(true);
     const [form, setForm] = useState({} as ScoutingFormData)
-    const [errored, setErrored] = useState(false);
+    const [errored] = useState(false);
 
     useEffect(() => {
         try {

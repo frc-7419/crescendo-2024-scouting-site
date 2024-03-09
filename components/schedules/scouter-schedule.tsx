@@ -29,27 +29,24 @@ import {
     useDisclosure
 } from '@nextui-org/react';
 import Link from 'next/link';
-import React, {Key, useContext, useEffect, useState} from 'react';
-import {getCurrentEvent} from '@/components/util/getCurrentEvent';
+import React, {Key, ReactElement, useContext, useEffect, useState} from 'react';
 import axios from 'axios';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
 import toast from 'react-hot-toast';
 import Loadinganim from "@/components/loading/loadinganim";
 
 
-const ScouterSchedule = ({matches, loading, time, shifts}: {
+const ScouterSchedule = ({matches, loading, shifts}: {
     matches: Match[],
     loading: any,
     time: Date,
     shifts: Scouter[]
 }) => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
-
-    const eventKey = getCurrentEvent();
 
     const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
     const [users, setUsers] = useState<{ name: string; uuid: string }[]>([]);
@@ -67,7 +64,7 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
     }, [matches, shifts]);
 
 
-    const PopButton = ({icon, text}: { icon: JSX.Element, text: string }) => {
+    const PopButton = ({icon, text}: { icon: ReactElement, text: string }) => {
         return (
             <div className='flex justify-between items-center gap-4'>
                 <div className="">
@@ -167,7 +164,7 @@ const ScouterSchedule = ({matches, loading, time, shifts}: {
         toast.loading('Submitting Dispute. Please wait... Do not spam button.');
         e.preventDefault();
         try {
-            const response = await axios.post('/api/disputes/create', {
+            await axios.post('/api/disputes/create', {
                 reason,
                 matchId,
                 disputeUser

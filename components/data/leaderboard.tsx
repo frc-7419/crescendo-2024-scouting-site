@@ -25,7 +25,7 @@ import {faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
 import {BarChart} from "@tremor/react";
 
 export default function Leaderboard() {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };

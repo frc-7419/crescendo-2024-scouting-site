@@ -10,7 +10,7 @@ import {getTeamBlueAllianceData} from "@/components/fetches/apicalls";
 import Loadinganim from "@/components/loading/loadinganim";
 
 export default function Teamlookupcomponent() {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };

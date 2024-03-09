@@ -10,7 +10,7 @@ import AcceptDisputes from "@/components/scouting/accept-disputes";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 const Dashboard = () => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };

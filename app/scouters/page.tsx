@@ -14,13 +14,11 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 const Scouters = () => {
     const router = useRouter();
 
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
     const {data: session} = useSession();
-    const firstName = session?.user?.name?.split(" ")[0];
-
 
     const eventKey = getCurrentEvent();
     const [matches, setMatches] = useState([]);
@@ -42,13 +40,13 @@ const Scouters = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [session]);
 
-    const setTime = (time: number) => {
+    const setTime = () => {
         setCurrentTime(new Date());
     }
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setTime(0);
+            setTime();
         }, 1000);
 
         return () => clearInterval(interval);

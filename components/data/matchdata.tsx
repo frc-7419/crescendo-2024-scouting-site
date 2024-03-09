@@ -3,9 +3,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Input, Tab, Tabs} from '@nextui-org/react';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
-import TeamData from "@/types/TeamData";
-import {AvgModal, BestModal} from "@/types/scoutingform";
-import {Team} from "@/types/Team";
 import {getMatch} from "@/components/fetches/apicalls";
 import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import Justthedata from "@/components/data/justthedata";
@@ -21,20 +18,12 @@ interface TeamList {
 const MemoizedJustthedata = React.memo(Justthedata);
 
 export default function MatchData() {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
-    const [teamNumber, setTeamNumber] = useState('');
-    const [teamData, setTeamData] = useState<TeamData>();
-    const [teamAverages, setTeamAverages] = useState<AvgModal>();
     const [loading, setLoading] = useState(false);
     const [errored, setErrored] = useState(false);
-    const [teamBest, setTeamBest] = useState<BestModal>()
-    const [usersRequested, setUsersRequested] = useState<boolean>(false);
-    const [usersLoading, setUsersLoading] = useState<boolean>(true);
-    const [users, setUsers] = useState<{ name: string; uuid: string; email: string }[]>([]);
-    const [teamInfo, setTeamInfo] = useState<Team>();
     const [matchNumber, setMatchNumber] = useState(0);
     const [match, setMatch] = useState<any>();
     const [teamList, setTeamList] = useState<TeamList>();

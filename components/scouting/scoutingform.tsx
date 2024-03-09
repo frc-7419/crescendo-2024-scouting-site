@@ -20,13 +20,13 @@ import SuccessAnim from '@/resources/Success.json';
 import {useRouter} from 'next/navigation';
 
 const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
-    const {value, setValue} = useContext(LoadStatusContext) as {
+    const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
     const [submittingForm, setSubmittingForm] = useState<boolean>(false);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    const {control, handleSubmit, formState: {errors}, getValues} = useForm();
+    const {control, handleSubmit, formState: {errors}} = useForm();
     const router = useRouter();
     const [formSuccess, setFormSuccess] = useState(false);
 
@@ -214,7 +214,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
         );
     };
 
-    const ScoutCommentModule = ({text, moduleKey, rules, control}: {
+    const ScoutCommentModule = ({text, moduleKey, control}: {
         text: string;
         moduleKey: string;
         control: any;
@@ -372,7 +372,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}
                    hideCloseButton>
                 <ModalContent>
-                    {(onClose) => (
+                    {() => (
                         <>
                             <ModalBody className={'flex flex-col align-middle text-center pb-4 px-2'}>
                                 <div ref={aRef}></div>
