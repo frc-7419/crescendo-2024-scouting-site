@@ -4,10 +4,10 @@
 
 import * as Sentry from "@sentry/nextjs";
 import prisma from "@/lib/prisma";
-import env from "@/config/env";
+import env from "@/config/clientenv";
 
 Sentry.init({
-    dsn: env.SENTRY_PUBLIC,
+    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
 
     // Adjust this value in production, or use tracesSampler for greater control
     tracesSampleRate: 1,
