@@ -7,7 +7,7 @@ const schema = z.object({
     CRON_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
     DIRECT_URL: z.string().min(1),
-    SENTRY_PUBLIC: z.string().min(1),
+    NEXT_PUBLIC_SENTRY_DSN: z.string().min(1),
 });
 
 const formatErrors = (errors: ZodFormattedError<any>) =>

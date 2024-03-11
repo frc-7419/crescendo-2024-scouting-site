@@ -3,10 +3,10 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from "@sentry/nextjs";
-import env from "@/config/env";
+import env from "@/config/clientenv";
 
 Sentry.init({
-    dsn: env.SENTRY_PUBLIC,
+    dsn: env.NEXT_PUBLIC_SENTRY_DSN,
     beforeSend(event) {
         if (event.exception && event.event_id) {
             Sentry.showReportDialog({eventId: event.event_id});
