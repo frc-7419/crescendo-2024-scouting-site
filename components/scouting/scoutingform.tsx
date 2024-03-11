@@ -212,11 +212,12 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
         );
     };
 
-    const ScoutCommentModule = ({text, moduleKey, control}: {
+    const ScoutCommentModule = ({text, moduleKey, control, placeholder}: {
         text: string;
         moduleKey: string;
         control: any;
         rules?: any;
+        placeholder?: string;
     }) => {
         return (
             <div className='pt-4 pb-4 col-start-1 col-end-3'>
@@ -225,7 +226,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                     name={moduleKey}
                     control={control}
                     render={({field}) => (
-                        <Textarea {...field} variant="faded" key={moduleKey} color='primary'/>
+                        <Textarea {...field} variant="faded" key={moduleKey} color='primary' placeholder={placeholder}/>
                     )}
                     shouldUnregister={false}
                 />
@@ -341,7 +342,8 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                             <ScoutModule text="Trap" moduleKey="trap" type='number' control={control}
                             />
                             <ScoutModule text="Spot Light" moduleKey="spotLight" type='checkbox' control={control}/>
-                            <ScoutCommentModule text="Comments" moduleKey="teleopcomments" control={control}/>
+                            <ScoutCommentModule text="Comments" moduleKey="teleopcomments" control={control}
+                                                placeholder={"Include information such as where they shot from, where they defended, etc."}/>
                         </div>
                     </div>
                     <div className='pb-4'>
