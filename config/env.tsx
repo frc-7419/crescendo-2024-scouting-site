@@ -3,11 +3,11 @@ import {z, ZodFormattedError} from 'zod';
 const schema = z.object({
     NEXTAUTH_SECRET: z.string().min(1),
     BLUEALLIANCE_API_KEY: z.string().min(1),
-    SENTRY_AUTH_TOKEN: z.string().min(1),
+    SENTRY_AUTH_TOKEN: z.string().optional(),
     CRON_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
     DIRECT_URL: z.string().min(1),
-    NEXT_PUBLIC_SENTRY_DSN: z.string().min(1),
+    NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
 });
 
 const formatErrors = (errors: ZodFormattedError<any>) =>
