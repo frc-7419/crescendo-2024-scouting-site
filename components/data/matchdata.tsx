@@ -120,7 +120,7 @@ export default function MatchData() {
             const robotsWithHang = relevantBests.filter(best => best.hang).length;
 
             const baseendgame = (maxTrap * 5) + ((robotsWithHang) > 1 ? robotsWithHang * 6 : (robotsWithHang * 3) + (robotsWithHang - 1) * 2) + (3 - robotsWithHang);
-            const topEndgame = baseendgame + (robotsWithHang * 4);
+            const topEndgame = baseendgame + robotsWithHang;
             const endgameRange = `${baseendgame} - ${topEndgame}`;
 
             return {
