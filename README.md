@@ -67,6 +67,11 @@ Coming soon!
 We encourage you to contribute to 7419 Scouting App! Please check out the [contributing guidelines](./CONTRIBUTING.md)
 for more details.
 
+## Self-Hosting 🏠
+
+Our self-hosting guide [SELFHOSTING.md](./SELFHOSTING.md) will walk you through the steps required to set up and run our
+scouting app on your own infrastructure.
+
 ## Thanks
 
 Special thanks to [Team 7419](https://7419.tech/) for their invaluable support and resources.
