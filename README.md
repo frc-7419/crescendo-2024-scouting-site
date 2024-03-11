@@ -1,41 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped
-with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+  <a href="https://codesandbox.io">
+    <img src="./resources/Dashboard.png" height="300px">
+  </a>
+</p>
 
-## Getting Started
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)    ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white) ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Build](http://therealsujitk-vercel-badge.vercel.app/?app=crescendo-2024-scouting-site&style=for-the-badge&logo=none)
 
-First, run the development server:
+![Contributors](https://badgen.net/github/contributors/7419-tech/frc-7419/crescendo-2024-scouting-site/)
+![Issues](https://badgen.net/github/issues/7419-tech/frc-7419/crescendo-2024-scouting-site/)
+![Pull Requests](https://badgen.net/github/prs/7419-tech/frc-7419/crescendo-2024-scouting-site/)
+![License](https://badgen.net/github/license/7419-tech/frc-7419/crescendo-2024-scouting-site/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# 7419 Scouting App
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A new scouting app for the FRC 2024 Crescendo season.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and
-load Inter, a custom Google Font.
+- Cloud-based
+- Real-time data
+- Easy to use
+- Blue Alliance integration
+- Scouting schedule
+- Data analysis
+- Data visualization
 
-## Learn More
+## Documentation
 
-To learn more about Next.js, take a look at the following resources:
+coming ig
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Thanks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions
-are welcome!
+<a href="https://7419.tech/"><img src="./resources/7419light.svg"/></a>
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use
-the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
-from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+By the 7419 programming team.
