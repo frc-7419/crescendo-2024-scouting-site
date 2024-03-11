@@ -8,7 +8,9 @@
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![Build](http://therealsujitk-vercel-badge.vercel.app/?app=crescendo-2024-scouting-site&style=for-the-badge&logo=none)
 
 ![Contributors](https://badgen.net/github/contributors/7419-tech/frc-7419/crescendo-2024-scouting-site/)
-)
+![Issues](https://badgen.net/github/issues/7419-tech/frc-7419/crescendo-2024-scouting-site/)
+![Pull Requests](https://badgen.net/github/prs/7419-tech/frc-7419/crescendo-2024-scouting-site/)
+![License](https://badgen.net/github/license/7419-tech/frc-7419/crescendo-2024-scouting-site/)
 
 # 7419 Scouting App
 
