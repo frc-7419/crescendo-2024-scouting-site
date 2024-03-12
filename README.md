@@ -27,6 +27,8 @@ A cutting-edge scouting app designed for the FRC 2024 Crescendo season. 🤖
 - Develop custom scouting report templates for different scouting strategies. 📋
 - Customize scouting forms, data visualization, analysis tools for specific team needs. 🛠️
 
+Currently customizibility is very limited and many things are hard coded. This is an area of improvement we are working on so basically right now it's a proof of concept for a scouting app that can be used by many teams.
+
 ## Tech Stack 🛠️
 
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)    ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white) ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
