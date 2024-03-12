@@ -1,10 +1,10 @@
 ![Dash](./resources/Dashboard.png)
 
-![Contributors](https://badgen.net/github/contributors/7419-tech/frc-7419/crescendo-2024-scouting-site/)
-![Issues](https://badgen.net/github/issues/7419-tech/frc-7419/crescendo-2024-scouting-site/)
-![Pull Requests](https://badgen.net/github/prs/7419-tech/frc-7419/crescendo-2024-scouting-site/)
-![License](https://badgen.net/github/license/7419-tech/frc-7419/crescendo-2024-scouting-site/)
-
+![Contributors](https://badgen.net/github/contributors/frc-7419/crescendo-2024-scouting-site/)
+![Issues](https://badgen.net/github/issues/frc-7419/crescendo-2024-scouting-site/)
+![Pull Requests](https://badgen.net/github/prs/frc-7419/crescendo-2024-scouting-site/)
+![License](https://badgen.net/github/license/frc-7419/crescendo-2024-scouting-site/)
+![Tag](https://badgen.net/github/release/frc-7419/crescendo-2024-scouting-site)
 # 🚀 7419 Scouting App 📊
 
 A cutting-edge scouting app designed for the FRC 2024 Crescendo season. 🤖
