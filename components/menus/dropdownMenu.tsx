@@ -12,6 +12,7 @@ import {
     faHandPaper,
     faList,
     faMailForward,
+    faMapPin,
     faPerson,
     faPoll,
     faX
@@ -78,6 +79,11 @@ export default function Dropdown() {
                                 name="Match"
                                 route="/data/match"
                                 icon={<FontAwesomeIcon icon={faChessBoard}/>}
+                            />
+                            <MenuItem
+                                name="Picklist"
+                                route="/data/picklist"
+                                icon={<FontAwesomeIcon icon={faMapPin}/>}
                             />
                         </div>
                     </div>

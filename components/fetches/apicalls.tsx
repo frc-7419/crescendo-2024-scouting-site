@@ -53,6 +53,18 @@ export async function getEvent(eventKey: string) {
     return (data)
 }
 
+export async function getRankings(eventKey: string) {
+    const response = await axios.get(`/api/bluealliance/getRankings/${eventKey}`, {
+        cache: {
+            ttl: 60
+        }
+    });
+    const data = await response.data;
+    console.debug(data);
+    return (data)
+}
+
+
 export async function getFormData(match: string) {
     const res = await axios.get(`/api/schedule/user/get/form?matchId=${match}`, {
         cache: {
@@ -174,6 +186,17 @@ export async function getTopTeamsCont(venue: string) {
     const res = await axios.get(`/api/data/topTeams?venue=${venue}`, {
         cache: {
             ttl: 60
+        }
+    })
+    const data = await res.data;
+    console.debug(data)
+    return (data)
+}
+
+export async function getPicklist(venue: string) {
+    const res = await axios.get(`/api/picklist/get?venue=${venue}`, {
+        cache: {
+            ttl: 30
         }
     })
     const data = await res.data;

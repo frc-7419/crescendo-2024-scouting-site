@@ -38,4 +38,3 @@ interface District_List {
     key: string;
     year: number;
 }
-

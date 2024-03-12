@@ -5,7 +5,7 @@ const cenv = {
 };
 
 const clientSchema = z.object({
-    NEXT_PUBLIC_SENTRY_DSN: z.string().min(1),
+    NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
 });
 
 const formatErrors = (errors: ZodFormattedError<any>) =>
@@ -19,6 +19,7 @@ const formatErrors = (errors: ZodFormattedError<any>) =>
         .filter(Boolean);
 
 const clientEnv = clientSchema.safeParse(cenv);
+
 
 if (!clientEnv.success) {
     console.error('Invalid client environment variables:\n', ...formatErrors(clientEnv.error.format()));

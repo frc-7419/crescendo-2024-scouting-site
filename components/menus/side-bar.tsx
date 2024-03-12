@@ -12,6 +12,7 @@ import {
     faDatabase,
     faGauge,
     faHandPaper,
+    faMapPin,
     faPeopleGroup,
     faPerson,
     faPoll
@@ -73,6 +74,11 @@ function SideBar() {
                         name="Match"
                         route="/data/match"
                         icon={<FontAwesomeIcon icon={faChessBoard}/>}
+                    />
+                    <MenuItem
+                        name="Picklist"
+                        route="/data/picklist"
+                        icon={<FontAwesomeIcon icon={faMapPin}/>}
                     />
                 </div>
             </div>

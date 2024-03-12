@@ -30,9 +30,6 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
     const router = useRouter();
     const [formSuccess, setFormSuccess] = useState(false);
 
-    const validateNonNegative = (value: number) => {
-        return value === undefined || value > 0 || 'Value must be non-negative';
-    };
     const aRef = useRef<HTMLDivElement>(null);
 
     const loadAnimation = () => {
@@ -116,7 +113,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                         <Controller
                             name={moduleKey}
                             control={control}
-                            render={({field}) => <Checkbox {...field} color="primary"/>}
+                            render={({field}) => <Checkbox {...field} checked={field.value} color="primary"/>}
                             shouldUnregister={false}
                             rules={rules}
                         />
@@ -133,6 +130,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                                     {...field}
                                     placeholder="0"
                                     defaultValue='0'
+                                    min="0"
                                     className="w-25"
                                     variant="bordered"
                                     type="number"
@@ -157,8 +155,8 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                                     isRequired
                                     className="max-w-xs"
                                     key={moduleKey}
-                                    onSelectionChange={(value) => field.onChange(value)}
                                     value={field.value}
+                                    onSelectionChange={(value) => field.onChange(value)}
                                 >
                                     {items?.map(({key: itemKey, value: itemValue}) => (
                                         <AutocompleteItem key={itemKey} value={itemValue}>
@@ -214,11 +212,12 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
         );
     };
 
-    const ScoutCommentModule = ({text, moduleKey, control}: {
+    const ScoutCommentModule = ({text, moduleKey, control, placeholder}: {
         text: string;
         moduleKey: string;
         control: any;
         rules?: any;
+        placeholder?: string;
     }) => {
         return (
             <div className='pt-4 pb-4 col-start-1 col-end-3'>
@@ -227,7 +226,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                     name={moduleKey}
                     control={control}
                     render={({field}) => (
-                        <Textarea {...field} variant="faded" key={moduleKey} color='primary'/>
+                        <Textarea {...field} variant="faded" key={moduleKey} color='primary' placeholder={placeholder}/>
                     )}
                     shouldUnregister={false}
                 />
@@ -263,9 +262,12 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
             .catch(error => {
                 setValue(500);
                 toast.error('Error occurred while pushing data:', error);
+            })
+            .finally(() => {
+                setSubmittingForm(false);
             });
-        setSubmittingForm(false);
     }
+
 
     const [countdown, setCountdown] = useState(5);
 
@@ -306,9 +308,9 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                             <ScoutModule text="Left Community" moduleKey="leftCommunity" type='checkbox'
                                          control={control}/>
                             <ScoutModule text="Speaker" moduleKey="autospeaker" type='number' control={control}
-                                         rules={{validate: validateNonNegative}}/>
+                            />
                             <ScoutModule text="Amp" moduleKey="autoamp" type='number' control={control}
-                                         rules={{validate: validateNonNegative}}/>
+                            />
                             <ScoutCommentModule text="Comments" moduleKey="autocomments" control={control}/>
                         </div>
                     </div>
@@ -322,11 +324,11 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                                     {key: 'UTB', value: 'Under the Bumper'},]
                             } control={control}/>
                             <ScoutModule text="Amp" moduleKey="teleopamp" type='number' control={control}
-                                         rules={{validate: validateNonNegative}}/>
+                            />
                             <ScoutModule text="Speaker" moduleKey="teleopspeaker" type='number' control={control}
-                                         rules={{validate: validateNonNegative}}/>
+                            />
                             <ScoutModule text="Times Amped" moduleKey="timesAmped" type='number' control={control}
-                                         rules={{validate: validateNonNegative}}/>
+                            />
                             <ScoutModule text="Pickup From" moduleKey="pickupFrom" type='dropdown' items={[
                                 {key: 'FLOOR', value: 'Floor'},
                                 {key: 'SOURCE', value: 'Source'},
@@ -338,9 +340,10 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                             <ScoutModule text="Disabled At" moduleKey="disabledAt" type='datetime' control={control}/>
                             <ScoutModule text="Is Hanging" moduleKey="isHanging" type='checkbox' control={control}/>
                             <ScoutModule text="Trap" moduleKey="trap" type='number' control={control}
-                                         rules={{validate: validateNonNegative}}/>
+                            />
                             <ScoutModule text="Spot Light" moduleKey="spotLight" type='checkbox' control={control}/>
-                            <ScoutCommentModule text="Comments" moduleKey="teleopcomments" control={control}/>
+                            <ScoutCommentModule text="Comments" moduleKey="teleopcomments" control={control}
+                                                placeholder={"Include information such as where they shot from, where they defended, etc."}/>
                         </div>
                     </div>
                     <div className='pb-4'>
