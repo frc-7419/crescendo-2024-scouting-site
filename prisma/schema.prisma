@@ -42,6 +42,7 @@ model Robot {
   winloss      Float          @default(1.0)
   Averages     Averages[]
   Bests        Bests[]
+  Picklist     Picklist[]
 }
 
 model ScoutingData {
@@ -176,6 +177,14 @@ model ScheduleDisputes {
   scouterId   String
   toScouter   User   @relation(name: "ToScouter", fields: [toScouterId], references: [id])
   toScouterId String
+}
+
+model Picklist {
+  id         Int    @id @default(autoincrement())
+  teamNumber String
+  venue      String
+  robot      Robot  @relation(fields: [teamNumber], references: [teamNumber])
+  position   Int
 }
 
 enum Alliance {
