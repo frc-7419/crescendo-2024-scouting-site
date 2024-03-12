@@ -37,24 +37,25 @@ Before you begin, ensure you have the following:
    the `components/util/getCurrentEvent.tsx` We are planning to use blue alliance to get your team events but for now
    you will need to hardcode them.
 
-    ```tsx
-   export const getCurrentEvent = () => {
-        const currentDate = new Date();
-        const feb24 = new Date('2024-02-24');
-        const mar11 = new Date('2024-03-11');
-        const mar30 = new Date('2024-03-30');
+```tsx
+export const getCurrentEvent = () => {
+   const currentDate = new Date();
+   const feb24 = new Date('2024-02-24');
+   const mar11 = new Date('2024-03-11');
+   const mar30 = new Date('2024-03-30');
 
-        if (currentDate > feb24) {
-            return '2024casj';
-        } else if (currentDate > mar11) {
-            return '2024azgl';
-        } else if (currentDate > mar30) {
-            return '2024cabe';
-        } else {
-            return '2024cabe';
-        }
-   };
-   ```
+   if (currentDate > mar30) {
+      return '2024cabe';
+   } else if (currentDate > mar11) {
+      return '2024azgl';
+   } else if (currentDate > feb24) {
+      return '2024casj';
+   } else {
+      return '2024casj';
+   }
+};
+```
+
 5. **Initialize the Database**: Run the following command to initialize the database and create the required tables.
 
     ```bash
