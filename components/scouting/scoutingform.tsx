@@ -8,6 +8,8 @@ import {
     Modal,
     ModalBody,
     ModalContent,
+    ModalFooter,
+    ModalHeader,
     Textarea,
     useDisclosure
 } from '@nextui-org/react';
@@ -18,6 +20,8 @@ import {LoadStatusContext} from '../loading/LoadStatusContext';
 import toast from 'react-hot-toast';
 import SuccessAnim from '@/resources/Success.json';
 import {useRouter} from 'next/navigation';
+import {useQRCode} from "next-qrcode";
+import {useSession} from "next-auth/react";
 
 const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
     const {setValue} = useContext(LoadStatusContext) as {
@@ -26,12 +30,14 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
     };
     const [submittingForm, setSubmittingForm] = useState<boolean>(false);
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen: isErrorOpen, onOpen: onErrorOpen, onOpenChange: onErrorOpenChange} = useDisclosure();
     const {control, handleSubmit, formState: {errors}} = useForm();
     const router = useRouter();
     const [formSuccess, setFormSuccess] = useState(false);
-
+    const [data, setData] = useState({})
     const aRef = useRef<HTMLDivElement>(null);
-
+    const {Canvas} = useQRCode();
+    const session = useSession();
     const loadAnimation = () => {
         if (typeof window !== 'undefined') {
             import('lottie-web').then((lottie) => {
@@ -80,7 +86,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                 reliability: Number(data.reliability),
                 comments: data.misccomments ?? ''
             },
-            scouterId: formData.scouterId
+            scouterId: session.data?.user?.id as string,
         };
     }
 
@@ -240,6 +246,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
         setSubmittingForm(true);
         console.debug("Starting Submit")
         const dataBody = mapReturnedFormDataToFullFormData(data as ReturnedFormData);
+        setData(dataBody);
         console.debug(dataBody);
         fetch('/api/scoutingForm/push', {
             method: 'POST',
@@ -256,12 +263,14 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                     setFormSuccess(true);
                 } else {
                     toast.error('Failed to push data');
+                    onErrorOpen();
                     setValue(500);
                 }
             })
             .catch(error => {
                 setValue(500);
                 toast.error('Error occurred while pushing data:', error);
+                onErrorOpen();
             })
             .finally(() => {
                 setSubmittingForm(false);
@@ -382,6 +391,40 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                                 <div className="text-3xl">Success!</div>
                                 <p className="text-xl">Redirecting in {countdown} seconds...</p>
                             </ModalBody>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+            <Modal isOpen={isErrorOpen} onOpenChange={onErrorOpenChange} size={"5xl"}>
+                <ModalContent>
+                    {(onErrorClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Error</ModalHeader>
+                            <ModalBody>
+                                <div className={'flex flex-col items-center w-full gap-2'}>
+                                    <p>
+                                        Error Pushing Data, Please copy this QR code and send in the thread in slack.
+                                    </p>
+                                    <p>
+                                        Right click or press and hold to save/copy the QR code.
+                                    </p>
+                                    <Canvas
+                                        text={JSON.stringify(data)}
+                                        options={{
+                                            errorCorrectionLevel: 'M',
+                                            margin: 3,
+                                        }}
+                                    />
+                                    <p>
+                                        {session.data?.user?.id}: {session.data?.user?.name} - {session.data?.user?.email}
+                                    </p>
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="primary" variant="light" onPress={onErrorClose}>
+                                    Close
+                                </Button>
+                            </ModalFooter>
                         </>
                     )}
                 </ModalContent>
