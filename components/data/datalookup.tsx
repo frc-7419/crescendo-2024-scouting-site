@@ -2,18 +2,25 @@
 
 import React, {useContext, useEffect, useState} from 'react';
 import {
+    Button,
     Card,
     CardBody,
     Divider,
     Input,
     Link,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
     Spinner,
     Table,
     TableBody,
     TableCell,
     TableColumn,
     TableHeader,
-    TableRow
+    TableRow,
+    useDisclosure
 } from '@nextui-org/react';
 import {LoadStatusContext} from '../loading/LoadStatusContext';
 import {
@@ -28,6 +35,9 @@ import {AvgModal, BestModal} from "@/types/scoutingform";
 import {Team} from "@/types/Team";
 import {AreaChart, Tracker} from "@tremor/react";
 import Dataloading from "@/components/loading/dataloading";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import toast from "react-hot-toast";
 
 export default function Datalookup() {
     const {setValue} = useContext(LoadStatusContext) as {
@@ -44,6 +54,30 @@ export default function Datalookup() {
     const [usersLoading, setUsersLoading] = useState<boolean>(true);
     const [users, setUsers] = useState<{ name: string; uuid: string; email: string }[]>([]);
     const [teamInfo, setTeamInfo] = useState<Team>();
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [selectedEntry, setSelectedEntry] = useState<Number>();
+    const deleteEntryButton = async (id: number | undefined) => {
+        setSelectedEntry(id);
+        onOpen();
+    }
+
+    const deleteEntry = async () => {
+        setValue(0);
+        try {
+            toast.loading("Deleting Data")
+            await fetch(`/api/data/delete/${selectedEntry}`, {
+                method: 'POST'
+            });
+            getTeamInfo();
+            toast.success("Deleted")
+        } catch (error) {
+            toast.error("Error deleting data")
+            console.error(error);
+            setErrored(true);
+            setValue(500);
+        }
+    }
+
     const getUser = (uuid: string) => {
         return users.find((user) => user.uuid === uuid);
     };
@@ -397,6 +431,7 @@ export default function Datalookup() {
                                         <TableColumn key="miscDefense">Misc Defense</TableColumn>
                                         <TableColumn key="miscReliability">Misc Reliability</TableColumn>
                                         <TableColumn key="scouter">Scouter</TableColumn>
+                                        <TableColumn key="actions">Actions</TableColumn>
                                     </TableHeader>
 
                                     <TableBody
@@ -490,6 +525,12 @@ export default function Datalookup() {
                                                     {
                                                         getUser(item.scouterId)?.name
                                                     }
+                                                </TableCell>
+                                                <TableCell>
+                                                    <button
+                                                        onClick={() => {
+                                                            deleteEntryButton(item.id)
+                                                        }}><FontAwesomeIcon icon={faTrash}/></button>
                                                 </TableCell>
                                             </TableRow>
                                         )}
@@ -602,6 +643,31 @@ export default function Datalookup() {
             ) : (
                 <p>No data available. Please enter a valid team number.</p>
             )}
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Delete Menu</ModalHeader>
+                            <ModalBody>
+                                <p>
+                                    Are you sure you want to delete this entry?
+                                </p>
+                                <p>
+                                    ID: {selectedEntry?.toString()}
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="light" onPress={onClose}>
+                                    Cancel
+                                </Button>
+                                <Button color="primary" onPress={deleteEntry}>
+                                    Delete
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
         </>
     );
 }

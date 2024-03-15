@@ -6,7 +6,9 @@ import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 
 async function getAll(teamNumber: string) {
     const scoutingData = await prisma.robot.findUnique({
-        where: {teamNumber},
+        where: {
+            teamNumber,
+        },
         include: {scoutingData: {include: {auton: true, teleop: true, misc: true}}},
         cacheStrategy: {
             ttl: 60,
@@ -18,6 +20,10 @@ async function getAll(teamNumber: string) {
         return new Response('Scouting data not found for the specified robot', {
             status: 404,
         });
+    }
+
+    if (scoutingData?.scoutingData) {
+        scoutingData.scoutingData = scoutingData.scoutingData.filter(entry => entry.venue === getCurrentEvent());
     }
 
     const responseBody = JSON.stringify(scoutingData);
