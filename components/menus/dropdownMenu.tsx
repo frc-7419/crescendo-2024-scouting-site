@@ -8,6 +8,7 @@ import {
     faCalendarDays,
     faChessBoard,
     faDatabase,
+    faDoorOpen,
     faGauge,
     faHandPaper,
     faList,
@@ -135,6 +136,11 @@ export default function Dropdown() {
                                 name="Disputes"
                                 route="/disputes"
                                 icon={<FontAwesomeIcon icon={faMailForward}/>}
+                            />
+                            <MenuItem
+                                name="Logout"
+                                route="/logout"
+                                icon={<FontAwesomeIcon icon={faDoorOpen}/>}
                             />
                         </div>
                     </div>
