@@ -38,6 +38,7 @@ async function getTop(venue: string) {
 
     const data = sortedbests.slice(0, 16);
     const teamNumbers = data.map(team => team.teamNumber);
+
     const scoutingData = await prisma.robot.findMany({
         where: {teamNumber: {in: teamNumbers}},
         select: {
@@ -69,11 +70,15 @@ async function getTop(venue: string) {
         return scoutingData.find(team => team.teamNumber === teamNumber);
     });
 
-    const responseData: any = {};
+    const responseData: any[] = [];
 
-    reorderedScoutingData.forEach((team) => {
+    teamNumbers.forEach((teamNumber) => {
+        const team = reorderedScoutingData.find((team) => team?.teamNumber === teamNumber);
         if (team) {
-            responseData[team.teamNumber] = calculateContinuousAverage(team as TeamData);
+            responseData.push({
+                teamNumber,
+                continuousAverage: calculateContinuousAverage(team as TeamData),
+            });
         }
     });
 
