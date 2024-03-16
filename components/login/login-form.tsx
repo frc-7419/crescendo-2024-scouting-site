@@ -25,7 +25,9 @@ export default function LoginForm() {
         setIsDark(theme === 'dark');
     }, [theme]);
 
-    const {status} = useSession();
+    const {status} = useSession({
+        required: true
+    });
 
     useEffect(() => {
         if (status == "authenticated") router.push("/dashboard");

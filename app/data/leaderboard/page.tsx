@@ -9,7 +9,9 @@ import TickerLayout from "@/components/layouts/TickerLayout";
 
 const Page = () => {
     const router = useRouter();
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
 
     useEffect(() => {
         enforceAdmin(session, router);

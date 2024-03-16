@@ -10,7 +10,9 @@ import MatchData from "@/components/data/matchdata";
 
 const Page = () => {
     const router = useRouter();
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
 
     useEffect(() => {

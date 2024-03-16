@@ -18,7 +18,9 @@ const Scouters = () => {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
 
     const eventKey = getCurrentEvent();
     const [matches, setMatches] = useState([]);

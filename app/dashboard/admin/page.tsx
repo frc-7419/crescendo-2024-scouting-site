@@ -22,7 +22,9 @@ const Dashboard = () => {
         setValue: React.Dispatch<React.SetStateAction<number>>
     };
     const router = useRouter();
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
     const firstName = session?.user?.name?.split(" ")[0];
     const [shifts, setShifts] = useState([]);
     const [eventData, setEventData] = useState<Event>();

@@ -15,7 +15,9 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 
 
 const Dashboard = () => {
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
     const firstName = session?.user?.name?.split(" ")[0];
 
     const {setValue} = React.useContext(LoadStatusContext) as {
