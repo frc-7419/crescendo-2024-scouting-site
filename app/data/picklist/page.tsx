@@ -9,7 +9,9 @@ import Picklist from "@/components/data/picklist";
 
 const Page = () => {
     const router = useRouter();
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
 
     useEffect(() => {
         enforceAdmin(session, router);

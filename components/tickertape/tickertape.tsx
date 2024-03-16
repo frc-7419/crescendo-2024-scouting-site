@@ -6,9 +6,10 @@ import {getCurrentEvent} from '@/components/util/getCurrentEvent';
 import {SparkAreaChart} from '@tremor/react';
 import {Divider} from "@nextui-org/react";
 import styles from "./tickertape.module.css";
+import {TickerData} from "@/types/TickerData";
 
 export default function Tickertape() {
-    const [topTeams, setTopTeams] = useState<any[]>([]);
+    const [topTeams, setTopTeams] = useState<TickerData[]>([]);
     const [loading, setLoading] = useState(true);
     const [errored, setErrored] = useState(false);
 
@@ -32,17 +33,18 @@ export default function Tickertape() {
     return (
         <div className={'dark:bg-slate-900 bg-slate-100 overflow-hidden'}>
             <div className={`h-16 max-w-full dark:bg-slate-900 bg-slate-100 flex ${styles.scrollContainer}`}>
-                {Object.keys(topTeams).map((teamId, index) => (
-                    <div key={teamId} className={'flex w-72 gap-2 items-center px-2 dark:bg-slate-900 bg-slate-100'}>
+                {topTeams.map((team, index) => (
+                    <div key={team.teamNumber}
+                         className={'flex w-72 gap-2 items-center px-2 dark:bg-slate-900 bg-slate-100'}>
                         <div className={'flex flex-col w-20'}>
-                            <p className={'text-sm'}>#{index + 1} {teamId}</p>
+                            <p className={'text-sm'}>#{index + 1} {team.teamNumber}</p>
                             <span
-                                className={`rounded w-14 px-1 text-sm font-medium text-white ${topTeams[teamId as any]?.[topTeams[teamId as any]?.length - 1].percentChange < 0 ? 'bg-red-500' : 'bg-emerald-500'}`}>
-                                {topTeams[teamId as any]?.[topTeams[teamId as any]?.length - 1].percentChange}%
+                                className={`rounded w-14 px-1 text-sm font-medium text-white ${team.continuousAverage.slice(-1)[0].percentChange < 0 ? 'bg-red-500' : 'bg-emerald-500'}`}>
+                                {team.continuousAverage.slice(-1)[0].percentChange}%
                             </span>
                         </div>
                         <SparkAreaChart
-                            data={topTeams[teamId as any]}
+                            data={team.continuousAverage}
                             categories={['continuousAverage']}
                             index={'match'}
                             colors={['blue']}

@@ -24,7 +24,9 @@ export default function Dropdown() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const pathname = usePathname();
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
 
     const MenuItem = ({icon, name, route}: { icon: React.JSX.Element, name: string, route: string }) => {
         // Highlight menu item based on currently displayed route

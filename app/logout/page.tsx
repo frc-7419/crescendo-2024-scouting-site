@@ -5,7 +5,9 @@ import React, {useEffect} from "react";
 import Loadinganim from "@/components/loading/loadinganim";
 
 const UserValidation = () => {
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
 
     useEffect(() => {
         signOut()

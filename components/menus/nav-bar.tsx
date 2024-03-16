@@ -12,7 +12,9 @@ import {useRouter} from "next/navigation";
 import crypto from "crypto"
 
 export default function NavBar() {
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
     const [currentTime, setCurrentTime] = useState('');
 
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);

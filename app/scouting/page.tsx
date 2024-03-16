@@ -12,7 +12,9 @@ import DashboardLayout from "@/components/layouts/DashboardLayout";
 import ManualScouting from "@/components/scouting/manual-scouting";
 
 const Dashboard = () => {
-    const {data: session} = useSession();
+    const {data: session} = useSession({
+        required: true
+    });
     const {setValue} = useContext(LoadStatusContext) as {
         value: number;
         setValue: React.Dispatch<React.SetStateAction<number>>

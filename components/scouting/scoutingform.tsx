@@ -37,7 +37,10 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
     const [data, setData] = useState({})
     const aRef = useRef<HTMLDivElement>(null);
     const {Canvas} = useQRCode();
-    const session = useSession();
+    const session = useSession({
+        required: true
+    });
+    
     const loadAnimation = () => {
         if (typeof window !== 'undefined') {
             import('lottie-web').then((lottie) => {
