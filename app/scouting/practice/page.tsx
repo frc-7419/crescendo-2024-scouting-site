@@ -21,9 +21,7 @@ const Scouting = () => {
     const [loading, setLoading] = useState(true);
     const [form, setForm] = useState({} as ScoutingFormData)
     const [errored] = useState(false);
-    const {data: session} = useSession({
-        required: true
-    });
+    const {data: session} = useSession();
     const searchParams = useSearchParams()
 
     const robot = searchParams.get('robot')
