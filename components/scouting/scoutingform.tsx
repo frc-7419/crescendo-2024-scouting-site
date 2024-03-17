@@ -22,6 +22,7 @@ import SuccessAnim from '@/resources/Success.json';
 import {useRouter} from 'next/navigation';
 import {useQRCode} from "next-qrcode";
 import {useSession} from "next-auth/react";
+import {Session} from 'next-auth';
 
 const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
     const {setValue} = useContext(LoadStatusContext) as {
@@ -37,9 +38,14 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
     const [data, setData] = useState({})
     const aRef = useRef<HTMLDivElement>(null);
     const {Canvas} = useQRCode();
-    const session = useSession({
-        required: true
-    });
+    const session = useSession();
+    const [initialSessionData, setInitialSessionData] = useState<Session>();
+
+    useEffect(() => {
+        if (session.status === 'authenticated') {
+            setInitialSessionData(session.data);
+        }
+    }, [session.status]);
     
     const loadAnimation = () => {
         if (typeof window !== 'undefined') {
@@ -89,7 +95,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                 reliability: Number(data.reliability),
                 comments: data.misccomments ?? ''
             },
-            scouterId: session.data?.user?.id as string,
+            scouterId: initialSessionData?.user?.id as string,
         };
     }
 
@@ -305,9 +311,11 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
 
     return (
         <>
-            <div className="bg-red-700 max-w-full p-6 rounded-lg mb-6">
-                Please double check your data before submitting. Form will reset if invalid. We cannot fix that issue.
-            </div>
+            {session.status === 'unauthenticated' &&
+                <div className="bg-red-700 max-w-full p-6 rounded-lg mb-6">
+                    Your session is not authenticated.
+                </div>
+            }
             <div className="bg-amber-700 max-w-full p-6 rounded-lg mb-6">
                 Your changes will NOT be saved if you leave this page.
             </div>
@@ -419,7 +427,7 @@ const ScoutingForm = ({formData}: { formData: ScoutingFormData }) => {
                                         }}
                                     />
                                     <p>
-                                        {session.data?.user?.id}: {session.data?.user?.name} - {session.data?.user?.email}
+                                        {initialSessionData?.user?.id}: {initialSessionData?.user?.name} - {initialSessionData?.user?.email}
                                     </p>
                                 </div>
                             </ModalBody>

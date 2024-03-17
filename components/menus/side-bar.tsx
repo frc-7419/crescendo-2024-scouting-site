@@ -21,9 +21,7 @@ import {useSession} from 'next-auth/react';
 
 function SideBar() {
     const pathname = usePathname();
-    const {data: session} = useSession({
-        required: true
-    });
+    const {data: session} = useSession();
 
     const MenuItem = React.memo(function MenuItem({icon, name, route}: {
         icon: React.JSX.Element,
