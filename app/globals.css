@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
 main {
     display: grid;
     grid-template-columns: 15rem calc(100vw - 15rem);
@@ -20,6 +29,12 @@ main {
 
 #dash {
     grid-area: 2 / 2 / 3 / 3;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#dash::-webkit-scrollbar {
+    display: none;
 }
 
 @layer utilities {
