@@ -10,6 +10,7 @@ import {
     faDatabase,
     faDoorOpen,
     faGauge,
+    faGear,
     faHandPaper,
     faList,
     faMailForward,
@@ -83,11 +84,13 @@ export default function Dropdown() {
                                 route="/data/match"
                                 icon={<FontAwesomeIcon icon={faChessBoard}/>}
                             />
-                            <MenuItem
-                                name="Picklist"
-                                route="/data/picklist"
-                                icon={<FontAwesomeIcon icon={faMapPin}/>}
-                            />
+                            {(session?.user?.role !== "TEAM") ? (
+                                <MenuItem
+                                    name="Picklist"
+                                    route="/data/picklist"
+                                    icon={<FontAwesomeIcon icon={faMapPin}/>}
+                                />
+                            ) : null}
                         </div>
                     </div>
                 ) : (
@@ -126,6 +129,11 @@ export default function Dropdown() {
                                         name="Data"
                                         route="/data"
                                         icon={<FontAwesomeIcon icon={faDatabase}/>}
+                                    />
+                                    <MenuItem
+                                        name="Settings"
+                                        route="/settings"
+                                        icon={<FontAwesomeIcon icon={faGear}/>}
                                     />
                                 </>
                             ) : null}

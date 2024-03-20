@@ -15,7 +15,7 @@ const UserValidation = () => {
         if (session?.user?.role) {
             console.debug(session?.user?.role);
 
-            if (session?.user?.role === "ADMIN" || session?.user?.role === "SITEADMIN") {
+            if (session?.user?.role === "ADMIN" || session?.user?.role === "SITEADMIN" || session?.user?.role === "TEAM") {
                 router.push("/data/basic");
             } else {
                 router.push("/dashboard/user");

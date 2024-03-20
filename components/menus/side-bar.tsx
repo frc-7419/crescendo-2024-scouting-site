@@ -11,6 +11,7 @@ import {
     faChessBoard,
     faDatabase,
     faGauge,
+    faGear,
     faHandPaper,
     faMapPin,
     faPeopleGroup,
@@ -75,11 +76,13 @@ function SideBar() {
                         route="/data/match"
                         icon={<FontAwesomeIcon icon={faChessBoard}/>}
                     />
-                    <MenuItem
+                    {(session?.user?.role !== "TEAM") ? (
+                        <MenuItem
                         name="Picklist"
                         route="/data/picklist"
                         icon={<FontAwesomeIcon icon={faMapPin}/>}
                     />
+                    ) : null}
                 </div>
             </div>
         )
@@ -115,6 +118,11 @@ function SideBar() {
                             name="Data"
                             route="/data"
                             icon={<FontAwesomeIcon icon={faDatabase}/>}
+                        />
+                        <MenuItem
+                            name="Settings"
+                            route="/settings"
+                            icon={<FontAwesomeIcon icon={faGear}/>}
                         />
                     </>
                 ) : null}

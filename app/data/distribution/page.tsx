@@ -1,8 +1,7 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
 import DashCard from "@/components/templates/dash-card";
@@ -14,10 +13,6 @@ const Page = () => {
         required: true
     });
 
-    useEffect(() => {
-        enforceAdmin(session, router);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [session]);
     return (
         <DashboardLayout>
             <div id='dash' className="overflow-scroll pt-6 flex flex-col">
