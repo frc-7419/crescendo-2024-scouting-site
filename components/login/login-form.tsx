@@ -41,7 +41,7 @@ export default function LoginForm() {
         const email = formData.get('email')
         const password = formData.get('password')
 
-        signIn("credentials", {
+        signIn("user-login", {
             redirect: false,
             email: email,
             password: password,
@@ -63,7 +63,7 @@ export default function LoginForm() {
     }, []);
 
     return (
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 dark:bg-slate-950">
+        <>
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <Image
                     className="mx-auto h-12"
@@ -131,6 +131,6 @@ export default function LoginForm() {
                     </div>
                 </form>
             </div>
-        </div>
+        </>
     );
 };

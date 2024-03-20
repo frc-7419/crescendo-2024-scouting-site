@@ -1,8 +1,7 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
 import Picklist from "@/components/data/picklist";
@@ -12,11 +11,6 @@ const Page = () => {
     const {data: session} = useSession({
         required: true
     });
-
-    useEffect(() => {
-        enforceAdmin(session, router);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [session]);
 
     return (
         <DashboardLayout>

@@ -3,7 +3,6 @@
 import React, {useEffect, useState} from 'react';
 import DashboardLayout from "@/components/layouts/DashboardLayout";
 import DashCard from "@/components/templates/dash-card";
-import enforceAdmin from "@/components/util/enforceadmin";
 import {useRouter} from "next/navigation";
 import {useSession} from "next-auth/react";
 import MatchData from "@/components/data/matchdata";
@@ -14,11 +13,6 @@ const Page = () => {
         required: true
     });
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
-
-    useEffect(() => {
-        enforceAdmin(session, router);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [session]);
 
     useEffect(() => {
         const handleResize = () => {

@@ -14,7 +14,6 @@ import {Event} from '@/types/Event';
 import Loading from '@/components/loading/loading';
 import {getEvent, getMatches, getShifts} from "@/components/fetches/apicalls";
 import DashboardLayout from "@/components/layouts/DashboardLayout";
-import enforceAdmin from "@/components/util/enforceadmin";
 
 const Dashboard = () => {
     const {setValue} = React.useContext(LoadStatusContext) as {
@@ -47,11 +46,6 @@ const Dashboard = () => {
         }, 1000)
         return () => clearInterval(id);
     }, [currentTime]);
-
-    useEffect(() => {
-        enforceAdmin(session, router);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [session]);
 
     useEffect(() => {
         console.debug(selectedTab)

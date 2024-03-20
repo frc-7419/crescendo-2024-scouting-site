@@ -132,6 +132,12 @@ model Session {
   expiresAt DateTime
 }
 
+model InviteCode {
+  id   Int    @id @default(autoincrement())
+  team String
+  code String @unique
+}
+
 model Averages {
   id               Int            @id @default(autoincrement())
   teamNumber       String

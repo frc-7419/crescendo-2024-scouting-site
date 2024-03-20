@@ -83,11 +83,13 @@ export default function Dropdown() {
                                 route="/data/match"
                                 icon={<FontAwesomeIcon icon={faChessBoard}/>}
                             />
-                            <MenuItem
-                                name="Picklist"
-                                route="/data/picklist"
-                                icon={<FontAwesomeIcon icon={faMapPin}/>}
-                            />
+                            {(session?.user?.role !== "TEAM") ? (
+                                <MenuItem
+                                    name="Picklist"
+                                    route="/data/picklist"
+                                    icon={<FontAwesomeIcon icon={faMapPin}/>}
+                                />
+                            ) : null}
                         </div>
                     </div>
                 ) : (

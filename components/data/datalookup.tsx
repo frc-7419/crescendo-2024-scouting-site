@@ -38,6 +38,7 @@ import Dataloading from "@/components/loading/dataloading";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import toast from "react-hot-toast";
+import {useSession} from "next-auth/react";
 
 export default function Datalookup() {
     const {setValue} = useContext(LoadStatusContext) as {
@@ -57,6 +58,10 @@ export default function Datalookup() {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [selectedEntry, setSelectedEntry] = useState<Number>();
     const deleteEntryButton = async (id: number | undefined) => {
+        if (!hasPerms) {
+            toast.error("You do not have permission to delete data")
+            return;
+        }
         setSelectedEntry(id);
         onOpen();
     }
@@ -115,6 +120,9 @@ export default function Datalookup() {
         fetchUsers();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const {data} = useSession();
+    const hasPerms = data?.user?.role === 'ADMIN' || data?.user?.role === 'SITEADMIN';
 
     const getTeamInfo = async () => {
         if (teamNumber) {

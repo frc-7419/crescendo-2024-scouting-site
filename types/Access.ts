@@ -1,0 +1,1 @@
+export type Access = 'USER' | 'TEAM' | 'ADMIN' | 'SITEADMIN';
