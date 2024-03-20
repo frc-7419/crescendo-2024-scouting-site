@@ -21,8 +21,6 @@ export default function LoadingSession({children}: { children: ReactNode }) {
     const hasAnyAccess = Object.keys(accessConfig)
         .filter(path => pathname.startsWith(path.replace('*', ''))).length == 0;
 
-    console.log(accessConfig[pathname])
-
     useEffect(() => {
         if (role === 'TEAM' && hasAnyAccess) {
             router.push('/data');

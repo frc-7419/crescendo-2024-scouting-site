@@ -12,6 +12,7 @@ export default function Login() {
     const searchParams = useSearchParams()
 
     const error = searchParams.get("error")
+    const invite = searchParams.get("invite")
 
     const [asTeam, setAsTeam] = useState(false)
     // Handle error toast on component mount (or when error query param changes)
@@ -20,6 +21,12 @@ export default function Login() {
             toast.error(error);
         }
     }, [error]); // Dependency array ensures toast displays only once
+
+    if (invite) {
+        setAsTeam(true)
+        navigator.clipboard.writeText(invite)
+        toast.success("Invite code copied to clipboard.")
+    }
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24 dark:bg-slate-950 relative">

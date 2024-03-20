@@ -10,6 +10,7 @@ import {
     faDatabase,
     faDoorOpen,
     faGauge,
+    faGear,
     faHandPaper,
     faList,
     faMailForward,
@@ -128,6 +129,11 @@ export default function Dropdown() {
                                         name="Data"
                                         route="/data"
                                         icon={<FontAwesomeIcon icon={faDatabase}/>}
+                                    />
+                                    <MenuItem
+                                        name="Settings"
+                                        route="/settings"
+                                        icon={<FontAwesomeIcon icon={faGear}/>}
                                     />
                                 </>
                             ) : null}

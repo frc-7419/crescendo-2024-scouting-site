@@ -11,6 +11,7 @@ import {
     faChessBoard,
     faDatabase,
     faGauge,
+    faGear,
     faHandPaper,
     faMapPin,
     faPeopleGroup,
@@ -117,6 +118,11 @@ function SideBar() {
                             name="Data"
                             route="/data"
                             icon={<FontAwesomeIcon icon={faDatabase}/>}
+                        />
+                        <MenuItem
+                            name="Settings"
+                            route="/settings"
+                            icon={<FontAwesomeIcon icon={faGear}/>}
                         />
                     </>
                 ) : null}
