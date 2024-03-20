@@ -23,6 +23,7 @@ A cutting-edge scouting app designed for the FRC 2024 Crescendo season. 🤖
 ## To Do 📝
 
 - Implement alliance selection and match strategy features. 🛡️
+- Data across all events and event selection. 📈
 - Add offline support for data collection in areas with limited connectivity. 📴
 - Develop custom scouting report templates for different scouting strategies. 📋
 - Customize scouting forms, data visualization, analysis tools for specific team needs. 🛠️
