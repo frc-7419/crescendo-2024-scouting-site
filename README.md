@@ -76,6 +76,12 @@ scouting app on your own infrastructure.
 
 ## Thanks
 
+We would like to extend our heartfelt thanks to the following organizations for their support and resources:
+
+## [Sentry.io](https://sentry.io)
+
+![Sentry.io](./resources/SentryLogoLight.svg)
+
 Special thanks to [Team 7419](https://7419.tech/) for their invaluable support and resources.
 
 ![7419 Programming Team](./resources/7419light.svg)
