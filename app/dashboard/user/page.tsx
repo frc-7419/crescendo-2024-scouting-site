@@ -46,6 +46,7 @@ const Dashboard = () => {
             setValue(0);
             getMatches(eventKey).then(data => {
                 setMatches(data);
+                //take own
             })
             getShifts().then(data => {
                 setShifts(data);
