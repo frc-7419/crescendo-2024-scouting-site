@@ -2,6 +2,7 @@ export const getCurrentEvent = () => {
     const currentDate = new Date();
 
     const dateMap: { [key: string]: string } = {
+        '2024-07-17': '2024sunshow',
         '2024-04-12': '2024joh',
         '2024-03-30': '2024cabe',
         '2024-03-11': '2024azgl',
