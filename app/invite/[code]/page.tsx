@@ -1,8 +1,5 @@
-// DOES NOT WORK
-
 import React from 'react';
-import Loading from "@/components/loading/loading";
-import {useRouter} from "next/navigation";
+import RedirectAgent from "@/components/util/redirectAgent";
 
 import type {Metadata, ResolvingMetadata} from 'next'
 
@@ -25,17 +22,10 @@ export async function generateMetadata(
     }
 }
 
-const Invite = ({params}: { params: { code: string } }) => {
-    const router = useRouter();
+const InvitePage = ({params}: { params: { code: string } }) => {
     const code = params.code;
 
-    if (code) {
-        router.push(`/login?invite=${code}`);
-    }
+    return <RedirectAgent code={code}/>;
+};
 
-    return (
-        <Loading/>
-    );
-}
-
-export default Invite;
+export default InvitePage;
