@@ -30,6 +30,34 @@ async function getUpdatedDates(teamNumbers: string[], venue: string) {
     return results.filter(entry => entry !== null);
 }
 
+async function getLatestScoutUpdate(venue: string) {
+    return prisma.scoutingData.findFirst({
+        where: {
+            venue
+        },
+        orderBy: {
+            submitTime: 'desc'
+        },
+        select: {
+            submitTime: true
+        }
+    });
+}
+
+async function getLatestBestUpdate(venue: string) {
+    return prisma.bests.findFirst({
+        where: {
+            venue
+        },
+        orderBy: {
+            lastUpdated: 'desc'
+        },
+        select: {
+            lastUpdated: true
+        }
+    });
+}
+
 async function getExistingAverages(teamNumbers: string[], venue: string) {
     return prisma.averages.findMany({
         where: {
@@ -65,6 +93,21 @@ export async function GET(
     }
 
     try {
+        const venue = getCurrentEvent()
+
+        const latestScoutUpdate = await getLatestScoutUpdate(venue);
+        const latestBestUpdate = await getLatestBestUpdate(venue);
+
+        if (latestScoutUpdate?.submitTime != null && latestBestUpdate?.lastUpdated != null) {
+            if (latestScoutUpdate.submitTime < latestBestUpdate.lastUpdated) {
+                return new Response('No new data to update', {
+                    status: 200,
+                });
+            }
+        }
+
+        console.log("Updating data")
+
         const robots = await prisma.robot.findMany({
             select: {
                 teamNumber: true
@@ -72,7 +115,6 @@ export async function GET(
         });
 
         const teamNumbers = robots.map(robot => robot.teamNumber);
-        const venue = getCurrentEvent()
         const updatedDates = (await getUpdatedDates(teamNumbers, venue));
 
         const existingAverages = await getExistingAverages(teamNumbers, venue);
