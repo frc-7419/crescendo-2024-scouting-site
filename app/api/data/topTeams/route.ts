@@ -2,20 +2,34 @@ import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
 import TeamData from "@/types/TeamData";
 
-const calculateContinuousAverage = (teamData: TeamData) => {
+export function calculateContinuousAverage(teamData: TeamData) {
     let total = 0;
-    let contAvg: any[] = [];
+    let contAvg: Array<{
+        continuousAverage: number;
+        percentChange: string;
+        match: number;
+    }> = [];
     let lastVal: number = 0;
+
     teamData.scoutingData.forEach((entry, index) => {
-        total += entry.auton.amp + entry.auton.speaker + entry.teleop.amp + entry.teleop.speaker;
+        total +=
+            entry.auton.amp +
+            entry.auton.speaker +
+            entry.teleop.amp +
+            entry.teleop.speaker;
         const count = index + 1;
-        const continuousAverage = Number((total / count).toFixed(2))
+        const continuousAverage = Number((total / count).toFixed(2));
+
+        const percentChange = lastVal
+            ? (((continuousAverage - lastVal) / lastVal) * 100).toFixed(1)
+            : '0';
+
         contAvg.push({
             continuousAverage: continuousAverage,
-            percentChange: ((lastVal - continuousAverage) / lastVal).toFixed(1),
-            match: entry.matchNumber
+            percentChange: percentChange,
+            match: entry.matchNumber,
         });
-        lastVal = continuousAverage
+        lastVal = continuousAverage;
     });
     return contAvg;
 }
