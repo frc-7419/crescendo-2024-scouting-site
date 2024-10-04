@@ -2,7 +2,7 @@ import {type NextRequest} from 'next/server'
 import prisma from "@/lib/prisma";
 import TeamData from "@/types/TeamData";
 
-export function calculateContinuousAverage(teamData: TeamData) {
+function calculateContinuousAverage(teamData: TeamData) {
     let total = 0;
     let contAvg: Array<{
         continuousAverage: number;
