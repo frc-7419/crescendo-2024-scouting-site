@@ -20,4 +20,5 @@ export const getCurrentEvent = () => {
         }
     }
     return result;
+    // commit to update vercel
 };
