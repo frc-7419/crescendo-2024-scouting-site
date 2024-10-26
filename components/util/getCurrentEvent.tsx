@@ -19,6 +19,7 @@ export const getCurrentEvent = () => {
             break;
         }
     }
-    return result;
+    let event = "2024cacc";
+    return event;
     // commit to update vercel
 };
