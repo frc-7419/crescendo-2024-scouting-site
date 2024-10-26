@@ -1,7 +1,7 @@
 import type {NextRequest} from "next/server";
 import {getCurrentEvent} from "@/components/util/getCurrentEvent";
 import {getAverages, getBests} from "@/components/fetches/sqlStatements";
-import {ScoutingDataAvg, ScoutingDataBest} from "@/types/scoutingform";
+import {IntakePosition, PickupFrom, ScoutingDataAvg, ScoutingDataBest} from "@/types/scoutingform";
 import {PrismaClient} from "@prisma/client";
 import env from "@/config/env";
 
@@ -101,12 +101,43 @@ export async function GET(request: NextRequest) {
                 if (scoutingDataAvg) {
                     if (!existingAverage) {
                         await prisma.averages.create({
-                            data: { ...scoutingDataAvg, teamNumber, venue }
+                            data: {
+                                teamNumber: entry.teamNumber,
+                                venue: venue,
+                                intake: scoutingDataAvg.intake as IntakePosition,
+                                avgampauton: scoutingDataAvg.avgampauton,
+                                avgspeakerauton: scoutingDataAvg.avgspeakerauton,
+                                avgampteleop: scoutingDataAvg.avgampteleop,
+                                avgspeakerteleop: scoutingDataAvg.avgspeakerteleop,
+                                avgtimesamped: scoutingDataAvg.avgtimesamped,
+                                avgtrap: scoutingDataAvg.avgtrap,
+                                avgdefense: scoutingDataAvg.avgdefense,
+                                avgreliability: scoutingDataAvg.avgreliability,
+                                hang: scoutingDataAvg.hang,
+                                pickup: scoutingDataAvg.pickup as PickupFrom
+                            }
                         });
                     } else {
                         await prisma.averages.update({
-                            where: { id: existingAverage.id },
-                            data: { ...scoutingDataAvg, lastUpdated: new Date() }
+                            where: {
+                                id: existingAverage.id
+                            },
+                            data: {
+                                teamNumber: entry.teamNumber,
+                                venue: venue,
+                                intake: scoutingDataAvg.intake as IntakePosition,
+                                avgampauton: scoutingDataAvg.avgampauton,
+                                avgspeakerauton: scoutingDataAvg.avgspeakerauton,
+                                avgampteleop: scoutingDataAvg.avgampteleop,
+                                avgspeakerteleop: scoutingDataAvg.avgspeakerteleop,
+                                avgtimesamped: scoutingDataAvg.avgtimesamped,
+                                avgtrap: scoutingDataAvg.avgtrap,
+                                avgdefense: scoutingDataAvg.avgdefense,
+                                avgreliability: scoutingDataAvg.avgreliability,
+                                hang: scoutingDataAvg.hang,
+                                pickup: scoutingDataAvg.pickup as PickupFrom,
+                                lastUpdated: new Date()
+                            }
                         });
                     }
                 }
@@ -126,12 +157,41 @@ export async function GET(request: NextRequest) {
                 if (BscoutingDataAvg) {
                     if (!existingBest) {
                         await prisma.bests.create({
-                            data: { ...BscoutingDataAvg, teamNumber, venue }
+                            data: {
+                                teamNumber: entry.teamNumber,
+                                venue: venue,
+                                intake: BscoutingDataAvg.intake as IntakePosition,
+                                ampauton: BscoutingDataAvg.ampauton,
+                                speakerauton: BscoutingDataAvg.speakerauton,
+                                ampteleop: BscoutingDataAvg.ampteleop,
+                                speakerteleop: BscoutingDataAvg.speakerteleop,
+                                trap: BscoutingDataAvg.trap,
+                                defense: BscoutingDataAvg.defense,
+                                reliability: BscoutingDataAvg.reliability,
+                                hang: BscoutingDataAvg.hang,
+                                pickup: BscoutingDataAvg.pickup as PickupFrom
+                            }
                         });
                     } else {
-                        await prisma.bests.update({
-                            where: { id: existingBest.id },
-                            data: { ...BscoutingDataAvg, lastUpdated: new Date() }
+                        prisma.bests.update({
+                            where: {
+                                id: existingBest.id
+                            },
+                            data: {
+                                teamNumber: entry.teamNumber,
+                                venue: venue,
+                                intake: BscoutingDataAvg.intake as IntakePosition,
+                                ampauton: BscoutingDataAvg.ampauton,
+                                speakerauton: BscoutingDataAvg.speakerauton,
+                                ampteleop: BscoutingDataAvg.ampteleop,
+                                speakerteleop: BscoutingDataAvg.speakerteleop,
+                                trap: BscoutingDataAvg.trap,
+                                defense: BscoutingDataAvg.defense,
+                                reliability: BscoutingDataAvg.reliability,
+                                hang: BscoutingDataAvg.hang,
+                                pickup: BscoutingDataAvg.pickup as PickupFrom,
+                                lastUpdated: new Date()
+                            }
                         });
                     }
                 }
